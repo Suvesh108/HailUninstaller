@@ -46,6 +46,9 @@ param(
     [Parameter(ParameterSetName = "Restore")]
     [string]$Restore,
 
+    [Parameter(ParameterSetName = "Orphans")]
+    [switch]$ScanOrphans,
+
     [Parameter(ParameterSetName = "Interactive")]
     [switch]$Cli,
 
@@ -73,6 +76,7 @@ $moduleFiles = @(
     "Backup.ps1",
     "Cleanup.ps1",
     "Restore.ps1",
+    "OrphanScanner.ps1",
     "GUI.ps1"
 )
 
@@ -121,6 +125,18 @@ if ($Scan -or $DeepScan) {
         $results | ConvertTo-Json -Depth 4
     } else {
         $results | Select-Object Badge, Score, Category, Type, Path, Size | Format-Table -AutoSize
+    }
+    exit 0
+}
+
+if ($ScanOrphans) {
+    Write-Host "Scanning storage for orphaned leftover folders (uninstalled applications)..." -ForegroundColor Cyan
+    $orphans = @(Scan-OrphanedStorageFolders -ConfigDir $ConfigDir)
+    Write-Host "Found $($orphans.Count) orphaned folders from uninstalled applications:" -ForegroundColor Green
+    if ($Json) {
+        $orphans | ConvertTo-Json -Depth 3
+    } else {
+        $orphans | Select-Object Name, @{N='Size';E={Format-Bytes $_.Size}}, Path | Format-Table -AutoSize
     }
     exit 0
 }
@@ -497,21 +513,27 @@ while ($true) {
             }
         }
         "2" {
-            Write-Host "Enter application name or token to scan: " -ForegroundColor Yellow -NoNewline
-            $appName = Read-Host
-            if ($appName) {
+            Clear-Host
+            Show-Banner
+            Show-Header -Title "Scan Storage For Orphan Leftovers"
+            Write-Host "Scanning storage for folders of uninstalled applications..." -ForegroundColor Cyan
+            $progressCb = {
+                param($cur, $tot, $task)
+                Show-ProgressBar -Current $cur -Total $tot -TaskName $task
+            }
+            $orphans = @(Scan-OrphanedStorageFolders -ConfigDir $ConfigDir -ProgressCallback $progressCb)
+            if ($orphans.Count -eq 0) {
+                Write-Host "No orphaned leftover folders found! Your storage is clean." -ForegroundColor Green
+                Write-Host "Press Enter to continue..." -ForegroundColor Cyan
+                [void][Console]::ReadLine()
+            } else {
                 $mockApp = [PSCustomObject]@{
-                    DisplayName     = $appName
-                    Publisher       = ""
+                    DisplayName     = "Uninstalled Applications Leftovers"
+                    Publisher       = "HailUninstaller"
                     InstallLocation = ""
-                    Type            = "Manual"
+                    Type            = "Orphans"
                 }
-                $progressCb = {
-                    param($cur, $tot, $task)
-                    Show-ProgressBar -Current $cur -Total $tot -TaskName $task
-                }
-                $scored = Start-DeepScan -Application $mockApp -ConfigDir $ConfigDir -ProgressCallback $progressCb
-                Show-CleanupPreviewTui -Application $mockApp -ScoredItems $scored
+                Show-CleanupPreviewTui -Application $mockApp -ScoredItems $orphans
             }
         }
         "3" {
