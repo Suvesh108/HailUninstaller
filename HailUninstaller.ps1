@@ -1,4 +1,4 @@
-﻿<#
+<#
 .SYNOPSIS
     HailUninstaller - Deep Application Removal Tool for Windows
 .DESCRIPTION
@@ -46,6 +46,9 @@ param(
     [Parameter(ParameterSetName = "Restore")]
     [string]$Restore,
 
+    [Parameter(ParameterSetName = "Interactive")]
+    [switch]$Cli,
+
     [switch]$Silent,
     [switch]$Json
 )
@@ -69,7 +72,8 @@ $moduleFiles = @(
     "Scanner.ps1",
     "Backup.ps1",
     "Cleanup.ps1",
-    "Restore.ps1"
+    "Restore.ps1",
+    "GUI.ps1"
 )
 
 foreach ($m in $moduleFiles) {
@@ -172,7 +176,16 @@ if ($Uninstall) {
 }
 
 # ==========================================
-# Interactive TUI Mode
+# Launch Mode: Default to Windows 11 Fluent GUI unless -Cli is specified
+# ==========================================
+
+if (-not $Cli) {
+    Show-HailUninstallerGUI -ConfigDir $ConfigDir
+    exit 0
+}
+
+# ==========================================
+# Interactive TUI Mode (CLI Fallback)
 # ==========================================
 
 function Show-InteractiveAppPicker {
