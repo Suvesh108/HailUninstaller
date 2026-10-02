@@ -1,0 +1,23 @@
+{
+  "Thresholds": {
+    "HighConfidence": 85,
+    "ReviewConfidence": 60,
+    "LowConfidence": 0
+  },
+  "Weights": {
+    "DirectGuidMatch": 45,
+    "ExactApplicationName": 35,
+    "ExactPublisherName": 25,
+    "InstallPathMatch": 40,
+    "ExecutableMatch": 30,
+    "KnownRuleMatch": 35,
+    "FuzzyNameMatch": 15,
+    "SharedDependencyPenalty": -50,
+    "ProtectedPathPenalty": -1000
+  },
+  "CategoryPreSelect": {
+    "HighConfidence": true,
+    "Review": false,
+    "Protected": false
+  }
+}

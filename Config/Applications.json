@@ -1,0 +1,106 @@
+{
+  "Applications": [
+    {
+      "Id": "discord",
+      "Aliases": ["Discord", "Discord PTB", "Discord Canary"],
+      "Publisher": "Discord Inc.",
+      "KnownDirectories": [
+        "%LOCALAPPDATA%\\Discord",
+        "%APPDATA%\\discord",
+        "%LOCALAPPDATA%\\DiscordCanary",
+        "%APPDATA%\\discordcanary"
+      ],
+      "KnownRegistryKeys": [
+        "HKCU:\\Software\\Discord",
+        "HKCU:\\Software\\Microsoft\\Windows\\CurrentVersion\\Uninstall\\Discord"
+      ],
+      "KnownServices": ["DiscordUpdater"],
+      "KnownTasks": ["Discord Update", "DiscordUpdate*"],
+      "KnownExecutables": ["Discord.exe", "Update.exe"]
+    },
+    {
+      "Id": "chrome",
+      "Aliases": ["Google Chrome", "Chrome"],
+      "Publisher": "Google LLC",
+      "KnownDirectories": [
+        "%LOCALAPPDATA%\\Google\\Chrome",
+        "%PROGRAMFILES%\\Google\\Chrome",
+        "%PROGRAMFILES(X86)%\\Google\\Chrome"
+      ],
+      "KnownRegistryKeys": [
+        "HKCU:\\Software\\Google\\Chrome",
+        "HKLM:\\Software\\Google\\Chrome",
+        "HKLM:\\SOFTWARE\\WOW6432Node\\Google\\Chrome"
+      ],
+      "KnownServices": ["gupdate", "gupdatem"],
+      "KnownTasks": ["GoogleUpdateTaskMachineCore", "GoogleUpdateTaskMachineUA"],
+      "KnownExecutables": ["chrome.exe"]
+    },
+    {
+      "Id": "vscode",
+      "Aliases": ["Microsoft Visual Studio Code", "Visual Studio Code", "VS Code"],
+      "Publisher": "Microsoft Corporation",
+      "KnownDirectories": [
+        "%LOCALAPPDATA%\\Programs\\Microsoft VS Code",
+        "%APPDATA%\\Code",
+        "%USERPROFILE%\\.vscode"
+      ],
+      "KnownRegistryKeys": [
+        "HKCU:\\Software\\Classes\\Applications\\Code.exe",
+        "HKCU:\\Software\\Classes\\*\\shell\\VSCode",
+        "HKCU:\\Software\\Classes\\directory\\shell\\VSCode"
+      ],
+      "KnownServices": [],
+      "KnownTasks": [],
+      "KnownExecutables": ["Code.exe"]
+    },
+    {
+      "Id": "blender",
+      "Aliases": ["Blender", "Blender Foundation"],
+      "Publisher": "Blender Foundation",
+      "KnownDirectories": [
+        "%APPDATA%\\Blender Foundation",
+        "%PROGRAMFILES%\\Blender Foundation"
+      ],
+      "KnownRegistryKeys": [
+        "HKLM:\\SOFTWARE\\BlenderFoundation",
+        "HKCU:\\Software\\BlenderFoundation"
+      ],
+      "KnownServices": [],
+      "KnownTasks": [],
+      "KnownExecutables": ["blender.exe", "blender-launcher.exe"]
+    },
+    {
+      "Id": "spotify",
+      "Aliases": ["Spotify", "Spotify Music"],
+      "Publisher": "Spotify Ltd",
+      "KnownDirectories": [
+        "%APPDATA%\\Spotify",
+        "%LOCALAPPDATA%\\Spotify"
+      ],
+      "KnownRegistryKeys": [
+        "HKCU:\\Software\\Spotify"
+      ],
+      "KnownServices": [],
+      "KnownTasks": ["Spotify*"],
+      "KnownExecutables": ["Spotify.exe", "SpotifyMigrator.exe"]
+    },
+    {
+      "Id": "vlc",
+      "Aliases": ["VLC media player", "VLC"],
+      "Publisher": "VideoLAN",
+      "KnownDirectories": [
+        "%PROGRAMFILES%\\VideoLAN\\VLC",
+        "%PROGRAMFILES(X86)%\\VideoLAN\\VLC",
+        "%APPDATA%\\vlc"
+      ],
+      "KnownRegistryKeys": [
+        "HKLM:\\Software\\VideoLAN\\VLC",
+        "HKCU:\\Software\\VideoLAN\\VLC"
+      ],
+      "KnownServices": [],
+      "KnownTasks": [],
+      "KnownExecutables": ["vlc.exe"]
+    }
+  ]
+}

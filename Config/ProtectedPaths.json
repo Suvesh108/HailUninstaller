@@ -1,0 +1,70 @@
+{
+  "ProtectedExactRoots": [
+    "C:\\",
+    "C:\\Users",
+    "C:\\Program Files",
+    "C:\\Program Files (x86)",
+    "C:\\ProgramData",
+    "C:\\Users\\Default",
+    "C:\\Users\\Public"
+  ],
+  "ProtectedSubtrees": [
+    "C:\\Windows",
+    "C:\\Recovery",
+    "C:\\System Volume Information",
+    "C:\\$Recycle.Bin",
+    "C:\\Boot",
+    "C:\\EFI",
+    "C:\\ProgramData\\Microsoft",
+    "C:\\ProgramData\\Package Cache",
+    "C:\\Program Files\\Common Files\\System",
+    "C:\\Program Files (x86)\\Common Files\\System"
+  ],
+  "ProtectedRegistryRoots": [
+    "HKLM:\\SOFTWARE\\Microsoft\\Windows",
+    "HKLM:\\SOFTWARE\\Microsoft\\Windows NT",
+    "HKLM:\\SOFTWARE\\Microsoft\\DirectX",
+    "HKLM:\\SOFTWARE\\Microsoft\\.NETFramework",
+    "HKLM:\\SOFTWARE\\Microsoft\\Cryptography",
+    "HKLM:\\SOFTWARE\\Microsoft\\Windows Defender",
+    "HKLM:\\SOFTWARE\\Policies",
+    "HKLM:\\SYSTEM",
+    "HKLM:\\SECURITY",
+    "HKLM:\\SAM",
+    "HKCU:\\Software\\Microsoft\\Windows",
+    "HKCU:\\Software\\Microsoft\\Windows NT",
+    "HKCU:\\Software\\Policies"
+  ],
+  "ProtectedServices": [
+    "RpcSs",
+    "DcomLaunch",
+    "Winmgmt",
+    "Schedule",
+    "EventLog",
+    "PlugPlay",
+    "CryptSvc",
+    "LanmanServer",
+    "LanmanWorkstation",
+    "wuauserv",
+    "mpssvc",
+    "Themes",
+    "ProfSvc"
+  ],
+  "ProtectedProcesses": [
+    "explorer",
+    "lsass",
+    "csrss",
+    "smss",
+    "services",
+    "svchost",
+    "wininit",
+    "winlogon",
+    "dwm",
+    "spoolsv",
+    "taskhostw",
+    "RuntimeBroker",
+    "ShellExperienceHost",
+    "powershell",
+    "pwsh"
+  ]
+}

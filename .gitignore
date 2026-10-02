@@ -1,0 +1,11 @@
+# HailUninstaller .gitignore
+
+# Local backups
+Backups/
+*.log
+
+# IDE & OS files
+.vscode/
+.idea/
+Thumbs.db
+Desktop.ini

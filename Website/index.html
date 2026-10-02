@@ -1,0 +1,315 @@
+﻿<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HailUninstaller - Deep Application Removal Tool for Windows</title>
+  <meta name="description" content="Lightweight, zero-installation PowerShell tool to completely identify and remove application leftover files, registry keys, services, and tasks.">
+  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+
+  <!-- Navigation -->
+  <header class="navbar">
+    <div class="nav-container">
+      <a href="#" class="brand">
+        <img src="assets/logo.png" alt="HailUninstaller Logo" class="brand-logo">
+        <span class="brand-name">HailUninstaller</span>
+      </a>
+      <nav class="nav-links">
+        <a href="#how-it-works">How It Works</a>
+        <a href="#evidence-engine">Evidence Engine</a>
+        <a href="#cli">CLI Mode</a>
+        <a href="#architecture">Architecture</a>
+      </nav>
+      <div class="nav-actions">
+        <a href="https://github.com/Suvesh108/HailUninstaller" target="_blank" class="btn btn-outline" rel="noreferrer">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
+          GitHub
+        </a>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="hero">
+    <div class="hero-glow"></div>
+    <div class="container hero-content">
+      <div class="pill-badge">
+        <span class="badge-dot"></span>
+        <span>Zero-Installation â€¢ Pure PowerShell â€¢ Safe Rollback</span>
+      </div>
+
+      <h1 class="hero-title">
+        Completely remove an application's <span class="gradient-text">remaining footprint</span>.
+      </h1>
+
+      <p class="hero-subtitle">
+        HailUninstaller is a lightweight Windows removal tool. It launches official uninstallers first, scans for leftover AppData, ProgramData, registry remnants, services, and tasks, scores candidates with multi-factor evidence, and provides an interactive preview before deletion.
+      </p>
+
+      <!-- One Liner Command Box -->
+      <div class="terminal-command-card">
+        <div class="command-label">Launch instantly in Windows PowerShell (Admin):</div>
+        <div class="command-box">
+          <span class="prompt-sign">&gt;</span>
+          <code id="install-command">irm https://hailuninstaller.dev | iex</code>
+          <button id="copy-btn" class="copy-button" aria-label="Copy Command">
+            <svg class="copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
+            <span class="copy-text">Copy</span>
+          </button>
+        </div>
+        <div class="command-meta">
+          <span>Or download <a href="#download" class="link">Run.bat</a> for one-click offline execution.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Interactive Terminal Showcase -->
+  <section class="showcase">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Interactive Terminal UI</span>
+        <h2>Download â†’ Scan â†’ Preview â†’ Clean â†’ Exit</h2>
+        <p>No bulky installer. No telemetry. It runs in your terminal, performs the surgical work, and cleanly exits.</p>
+      </div>
+
+      <div class="terminal-window">
+        <div class="terminal-bar">
+          <div class="terminal-dots">
+            <span class="dot red"></span>
+            <span class="dot yellow"></span>
+            <span class="dot green"></span>
+          </div>
+          <div class="terminal-title">Windows PowerShell â€” HailUninstaller.ps1</div>
+          <div class="terminal-tabs">
+            <button class="term-tab active" data-step="menu">1. Menu</button>
+            <button class="term-tab" data-step="scan">2. Deep Scan</button>
+            <button class="term-tab" data-step="preview">3. Preview</button>
+            <button class="term-tab" data-step="cleanup">4. Cleaned</button>
+          </div>
+        </div>
+
+        <div class="terminal-body" id="term-content">
+          <!-- Populated by app.js -->
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Philosophy & Comparison -->
+  <section id="how-it-works" class="features">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">The Focused Philosophy</span>
+        <h2>Built for Clean Uninstalls, Not System Tweaking</h2>
+        <p>Windows debloaters modify telemetry, disable services, and tweak registry policies. HailUninstaller does one thing with absolute precision.</p>
+      </div>
+
+      <div class="grid grid-3">
+        <div class="card">
+          <div class="card-icon blue-glow">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path><polyline points="14 2 14 8 20 8"></polyline><line x1="16" y1="13" x2="8" y2="13"></line><line x1="16" y1="17" x2="8" y2="17"></line><polyline points="10 9 9 9 8 9"></polyline></svg>
+          </div>
+          <h3>1. Native Uninstaller First</h3>
+          <p>Never bypasses the developer's official uninstall sequence. HailUninstaller triggers the official uninstaller first to let it unhook cleanly, then searches for what was left behind.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon cyan-glow">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"></circle><line x1="21" y1="21" x2="16.65" y2="16.65"></line></svg>
+          </div>
+          <h3>2. Multi-Subsystem Deep Scan</h3>
+          <p>Scans across AppData (Local/Roaming/LocalLow), ProgramData, Program Files, Registry (HKCU/HKLM/WOW6432Node), orphaned Services, and Scheduled Tasks.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-icon green-glow">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+          </div>
+          <h3>3. Zero Naive Wildcards</h3>
+          <p>Never deletes with blind wildcards like <code>*Name*</code>. Candidates are scored using multi-factor evidence while protected Windows paths are strictly immune.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Evidence Engine Section -->
+  <section id="evidence-engine" class="evidence-section">
+    <div class="container">
+      <div class="evidence-layout">
+        <div class="evidence-text">
+          <span class="section-tag">Safety Guardrails</span>
+          <h2>The Evidence Scoring Engine</h2>
+          <p>HailUninstaller verifies candidate remnants against weighted attributes. Every file, directory, or registry key is categorized before you hit delete.</p>
+
+          <div class="evidence-metrics">
+            <div class="metric-row">
+              <span class="metric-badge green">ðŸŸ¢ 98% HIGH CONFIDENCE</span>
+              <p>Direct rule match, exact executable path, or install directory match. Pre-selected for cleanup.</p>
+            </div>
+            <div class="metric-row">
+              <span class="metric-badge yellow">ðŸŸ¡ 68% REVIEW</span>
+              <p>Subfolder with shared name or ambiguous registry key. Deselected by default for user review.</p>
+            </div>
+            <div class="metric-row">
+              <span class="metric-badge red">[-] PROTECTED</span>
+              <p>Windows system files, System32, WinSxS, core registry hives. Completely locked and immune from deletion.</p>
+            </div>
+          </div>
+        </div>
+
+        <div class="evidence-card">
+          <div class="evidence-card-header">
+            <span>Evidence Score Breakdown</span>
+            <span class="tag">Discord Evaluation</span>
+          </div>
+          <div class="evidence-factors">
+            <div class="factor">
+              <span>Application Name Match</span>
+              <span class="score-pos">+40%</span>
+            </div>
+            <div class="factor">
+              <span>Official Install Location Match</span>
+              <span class="score-pos">+40%</span>
+            </div>
+            <div class="factor">
+              <span>Verified Rule in Applications.json</span>
+              <span class="score-pos">+45%</span>
+            </div>
+            <div class="factor">
+              <span>AppData/Local Directory Pattern</span>
+              <span class="score-pos">+15%</span>
+            </div>
+            <div class="factor divider">
+              <span>Protected Path Check</span>
+              <span class="score-safe">Passed (Not System32)</span>
+            </div>
+            <div class="factor total">
+              <strong>Calculated Confidence Score</strong>
+              <strong class="text-green">98% (High Confidence)</strong>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CLI Section -->
+  <section id="cli" class="cli-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Automation Ready</span>
+        <h2>Comprehensive CLI Parameters</h2>
+        <p>Integrate HailUninstaller into provisioning scripts, system administration pipelines, or unattended deployments.</p>
+      </div>
+
+      <div class="cli-grid">
+        <div class="cli-item">
+          <code>.\HailUninstaller.ps1 -List</code>
+          <span>List all registered 32/64-bit and MSIX applications.</span>
+        </div>
+        <div class="cli-item">
+          <code>.\HailUninstaller.ps1 -Scan "Discord"</code>
+          <span>Perform read-only leftover analysis without touching files.</span>
+        </div>
+        <div class="cli-item">
+          <code>.\HailUninstaller.ps1 -DeepScan "Blender"</code>
+          <span>Exhaustive multi-subsystem scan with evidence scoring.</span>
+        </div>
+        <div class="cli-item">
+          <code>.\HailUninstaller.ps1 -Uninstall "App" -DeepClean -CreateBackup</code>
+          <span>Complete automated uninstall, backup snapshot, and deep cleanup.</span>
+        </div>
+        <div class="cli-item">
+          <code>.\HailUninstaller.ps1 -Restore "2026-10-02_Discord"</code>
+          <span>Revert deleted files and re-import registry snapshots from manifest.</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Architecture Tree -->
+  <section id="architecture" class="arch-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-tag">Modular & Extensible</span>
+        <h2>Repository Architecture</h2>
+        <p>Organized in clean, single-responsibility PowerShell modules and JSON configuration schemas.</p>
+      </div>
+
+      <div class="tree-display">
+        <pre><code>HailUninstaller/
+â”œâ”€â”€ HailUninstaller.ps1          <span class="comment"># Main interactive TUI & CLI entrypoint</span>
+â”œâ”€â”€ Run.bat                      <span class="comment"># Double-click launcher with auto-elevation</span>
+â”œâ”€â”€ README.md                    <span class="comment"># Documentation & guides</span>
+â”œâ”€â”€ LICENSE                      <span class="comment"># MIT License</span>
+â”‚
+â”œâ”€â”€ Config/                      <span class="comment"># Deterministic JSON policies</span>
+â”‚   â”œâ”€â”€ Applications.json        <span class="comment"># Curated rules for Discord, Chrome, VS Code, etc.</span>
+â”‚   â”œâ”€â”€ ProtectedPaths.json      <span class="comment"># Guardrails for System32, WinSxS, and core hives</span>
+â”‚   â””â”€â”€ Rules.json               <span class="comment"># Confidence scoring weights and thresholds</span>
+â”‚
+â”œâ”€â”€ Modules/                     <span class="comment"># Zero-dependency PowerShell modules</span>
+â”‚   â”œâ”€â”€ UI.ps1                   <span class="comment"># ANSI terminal styling, banners, and progress bars</span>
+â”‚   â”œâ”€â”€ Applications.ps1         <span class="comment"># Registry & MSI & AppX discovery & uninstaller</span>
+â”‚   â”œâ”€â”€ Scanner.ps1              <span class="comment"># Coordinator for parallelized subsystem scans</span>
+â”‚   â”œâ”€â”€ FileScanner.ps1          <span class="comment"># AppData, ProgramData, and Temp file scanner</span>
+â”‚   â”œâ”€â”€ RegistryScanner.ps1      <span class="comment"># HKCU, HKLM, WOW6432Node and startup scanner</span>
+â”‚   â”œâ”€â”€ ServiceScanner.ps1       <span class="comment"># Background service scanner</span>
+â”‚   â”œâ”€â”€ TaskScanner.ps1          <span class="comment"># Scheduled tasks scanner</span>
+â”‚   â”œâ”€â”€ ProcessScanner.ps1       <span class="comment"># Active process detector</span>
+â”‚   â”œâ”€â”€ ShortcutScanner.ps1      <span class="comment"># Desktop & Start menu shortcut cleaner</span>
+â”‚   â”œâ”€â”€ Evidence.ps1             <span class="comment"># Multi-factor evidence scoring engine</span>
+â”‚   â”œâ”€â”€ Cleanup.ps1              <span class="comment"># Surgical deletion execution engine</span>
+â”‚   â”œâ”€â”€ Backup.ps1               <span class="comment"># Snapshot backup with manifest tracking</span>
+â”‚   â””â”€â”€ Restore.ps1              <span class="comment"># 1-Click rollback from saved snapshots</span>
+â”‚
+â””â”€â”€ Tests/                       <span class="comment"># Automated Pester test suite</span>
+    â”œâ”€â”€ Scanner.Tests.ps1
+    â”œâ”€â”€ Registry.Tests.ps1
+    â””â”€â”€ Cleanup.Tests.ps1</code></pre>
+      </div>
+    </div>
+  </section>
+
+  <!-- Download & Footer CTA -->
+  <section id="download" class="cta-section">
+    <div class="container text-center">
+      <img src="assets/logo.png" alt="HailUninstaller Logo" class="cta-logo">
+      <h2>Ready for Clean, Zero-Leftover Uninstalls?</h2>
+      <p>No installer required. Run with a single PowerShell line or download the standalone launcher.</p>
+      
+      <div class="cta-actions">
+        <button class="btn btn-primary btn-lg" onclick="navigator.clipboard.writeText('irm https://hailuninstaller.dev | iex'); alert('Copied command to clipboard!');">
+          Copy PowerShell Command
+        </button>
+        <a href="https://github.com/Suvesh108/HailUninstaller/archive/refs/heads/main.zip" class="btn btn-outline btn-lg">
+          Download ZIP Release
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <footer class="footer">
+    <div class="container footer-content">
+      <div class="footer-left">
+        <img src="assets/logo.png" alt="HailUninstaller Logo" class="footer-logo">
+        <span>Â© 2026 HailUninstaller. Open source under MIT License.</span>
+      </div>
+      <div class="footer-right">
+        <a href="https://github.com/Suvesh108/HailUninstaller" target="_blank" rel="noreferrer">GitHub</a>
+        <a href="#how-it-works">How It Works</a>
+        <a href="#cli">CLI</a>
+      </div>
+    </div>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
