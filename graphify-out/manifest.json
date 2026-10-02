@@ -1,0 +1,140 @@
+{
+  "Config/Applications.json": {
+    "mtime": 1790921357.4246676,
+    "seen": 1790926181.4992135,
+    "ast_hash": "94d7b94ccb101be36b8557bd16515da5",
+    "semantic_hash": "94d7b94ccb101be36b8557bd16515da5"
+  },
+  "Config/ProtectedPaths.json": {
+    "mtime": 1790922088.333954,
+    "seen": 1790926181.4992175,
+    "ast_hash": "f163386b3864475e2afd4e9d317420f2",
+    "semantic_hash": "f163386b3864475e2afd4e9d317420f2"
+  },
+  "Config/Rules.json": {
+    "mtime": 1790921346.499699,
+    "seen": 1790926181.499219,
+    "ast_hash": "41eb651ed31b64d58222b6690a9c2d8d",
+    "semantic_hash": "41eb651ed31b64d58222b6690a9c2d8d"
+  },
+  "HailUninstaller.ps1": {
+    "mtime": 1790925672.370245,
+    "seen": 1790926181.49922,
+    "ast_hash": "585bf7969fea71944a0bade37d95d8f5",
+    "semantic_hash": "585bf7969fea71944a0bade37d95d8f5"
+  },
+  "Modules/Applications.ps1": {
+    "mtime": 1790921387.0670018,
+    "seen": 1790926181.4992208,
+    "ast_hash": "b22486b9c78d416190bbf739d416cf47",
+    "semantic_hash": "b22486b9c78d416190bbf739d416cf47"
+  },
+  "Modules/Backup.ps1": {
+    "mtime": 1790921520.9925046,
+    "seen": 1790926181.4992216,
+    "ast_hash": "5194b8e972063a98156f0249bb33ba3f",
+    "semantic_hash": "5194b8e972063a98156f0249bb33ba3f"
+  },
+  "Modules/Cleanup.ps1": {
+    "mtime": 1790923774.5042572,
+    "seen": 1790926181.4992225,
+    "ast_hash": "4dfb607519cae6bdb63fb2423a924324",
+    "semantic_hash": "4dfb607519cae6bdb63fb2423a924324"
+  },
+  "Modules/Evidence.ps1": {
+    "mtime": 1790922654.2267215,
+    "seen": 1790926181.4992232,
+    "ast_hash": "44b7018ecd460c6cd8e4e885eed52777",
+    "semantic_hash": "44b7018ecd460c6cd8e4e885eed52777"
+  },
+  "Modules/FileScanner.ps1": {
+    "mtime": 1790922507.6698194,
+    "seen": 1790926181.4992237,
+    "ast_hash": "3972a808b6ea6ebff464740560d648ae",
+    "semantic_hash": "3972a808b6ea6ebff464740560d648ae"
+  },
+  "Modules/GUI.ps1": {
+    "mtime": 1790926107.1235075,
+    "seen": 1790926181.4992247,
+    "ast_hash": "b1035c6611c054f238399478244bd73e",
+    "semantic_hash": "b1035c6611c054f238399478244bd73e"
+  },
+  "Modules/OrphanScanner.ps1": {
+    "mtime": 1790925451.2707162,
+    "seen": 1790926181.4992254,
+    "ast_hash": "d5e0e4e29e218e4aa85c8310c6c1edd4",
+    "semantic_hash": "d5e0e4e29e218e4aa85c8310c6c1edd4"
+  },
+  "Modules/ProcessScanner.ps1": {
+    "mtime": 1790921468.7522054,
+    "seen": 1790926181.499226,
+    "ast_hash": "c5f3335c4787b866045d644d317bbeb5",
+    "semantic_hash": "c5f3335c4787b866045d644d317bbeb5"
+  },
+  "Modules/RegistryScanner.ps1": {
+    "mtime": 1790921419.879014,
+    "seen": 1790926181.4992268,
+    "ast_hash": "e748301057e25e02c63b9ce176e97275",
+    "semantic_hash": "e748301057e25e02c63b9ce176e97275"
+  },
+  "Modules/Restore.ps1": {
+    "mtime": 1790921542.2246668,
+    "seen": 1790926181.4992278,
+    "ast_hash": "812053b9f0c855e7e991b30bb7656690",
+    "semantic_hash": "812053b9f0c855e7e991b30bb7656690"
+  },
+  "Modules/Scanner.ps1": {
+    "mtime": 1790922437.8657098,
+    "seen": 1790926181.4992285,
+    "ast_hash": "6ed065d9e24c5a52f248981367d5482c",
+    "semantic_hash": "6ed065d9e24c5a52f248981367d5482c"
+  },
+  "Modules/ServiceScanner.ps1": {
+    "mtime": 1790921428.9958353,
+    "seen": 1790926181.4992292,
+    "ast_hash": "7d249a6324a0008d2b17f6b81dfe2a79",
+    "semantic_hash": "7d249a6324a0008d2b17f6b81dfe2a79"
+  },
+  "Modules/ShortcutScanner.ps1": {
+    "mtime": 1790922636.930515,
+    "seen": 1790926181.4992297,
+    "ast_hash": "37606ea7799cf92e36e04839e0c708c4",
+    "semantic_hash": "37606ea7799cf92e36e04839e0c708c4"
+  },
+  "Modules/TaskScanner.ps1": {
+    "mtime": 1790921457.8924623,
+    "seen": 1790926181.4992304,
+    "ast_hash": "1e72fcc9c4a182cc6f447b2794b683c3",
+    "semantic_hash": "1e72fcc9c4a182cc6f447b2794b683c3"
+  },
+  "Modules/UI.ps1": {
+    "mtime": 1790921934.2780192,
+    "seen": 1790926181.4992309,
+    "ast_hash": "61e7a0614acdb493ed0d6c0150dad5a4",
+    "semantic_hash": "61e7a0614acdb493ed0d6c0150dad5a4"
+  },
+  "Tests/Cleanup.Tests.ps1": {
+    "mtime": 1790923157.4273143,
+    "seen": 1790926181.499232,
+    "ast_hash": "dcc81b65df13ef70f9682e2ca25d26ac",
+    "semantic_hash": "dcc81b65df13ef70f9682e2ca25d26ac"
+  },
+  "Tests/Registry.Tests.ps1": {
+    "mtime": 1790922182.5554643,
+    "seen": 1790926181.4992328,
+    "ast_hash": "7e4c153a1d7dbed4a2b92839a04a0844",
+    "semantic_hash": "7e4c153a1d7dbed4a2b92839a04a0844"
+  },
+  "Tests/Scanner.Tests.ps1": {
+    "mtime": 1790922054.809455,
+    "seen": 1790926181.4992332,
+    "ast_hash": "5ec39ab4159b2c7cdb4ee9189d50c280",
+    "semantic_hash": "5ec39ab4159b2c7cdb4ee9189d50c280"
+  },
+  "Website/app.js": {
+    "mtime": 1790921760.1759713,
+    "seen": 1790926181.4992342,
+    "ast_hash": "a23ac7d01cd94236eabd9035a5ef4dd2",
+    "semantic_hash": "a23ac7d01cd94236eabd9035a5ef4dd2"
+  }
+}
