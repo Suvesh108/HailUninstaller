@@ -155,11 +155,11 @@ function Show-HailUninstallerGUI {
         <!-- Action / Filter Bar -->
         <Grid Grid.Row="3" Margin="24,6,24,12">
             <StackPanel Orientation="Horizontal">
-                <Button Name="BtnSelectHigh" Content="Select High Confidence" Style="{StaticResource SecondaryButton}" Margin="0,0,8,0"/>
-                <Button Name="BtnSelectAll" Content="Select All" Style="{StaticResource SecondaryButton}" Margin="0,0,8,0"/>
-                <Button Name="BtnSelectHeavy" Content="Select &gt; 100 MB" Style="{StaticResource SecondaryButton}" Margin="0,0,8,0"/>
-                <Button Name="BtnClearSelection" Content="Clear Selection" Style="{StaticResource SecondaryButton}" Margin="0,0,8,0"/>
-                <Button Name="BtnScanLeftovers" Content="Rescan Storage" Style="{StaticResource SecondaryButton}"/>
+                <Button Name="BtnScanLeftovers" Content="🔍 Scan Storage Leftovers" Style="{StaticResource PrimaryButton}" Margin="0,0,10,0" Padding="16,6"/>
+                <Button Name="BtnSelectHigh" Content="Select High Confidence" Style="{StaticResource SecondaryButton}" Margin="0,0,8,0" IsEnabled="False"/>
+                <Button Name="BtnSelectAll" Content="Select All" Style="{StaticResource SecondaryButton}" Margin="0,0,8,0" IsEnabled="False"/>
+                <Button Name="BtnSelectHeavy" Content="Select &gt; 100 MB" Style="{StaticResource SecondaryButton}" Margin="0,0,8,0" IsEnabled="False"/>
+                <Button Name="BtnClearSelection" Content="Clear Selection" Style="{StaticResource SecondaryButton}" Margin="0,0,8,0" IsEnabled="False"/>
             </StackPanel>
 
             <Border HorizontalAlignment="Right" Background="#FFFFFF" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="5" Padding="8,4" Width="260">
@@ -183,9 +183,20 @@ function Show-HailUninstallerGUI {
                         </Grid.RowDefinitions>
                         <Grid Margin="4,0,0,8">
                             <TextBlock Name="TxtOrphanHeader" Text="Detected Orphan Folders (Apps are NOT installed, but folders remain on disk)" FontWeight="SemiBold" FontSize="14" Foreground="#1B1B1B"/>
-                            <TextBlock Name="TxtOrphanCount" Text="Scanning storage..." HorizontalAlignment="Right" FontSize="12" Foreground="#0067C0" FontWeight="SemiBold"/>
+                            <TextBlock Name="TxtOrphanCount" Text="Click 'Scan Storage Leftovers' above to scan your drives." HorizontalAlignment="Right" FontSize="12" Foreground="#707070" FontWeight="SemiBold"/>
                         </Grid>
-                        <ListBox Name="LstOrphans" Grid.Row="1" BorderThickness="0" Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+
+                        <!-- Empty / Prompt State before scan -->
+                        <Border Name="PnlScanPrompt" Grid.Row="1" Background="#FAFAFA" BorderBrush="#EEEEEE" BorderThickness="1" CornerRadius="6" Padding="32" Margin="0,10,0,0" VerticalAlignment="Center" HorizontalAlignment="Center">
+                            <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="520">
+                                <TextBlock Text="💾" FontSize="42" HorizontalAlignment="Center" Margin="0,0,0,12"/>
+                                <TextBlock Text="Ready to Scan Your Storage" FontSize="18" FontWeight="Bold" Foreground="#1B1B1B" HorizontalAlignment="Center" Margin="0,0,0,6"/>
+                                <TextBlock Text="HailUninstaller will deeply analyze AppData and ProgramData to isolate orphaned directories whose applications are already uninstalled." FontSize="13" Foreground="#666666" TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,20"/>
+                                <Button Name="BtnStartScanHero" Content="🔍 Scan Storage Now" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Center" Padding="28,10" FontSize="14"/>
+                            </StackPanel>
+                        </Border>
+
+                        <ListBox Name="LstOrphans" Grid.Row="1" BorderThickness="0" Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled" Visibility="Collapsed">
                             <ListBox.ItemTemplate>
                                 <DataTemplate>
                                     <Border BorderBrush="#F0F0F0" BorderThickness="0,0,0,1" Padding="8,8" Background="Transparent">
@@ -407,6 +418,8 @@ function Show-HailUninstallerGUI {
     $pnlRegistryList = $window.FindName("PnlRegistryList")
     $pnlServicesList = $window.FindName("PnlServicesList")
     $pnlShortcutsList = $window.FindName("PnlShortcutsList")
+    $pnlScanPrompt = $window.FindName("PnlScanPrompt")
+    $btnStartScanHero = $window.FindName("BtnStartScanHero")
     $txtSelectedSummary = $window.FindName("TxtSelectedSummary")
 
     # State
@@ -433,7 +446,12 @@ function Show-HailUninstallerGUI {
     # Load Orphan Folders
     $loadOrphansData = {
         $window.Cursor = [System.Windows.Input.Cursors]::Wait
-        $txtOrphanCount.Text = "Scanning storage..."
+        $txtOrphanCount.Text = "Scanning drives for orphaned leftovers..."
+        $btnScanLeftovers.IsEnabled = $false
+        if ($btnStartScanHero) { $btnStartScanHero.IsEnabled = $false }
+
+        # Refresh UI thread so user sees the scanning status
+        [System.Windows.Forms.Application]::DoEvents() 2>$null
 
         $rawOrphans = @(Scan-OrphanedStorageFolders -ConfigDir $ConfigDir)
         $script:allOrphans.Clear()
@@ -455,9 +473,21 @@ function Show-HailUninstallerGUI {
             })
         }
 
+        # Show list and hide hero prompt
+        if ($pnlScanPrompt) { $pnlScanPrompt.Visibility = [System.Windows.Visibility]::Collapsed }
+        $lstOrphans.Visibility = [System.Windows.Visibility]::Visible
         $lstOrphans.ItemsSource = $script:allOrphans
+
+        # Enable selection buttons
+        $btnSelectHigh.IsEnabled = $true
+        $btnSelectAll.IsEnabled = $true
+        $btnSelectHeavy.IsEnabled = $true
+        $btnClearSelection.IsEnabled = $true
+        $btnScanLeftovers.IsEnabled = $true
+        $btnScanLeftovers.Content = "🔄 Rescan Storage"
+
         $totalFormatted = Format-Bytes $totalOrphanBytes
-        $txtOrphanCount.Text = "$($script:allOrphans.Count) folders found ($totalFormatted total)"
+        $txtOrphanCount.Text = "$($script:allOrphans.Count) orphan folders found ($totalFormatted total)"
         $window.Cursor = [System.Windows.Input.Cursors]::Arrow
         & $updateOrphanSummary
     }
@@ -563,10 +593,16 @@ function Show-HailUninstallerGUI {
         }
     })
 
-    # Button: Rescan
+    # Button: Rescan / Scan Storage
     $btnScanLeftovers.Add_Click({
         & $loadOrphansData
     })
+
+    if ($btnStartScanHero) {
+        $btnStartScanHero.Add_Click({
+            & $loadOrphansData
+        })
+    }
 
     # Bottom Action Button
     $btnNext.Add_Click({
@@ -667,9 +703,10 @@ function Show-HailUninstallerGUI {
         }
     })
 
-    # Initial load: Scan and show Orphan Leftover Folders right away
+    # App opens immediately without frozen/slow startup scan
+    # The scan starts only when the user clicks 'Scan Storage Leftovers' or 'Scan Storage Now'
     $window.Add_Loaded({
-        & $loadOrphansData
+        $txtBottomSummary.Text = "HailUninstaller ready. Click 'Scan Storage Leftovers' to begin."
     })
 
     # Launch GUI
