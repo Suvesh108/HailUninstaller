@@ -9,3 +9,8 @@ Backups/
 .idea/
 Thumbs.db
 Desktop.ini
+
+# Graphify temporary caches
+graphify-out/cache/
+graphify-out/[0-9]*/
+
