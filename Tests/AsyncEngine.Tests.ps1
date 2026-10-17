@@ -36,6 +36,58 @@ Describe "Async Background Engine and Queue Streaming Tests" {
         }
     }
 
+    Context "DispatcherTimer Closure Scope Retention" {
+        It "Retains local variables and drains ConcurrentQueue without null reference when using GetNewClosure" {
+            Add-Type -AssemblyName WindowsBase
+            Add-Type -AssemblyName PresentationCore
+            Add-Type -AssemblyName PresentationFramework
+
+            $testClosureFunction = {
+                param([ref]$receivedList)
+                $queue = [System.Collections.Concurrent.ConcurrentQueue[psobject]]::new()
+                $queue.Enqueue([PSCustomObject]@{ Status = "Active" })
+                $queue.Enqueue([PSCustomObject]@{ Status = "Complete" })
+
+                $timer = [System.Windows.Threading.DispatcherTimer]::new()
+                $timer.Interval = [TimeSpan]::FromMilliseconds(10)
+
+                $tickBlock = {
+                    try {
+                        if ($queue) {
+                            $item = $null
+                            while ($queue.TryDequeue([ref]$item)) {
+                                $receivedList.Value.Add($item.Status)
+                            }
+                        }
+                    } finally {
+                        $timer.Stop()
+                    }
+                }.GetNewClosure()
+
+                $timer.Add_Tick($tickBlock)
+                $timer.Start()
+                return $timer
+            }
+
+            $results = [System.Collections.Generic.List[string]]::new()
+            $activeTimer = & $testClosureFunction ([ref]$results)
+
+            $frame = [System.Windows.Threading.DispatcherFrame]::new()
+            $timeoutTimer = [System.Windows.Threading.DispatcherTimer]::new()
+            $timeoutTimer.Interval = [TimeSpan]::FromMilliseconds(100)
+            $timeoutTimer.Add_Tick({
+                $frame.Continue = $false
+                $this.Stop()
+            })
+            $timeoutTimer.Start()
+            [System.Windows.Threading.Dispatcher]::PushFrame($frame)
+
+            $results.Count | Should Be 2
+            $results[0] | Should Be "Active"
+            $results[1] | Should Be "Complete"
+        }
+    }
+
     Context "Real-Time Console Logging" {
         It "Executes Log-GuiConsole without throwing exceptions" {
             $baseDir = Split-Path $PSScriptRoot -Parent

@@ -730,6 +730,7 @@ function Show-HailUninstallerGUI {
     $script:activeTargetApp = $null
     $script:latestBackupId = ""
     $script:isOperationRunning = $false
+    $script:activeAsyncJobs = [System.Collections.Generic.List[psobject]]::new()
 
     # Helper: Set Tab Active UI
     $setTabActive = {
@@ -818,39 +819,72 @@ function Show-HailUninstallerGUI {
         $asyncHandle = $ps.BeginInvoke()
 
         $pollTimer = [System.Windows.Threading.DispatcherTimer]::new()
-        $pollTimer.Interval = [TimeSpan]::FromMilliseconds(60)
+        $pollTimer.Interval = [TimeSpan]::FromMilliseconds(50)
 
-        $pollTimer.Add_Tick({
-            # Drain queue and stream events
-            $item = $null
-            while ($queue.TryDequeue([ref]$item)) {
-                if ($OnProgress -and $item) {
-                    & $OnProgress $item
+        # Track active job in script scope to prevent early garbage collection
+        $jobRecord = [PSCustomObject]@{
+            Timer    = $pollTimer
+            Runspace = $ps
+            Handle   = $asyncHandle
+            Queue    = $queue
+        }
+        $script:activeAsyncJobs.Add($jobRecord) | Out-Null
+
+        $tickAction = {
+            try {
+                # Drain queue and stream events
+                if ($queue) {
+                    $item = $null
+                    while ($queue.TryDequeue([ref]$item)) {
+                        if ($OnProgress -and $item) {
+                            try { & $OnProgress $item } catch { }
+                        }
+                    }
                 }
-            }
 
-            if ($asyncHandle.IsCompleted) {
+                if ($asyncHandle -and $asyncHandle.IsCompleted) {
+                    $pollTimer.Stop()
+                    $script:isOperationRunning = $false
+                    if ($txtLiveStatusIndicator) {
+                        $txtLiveStatusIndicator.Text = "● Ready"
+                        $txtLiveStatusIndicator.Foreground = [System.Windows.Media.BrushConverter]::new().ConvertFromString("#107C41")
+                    }
+
+                    try {
+                        $res = $ps.EndInvoke($asyncHandle)
+                        if ($ps.Streams.Error.Count -gt 0) {
+                            foreach ($err in $ps.Streams.Error) {
+                                Log-GuiConsole -Tag "WARN" -Message "Worker stream: $err" -Color Yellow
+                            }
+                        }
+                        if ($OnComplete) {
+                            & $OnComplete $res
+                        }
+                    } catch {
+                        Log-GuiConsole -Tag "ERROR" -Message "Async background error: $_" -Color Red
+                        if ($OnError) {
+                            & $OnError $_
+                        }
+                    } finally {
+                        $ps.Dispose()
+                        $script:activeAsyncJobs.Remove($jobRecord) | Out-Null
+                    }
+                }
+            } catch {
+                Log-GuiConsole -Tag "ERROR" -Message "Timer tick exception: $_" -Color Red
                 $pollTimer.Stop()
                 $script:isOperationRunning = $false
-                $txtLiveStatusIndicator.Text = "● Ready"
-                $txtLiveStatusIndicator.Foreground = [System.Windows.Media.BrushConverter]::new().ConvertFromString("#107C41")
-
-                try {
-                    $res = $ps.EndInvoke($asyncHandle)
-                    if ($OnComplete) {
-                        & $OnComplete $res
-                    }
-                } catch {
-                    Log-GuiConsole -Tag "ERROR" -Message "Async background error: $_" -Color Red
-                    if ($OnError) {
-                        & $OnError $_
-                    }
-                } finally {
-                    $ps.Dispose()
+                if ($txtLiveStatusIndicator) {
+                    $txtLiveStatusIndicator.Text = "● Ready"
+                    $txtLiveStatusIndicator.Foreground = [System.Windows.Media.BrushConverter]::new().ConvertFromString("#107C41")
+                }
+                if ($OnError) {
+                    & $OnError $_
                 }
             }
-        })
+        }.GetNewClosure()
 
+        $pollTimer.Add_Tick($tickAction)
         $pollTimer.Start()
     }
 
@@ -882,16 +916,18 @@ function Show-HailUninstallerGUI {
 
         $workerBlock = {
             param($mPath, $cPath, $q)
-            Get-ChildItem -Path $mPath -Filter *.ps1 | ForEach-Object { . $_.FullName }
+            Get-ChildItem -Path $mPath -Filter *.ps1 | Where-Object { $_.Name -ne "GUI.ps1" } | ForEach-Object { . $_.FullName }
             
             $cb = {
                 param($cur, $tot, $task)
-                $q.Enqueue([PSCustomObject]@{
-                    Type    = "Progress"
-                    Current = $cur
-                    Total   = $tot
-                    Task    = $task
-                })
+                if ($q) {
+                    $q.Enqueue([PSCustomObject]@{
+                        Type    = "Progress"
+                        Current = $cur
+                        Total   = $tot
+                        Task    = $task
+                    })
+                }
             }
 
             $raw = @(Scan-OrphanedStorageFolders -ConfigDir $cPath -ProgressCallback $cb)
@@ -911,7 +947,8 @@ function Show-HailUninstallerGUI {
             $script:allOrphans.Clear()
             $totalOrphanBytes = 0L
 
-            foreach ($o in $rawOrphans) {
+            foreach ($o in @($rawOrphans)) {
+                if (-not $o) { continue }
                 $totalOrphanBytes += [long]$o.Size
                 $script:allOrphans.Add([PSCustomObject]@{
                     Category        = $o.Category
@@ -948,7 +985,17 @@ function Show-HailUninstallerGUI {
             & $updateOrphanSummary
         }
 
-        & $invokeAsyncWorker $workerBlock @($modulesDir, $ConfigDir) $onProgress $onComplete
+        $onError = {
+            param($err)
+            & $stopSpinner $spinnerScanAction $rotScanAction $txtScanActionIcon $txtScanActionLabel "🔄 Rescan Storage"
+            & $stopSpinner $spinnerStartScanHero $rotStartScanHero $txtHeroScanIcon $txtHeroScanLabel "Scan Storage Now"
+            $btnScanAction.IsEnabled = $true
+            $btnStartScanHero.IsEnabled = $true
+            $txtOrphanCount.Text = "Scan stopped: $err"
+            Log-GuiConsole -Tag "ERROR" -Message "Storage scan failed: $err" -Color Red
+        }
+
+        & $invokeAsyncWorker $workerBlock @($modulesDir, $ConfigDir) $onProgress $onComplete $onError
     }
 
     # Load Installed Applications (Async)
@@ -960,8 +1007,7 @@ function Show-HailUninstallerGUI {
 
         $workerBlock = {
             param($mPath, $q)
-            . (Join-Path $mPath "UI.ps1")
-            . (Join-Path $mPath "Applications.ps1")
+            Get-ChildItem -Path $mPath -Filter *.ps1 | Where-Object { $_.Name -ne "GUI.ps1" } | ForEach-Object { . $_.FullName }
             return @(Get-InstalledApplications -IncludeAppX)
         }
 
@@ -973,7 +1019,13 @@ function Show-HailUninstallerGUI {
             Log-GuiConsole -Tag "APP" -Message "Successfully loaded $($script:allInstalledApps.Count) installed applications." -Color Green
         }
 
-        & $invokeAsyncWorker $workerBlock @($modulesDir) $null $onComplete
+        $onError = {
+            param($err)
+            $txtBottomSummary.Text = "Failed to load applications: $err"
+            Log-GuiConsole -Tag "ERROR" -Message "Failed to load installed applications: $err" -Color Red
+        }
+
+        & $invokeAsyncWorker $workerBlock @($modulesDir) $null $onComplete $onError
     }
 
     # Load Hunter Processes (Async)
@@ -986,8 +1038,7 @@ function Show-HailUninstallerGUI {
 
         $workerBlock = {
             param($mPath, $cPath, $q)
-            . (Join-Path $mPath "UI.ps1")
-            . (Join-Path $mPath "HunterMode.ps1")
+            Get-ChildItem -Path $mPath -Filter *.ps1 | Where-Object { $_.Name -ne "GUI.ps1" } | ForEach-Object { . $_.FullName }
             return @(Get-RunningHunterTargets -ConfigDir $cPath)
         }
 
@@ -999,7 +1050,14 @@ function Show-HailUninstallerGUI {
             Log-GuiConsole -Tag "HUNTER" -Message "Discovered $(@($targets).Count) active user target processes." -Color Green
         }
 
-        & $invokeAsyncWorker $workerBlock @($modulesDir, $ConfigDir) $null $onComplete
+        $onError = {
+            param($err)
+            & $stopSpinner $spinnerHunter $rotHunter $txtHunterIcon $txtHunterLabel "Refresh Active Processes"
+            $btnRefreshHunter.IsEnabled = $true
+            Log-GuiConsole -Tag "ERROR" -Message "Failed to enumerate hunter processes: $err" -Color Red
+        }
+
+        & $invokeAsyncWorker $workerBlock @($modulesDir, $ConfigDir) $null $onComplete $onError
     }
 
     # Load Backups (Async)
@@ -1009,8 +1067,7 @@ function Show-HailUninstallerGUI {
         Log-GuiConsole -Tag "BACKUP" -Message "Retrieving backup restore manifests..." -Color Cyan
         $workerBlock = {
             param($mPath, $q)
-            . (Join-Path $mPath "UI.ps1")
-            . (Join-Path $mPath "Backup.ps1")
+            Get-ChildItem -Path $mPath -Filter *.ps1 | Where-Object { $_.Name -ne "GUI.ps1" } | ForEach-Object { . $_.FullName }
             return @(Get-CleanupBackups)
         }
 
@@ -1020,7 +1077,12 @@ function Show-HailUninstallerGUI {
             Log-GuiConsole -Tag "BACKUP" -Message "Loaded $(@($backups).Count) backup snapshots." -Color Green
         }
 
-        & $invokeAsyncWorker $workerBlock @($modulesDir) $null $onComplete
+        $onError = {
+            param($err)
+            Log-GuiConsole -Tag "ERROR" -Message "Failed to load backups: $err" -Color Red
+        }
+
+        & $invokeAsyncWorker $workerBlock @($modulesDir) $null $onComplete $onError
     }
 
     # Display Leftover Cards for any Scored Result Set
@@ -1264,7 +1326,7 @@ function Show-HailUninstallerGUI {
 
         $workerBlock = {
             param($mPath, $cPath, $targetApp, $q)
-            Get-ChildItem -Path $mPath -Filter *.ps1 | ForEach-Object { . $_.FullName }
+            Get-ChildItem -Path $mPath -Filter *.ps1 | Where-Object { $_.Name -ne "GUI.ps1" } | ForEach-Object { . $_.FullName }
             
             $cb = {
                 param($cur, $tot, $task)
@@ -1294,7 +1356,14 @@ function Show-HailUninstallerGUI {
             & $displayLeftoverCards $app $leftovers
         }
 
-        & $invokeAsyncWorker $workerBlock @($modulesDir, $ConfigDir, $app) $onProgress $onComplete
+        $onError = {
+            param($err)
+            & $stopSpinner $spinnerAppDeepScan $rotAppDeepScan $txtAppDeepScanIcon $txtAppDeepScanLabel "Deep Scan Leftovers"
+            $btnAppDeepScan.IsEnabled = $true
+            Log-GuiConsole -Tag "ERROR" -Message "Deep scan failed: $err" -Color Red
+        }
+
+        & $invokeAsyncWorker $workerBlock @($modulesDir, $ConfigDir, $app) $onProgress $onComplete $onError
     })
 
     # Forced Uninstall: Browse Folder
@@ -1333,7 +1402,7 @@ function Show-HailUninstallerGUI {
 
         $workerBlock = {
             param($mPath, $cPath, $tgt, $q)
-            Get-ChildItem -Path $mPath -Filter *.ps1 | ForEach-Object { . $_.FullName }
+            Get-ChildItem -Path $mPath -Filter *.ps1 | Where-Object { $_.Name -ne "GUI.ps1" } | ForEach-Object { . $_.FullName }
             
             $cb = {
                 param($cur, $tot, $task)
@@ -1370,7 +1439,14 @@ function Show-HailUninstallerGUI {
             & $displayLeftoverCards $syntheticApp $res.Candidates
         }
 
-        & $invokeAsyncWorker $workerBlock @($modulesDir, $ConfigDir, $target) $onProgress $onComplete
+        $onError = {
+            param($err)
+            & $stopSpinner $spinnerForcedScan $rotForcedScan $txtForcedScanIcon $txtForcedScanLabel "Start Forced Scan & Remnant Analysis"
+            $btnRunForcedScan.IsEnabled = $true
+            Log-GuiConsole -Tag "ERROR" -Message "Forced scan failed: $err" -Color Red
+        }
+
+        & $invokeAsyncWorker $workerBlock @($modulesDir, $ConfigDir, $target) $onProgress $onComplete $onError
     })
 
     # Hunter Mode: Target Running Process
