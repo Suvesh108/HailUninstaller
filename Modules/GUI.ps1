@@ -29,7 +29,7 @@ function Show-HailUninstallerGUI {
         [string]$ConfigDir = ""
     )
 
-    $scriptDir = Split-Path $PSScriptRoot -Parent
+    $scriptDir = if ($PSScriptRoot) { Split-Path $PSScriptRoot -Parent } else { (Get-Location).Path }
     if (-not $ConfigDir) {
         $ConfigDir = Join-Path $scriptDir "Config"
     }
@@ -221,10 +221,10 @@ function Show-HailUninstallerGUI {
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                         <Viewbox Name="SpinnerScanAction" Width="14" Height="14" Margin="0,0,8,0" Visibility="Collapsed">
                             <Canvas Width="24" Height="24">
-                                <Path Stroke="#FFFFFF" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                <Path Name="PathScanAction" Stroke="#FFFFFF" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
                                       Data="M 12 2 A 10 10 0 0 1 22 12" RenderTransformOrigin="0.5,0.5">
                                     <Path.RenderTransform>
-                                        <RotateTransform Name="RotScanAction" Angle="0"/>
+                                        <RotateTransform Angle="0"/>
                                     </Path.RenderTransform>
                                 </Path>
                             </Canvas>
@@ -276,10 +276,10 @@ function Show-HailUninstallerGUI {
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                         <Viewbox Name="SpinnerStartScanHero" Width="16" Height="16" Margin="0,0,8,0" Visibility="Collapsed">
                                             <Canvas Width="24" Height="24">
-                                                <Path Stroke="#FFFFFF" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                                <Path Name="PathStartScanHero" Stroke="#FFFFFF" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
                                                       Data="M 12 2 A 10 10 0 0 1 22 12" RenderTransformOrigin="0.5,0.5">
                                                     <Path.RenderTransform>
-                                                        <RotateTransform Name="RotStartScanHero" Angle="0"/>
+                                                        <RotateTransform Angle="0"/>
                                                     </Path.RenderTransform>
                                                 </Path>
                                             </Canvas>
@@ -342,10 +342,10 @@ function Show-HailUninstallerGUI {
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                         <Viewbox Name="SpinnerAppDeepScan" Width="13" Height="13" Margin="0,0,6,0" Visibility="Collapsed">
                                             <Canvas Width="24" Height="24">
-                                                <Path Stroke="#FFFFFF" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                                <Path Name="PathAppDeepScan" Stroke="#FFFFFF" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
                                                       Data="M 12 2 A 10 10 0 0 1 22 12" RenderTransformOrigin="0.5,0.5">
                                                     <Path.RenderTransform>
-                                                        <RotateTransform Name="RotAppDeepScan" Angle="0"/>
+                                                        <RotateTransform Angle="0"/>
                                                     </Path.RenderTransform>
                                                 </Path>
                                             </Canvas>
@@ -411,10 +411,10 @@ function Show-HailUninstallerGUI {
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                 <Viewbox Name="SpinnerForcedScan" Width="14" Height="14" Margin="0,0,8,0" Visibility="Collapsed">
                                     <Canvas Width="24" Height="24">
-                                        <Path Stroke="#FFFFFF" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                        <Path Name="PathForcedScan" Stroke="#FFFFFF" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
                                               Data="M 12 2 A 10 10 0 0 1 22 12" RenderTransformOrigin="0.5,0.5">
                                             <Path.RenderTransform>
-                                                <RotateTransform Name="RotForcedScan" Angle="0"/>
+                                                <RotateTransform Angle="0"/>
                                             </Path.RenderTransform>
                                         </Path>
                                     </Canvas>
@@ -444,10 +444,10 @@ function Show-HailUninstallerGUI {
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                     <Viewbox Name="SpinnerHunter" Width="12" Height="12" Margin="0,0,6,0" Visibility="Collapsed">
                                         <Canvas Width="24" Height="24">
-                                            <Path Stroke="#1B1B1B" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
+                                            <Path Name="PathHunter" Stroke="#1B1B1B" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
                                                   Data="M 12 2 A 10 10 0 0 1 22 12" RenderTransformOrigin="0.5,0.5">
                                                 <Path.RenderTransform>
-                                                    <RotateTransform Name="RotHunter" Angle="0"/>
+                                                    <RotateTransform Angle="0"/>
                                                 </Path.RenderTransform>
                                             </Path>
                                         </Canvas>
@@ -644,7 +644,8 @@ function Show-HailUninstallerGUI {
 
     $btnScanAction = $window.FindName("BtnScanAction")
     $spinnerScanAction = $window.FindName("SpinnerScanAction")
-    $rotScanAction = $window.FindName("RotScanAction")
+    $pathScanAction = $window.FindName("PathScanAction")
+    $rotScanAction = if ($pathScanAction) { $pathScanAction.RenderTransform } else { $null }
     $txtScanActionIcon = $window.FindName("TxtScanActionIcon")
     $txtScanActionLabel = $window.FindName("TxtScanActionLabel")
 
@@ -666,7 +667,8 @@ function Show-HailUninstallerGUI {
     $pnlScanPrompt = $window.FindName("PnlScanPrompt")
     $btnStartScanHero = $window.FindName("BtnStartScanHero")
     $spinnerStartScanHero = $window.FindName("SpinnerStartScanHero")
-    $rotStartScanHero = $window.FindName("RotStartScanHero")
+    $pathStartScanHero = $window.FindName("PathStartScanHero")
+    $rotStartScanHero = if ($pathStartScanHero) { $pathStartScanHero.RenderTransform } else { $null }
     $txtHeroScanIcon = $window.FindName("TxtHeroScanIcon")
     $txtHeroScanLabel = $window.FindName("TxtHeroScanLabel")
 
@@ -678,7 +680,8 @@ function Show-HailUninstallerGUI {
     $btnAppQuietUninstall = $window.FindName("BtnAppQuietUninstall")
     $btnAppDeepScan = $window.FindName("BtnAppDeepScan")
     $spinnerAppDeepScan = $window.FindName("SpinnerAppDeepScan")
-    $rotAppDeepScan = $window.FindName("RotAppDeepScan")
+    $pathAppDeepScan = $window.FindName("PathAppDeepScan")
+    $rotAppDeepScan = if ($pathAppDeepScan) { $pathAppDeepScan.RenderTransform } else { $null }
     $txtAppDeepScanIcon = $window.FindName("TxtAppDeepScanIcon")
     $txtAppDeepScanLabel = $window.FindName("TxtAppDeepScanLabel")
 
@@ -687,14 +690,16 @@ function Show-HailUninstallerGUI {
     $btnBrowseForcedExe = $window.FindName("BtnBrowseForcedExe")
     $btnRunForcedScan = $window.FindName("BtnRunForcedScan")
     $spinnerForcedScan = $window.FindName("SpinnerForcedScan")
-    $rotForcedScan = $window.FindName("RotForcedScan")
+    $pathForcedScan = $window.FindName("PathForcedScan")
+    $rotForcedScan = if ($pathForcedScan) { $pathForcedScan.RenderTransform } else { $null }
     $txtForcedScanIcon = $window.FindName("TxtForcedScanIcon")
     $txtForcedScanLabel = $window.FindName("TxtForcedScanLabel")
 
     $lstHunter = $window.FindName("LstHunter")
     $btnRefreshHunter = $window.FindName("BtnRefreshHunter")
     $spinnerHunter = $window.FindName("SpinnerHunter")
-    $rotHunter = $window.FindName("RotHunter")
+    $pathHunter = $window.FindName("PathHunter")
+    $rotHunter = if ($pathHunter) { $pathHunter.RenderTransform } else { $null }
     $txtHunterIcon = $window.FindName("TxtHunterIcon")
     $txtHunterLabel = $window.FindName("TxtHunterLabel")
 
