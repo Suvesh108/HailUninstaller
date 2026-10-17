@@ -125,10 +125,17 @@ function Scan-OrphanedStorageFolders {
         }
 
         try {
-            $subDirs = Get-ChildItem -LiteralPath $root -Directory -Force -ErrorAction SilentlyContinue
+            $subDirs = @(Get-ChildItem -LiteralPath $root -Directory -Force -ErrorAction SilentlyContinue)
+            $subTotal = $subDirs.Count
+            $subIdx = 0
             foreach ($dir in $subDirs) {
+                $subIdx++
                 $dirPath = $dir.FullName
                 $dirName = $dir.Name
+
+                if ($ProgressCallback -and ($subIdx % 4 -eq 0 -or $subIdx -eq 1 -or $subIdx -eq $subTotal)) {
+                    & $ProgressCallback $rootIndex $scanRoots.Count "Examining [$rootIndex/$($scanRoots.Count)]: $dirName ($subIdx/$subTotal)"
+                }
 
                 if ($seenFolders.Contains($dirPath)) { continue }
                 $seenFolders.Add($dirPath) | Out-Null
