@@ -219,18 +219,31 @@ function Show-HailUninstallerGUI {
             <StackPanel Orientation="Horizontal">
                 <Button Name="BtnScanAction" Style="{StaticResource PrimaryButton}" Margin="0,0,8,0" Padding="14,6">
                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                        <Viewbox Name="SpinnerScanAction" Width="14" Height="14" Margin="0,0,8,0" Visibility="Collapsed">
-                            <Canvas Width="24" Height="24">
-                                <Path Name="PathScanAction" Stroke="#FFFFFF" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
-                                      Data="M 12 2 A 10 10 0 0 1 22 12" RenderTransformOrigin="0.5,0.5">
-                                    <Path.RenderTransform>
-                                        <RotateTransform Angle="0"/>
-                                    </Path.RenderTransform>
-                                </Path>
-                            </Canvas>
-                        </Viewbox>
+                        <!-- React Bits LatticeLoader Component -->
+                        <Grid Name="LatticeScanAction" Width="17" Height="17" Margin="0,0,8,0" Visibility="Collapsed" VerticalAlignment="Center">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="5"/>
+                                <ColumnDefinition Width="5"/>
+                            </Grid.ColumnDefinitions>
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="5"/>
+                                <RowDefinition Height="5"/>
+                                <RowDefinition Height="5"/>
+                            </Grid.RowDefinitions>
+                            <Rectangle Name="CellScan_0" Grid.Row="0" Grid.Column="0" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Rectangle Name="CellScan_1" Grid.Row="0" Grid.Column="1" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Rectangle Name="CellScan_2" Grid.Row="0" Grid.Column="2" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Rectangle Name="CellScan_7" Grid.Row="1" Grid.Column="0" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Rectangle Name="CellScan_8" Grid.Row="1" Grid.Column="1" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Rectangle Name="CellScan_3" Grid.Row="1" Grid.Column="2" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Rectangle Name="CellScan_6" Grid.Row="2" Grid.Column="0" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Rectangle Name="CellScan_5" Grid.Row="2" Grid.Column="1" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                            <Rectangle Name="CellScan_4" Grid.Row="2" Grid.Column="2" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Grid>
                         <TextBlock Name="TxtScanActionIcon" Text="🔍" Margin="0,0,6,0" VerticalAlignment="Center"/>
                         <TextBlock Name="TxtScanActionLabel" Text="Scan Storage Leftovers" VerticalAlignment="Center"/>
+                        <TextBlock Name="TxtScanActionTimer" Text="0.0s" Margin="6,0,0,0" FontSize="11" Opacity="0.85" FontFamily="Consolas, monospace" VerticalAlignment="Center" Visibility="Collapsed"/>
                     </StackPanel>
                 </Button>
                 <Button Name="BtnSelectHigh" Content="Select High Confidence" Style="{StaticResource SecondaryButton}" Margin="0,0,6,0" IsEnabled="False"/>
@@ -274,18 +287,31 @@ function Show-HailUninstallerGUI {
                                 <TextBlock Text="HailUninstaller will deeply analyze AppData, ProgramData, and secondary fixed drive roots to safely discover folders whose applications have already been uninstalled." FontSize="12" Foreground="#666666" TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,18"/>
                                 <Button Name="BtnStartScanHero" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Center" Padding="24,8" FontSize="13">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <Viewbox Name="SpinnerStartScanHero" Width="16" Height="16" Margin="0,0,8,0" Visibility="Collapsed">
-                                            <Canvas Width="24" Height="24">
-                                                <Path Name="PathStartScanHero" Stroke="#FFFFFF" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
-                                                      Data="M 12 2 A 10 10 0 0 1 22 12" RenderTransformOrigin="0.5,0.5">
-                                                    <Path.RenderTransform>
-                                                        <RotateTransform Angle="0"/>
-                                                    </Path.RenderTransform>
-                                                </Path>
-                                            </Canvas>
-                                        </Viewbox>
+                                        <!-- React Bits LatticeLoader Component -->
+                                        <Grid Name="LatticeStartScanHero" Width="18" Height="18" Margin="0,0,8,0" Visibility="Collapsed" VerticalAlignment="Center">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="6"/>
+                                                <ColumnDefinition Width="6"/>
+                                                <ColumnDefinition Width="6"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="6"/>
+                                                <RowDefinition Height="6"/>
+                                                <RowDefinition Height="6"/>
+                                            </Grid.RowDefinitions>
+                                            <Rectangle Name="CellHero_0" Grid.Row="0" Grid.Column="0" Width="4" Height="4" RadiusX="2" RadiusY="2" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <Rectangle Name="CellHero_1" Grid.Row="0" Grid.Column="1" Width="4" Height="4" RadiusX="2" RadiusY="2" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <Rectangle Name="CellHero_2" Grid.Row="0" Grid.Column="2" Width="4" Height="4" RadiusX="2" RadiusY="2" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <Rectangle Name="CellHero_7" Grid.Row="1" Grid.Column="0" Width="4" Height="4" RadiusX="2" RadiusY="2" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <Rectangle Name="CellHero_8" Grid.Row="1" Grid.Column="1" Width="4" Height="4" RadiusX="2" RadiusY="2" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <Rectangle Name="CellHero_3" Grid.Row="1" Grid.Column="2" Width="4" Height="4" RadiusX="2" RadiusY="2" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <Rectangle Name="CellHero_6" Grid.Row="2" Grid.Column="0" Width="4" Height="4" RadiusX="2" RadiusY="2" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <Rectangle Name="CellHero_5" Grid.Row="2" Grid.Column="1" Width="4" Height="4" RadiusX="2" RadiusY="2" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <Rectangle Name="CellHero_4" Grid.Row="2" Grid.Column="2" Width="4" Height="4" RadiusX="2" RadiusY="2" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Grid>
                                         <TextBlock Name="TxtHeroScanIcon" Text="🔍" Margin="0,0,6,0" VerticalAlignment="Center"/>
                                         <TextBlock Name="TxtHeroScanLabel" Text="Scan Storage Now" VerticalAlignment="Center"/>
+                                        <TextBlock Name="TxtHeroScanTimer" Text="0.0s" Margin="6,0,0,0" FontSize="11" Opacity="0.85" FontFamily="Consolas, monospace" VerticalAlignment="Center" Visibility="Collapsed"/>
                                     </StackPanel>
                                 </Button>
                             </StackPanel>
@@ -340,18 +366,31 @@ function Show-HailUninstallerGUI {
                                 <Button Name="BtnAppQuietUninstall" Content="⚡ Silent Uninstall" Style="{StaticResource SecondaryButton}" Margin="0,0,6,0" ToolTip="Heuristically executes unattended without wizard prompts"/>
                                 <Button Name="BtnAppDeepScan" Style="{StaticResource PrimaryButton}" Padding="14,4">
                                     <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                        <Viewbox Name="SpinnerAppDeepScan" Width="13" Height="13" Margin="0,0,6,0" Visibility="Collapsed">
-                                            <Canvas Width="24" Height="24">
-                                                <Path Name="PathAppDeepScan" Stroke="#FFFFFF" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
-                                                      Data="M 12 2 A 10 10 0 0 1 22 12" RenderTransformOrigin="0.5,0.5">
-                                                    <Path.RenderTransform>
-                                                        <RotateTransform Angle="0"/>
-                                                    </Path.RenderTransform>
-                                                </Path>
-                                            </Canvas>
-                                        </Viewbox>
+                                        <!-- React Bits LatticeLoader Component -->
+                                        <Grid Name="LatticeAppDeepScan" Width="17" Height="17" Margin="0,0,6,0" Visibility="Collapsed" VerticalAlignment="Center">
+                                            <Grid.ColumnDefinitions>
+                                                <ColumnDefinition Width="5"/>
+                                                <ColumnDefinition Width="5"/>
+                                                <ColumnDefinition Width="5"/>
+                                            </Grid.ColumnDefinitions>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="5"/>
+                                                <RowDefinition Height="5"/>
+                                                <RowDefinition Height="5"/>
+                                            </Grid.RowDefinitions>
+                                            <Rectangle Name="CellAppDeep_0" Grid.Row="0" Grid.Column="0" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <Rectangle Name="CellAppDeep_1" Grid.Row="0" Grid.Column="1" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <Rectangle Name="CellAppDeep_2" Grid.Row="0" Grid.Column="2" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <Rectangle Name="CellAppDeep_7" Grid.Row="1" Grid.Column="0" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <Rectangle Name="CellAppDeep_8" Grid.Row="1" Grid.Column="1" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <Rectangle Name="CellAppDeep_3" Grid.Row="1" Grid.Column="2" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <Rectangle Name="CellAppDeep_6" Grid.Row="2" Grid.Column="0" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <Rectangle Name="CellAppDeep_5" Grid.Row="2" Grid.Column="1" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                            <Rectangle Name="CellAppDeep_4" Grid.Row="2" Grid.Column="2" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        </Grid>
                                         <TextBlock Name="TxtAppDeepScanIcon" Text="🔍" Margin="0,0,4,0" VerticalAlignment="Center"/>
                                         <TextBlock Name="TxtAppDeepScanLabel" Text="Deep Scan Leftovers" VerticalAlignment="Center"/>
+                                        <TextBlock Name="TxtAppDeepScanTimer" Text="0.0s" Margin="5,0,0,0" FontSize="11" Opacity="0.85" FontFamily="Consolas, monospace" VerticalAlignment="Center" Visibility="Collapsed"/>
                                     </StackPanel>
                                 </Button>
                             </StackPanel>
@@ -409,18 +448,31 @@ function Show-HailUninstallerGUI {
 
                         <Button Name="BtnRunForcedScan" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Left" Padding="20,8">
                             <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                <Viewbox Name="SpinnerForcedScan" Width="14" Height="14" Margin="0,0,8,0" Visibility="Collapsed">
-                                    <Canvas Width="24" Height="24">
-                                        <Path Name="PathForcedScan" Stroke="#FFFFFF" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
-                                              Data="M 12 2 A 10 10 0 0 1 22 12" RenderTransformOrigin="0.5,0.5">
-                                            <Path.RenderTransform>
-                                                <RotateTransform Angle="0"/>
-                                            </Path.RenderTransform>
-                                        </Path>
-                                    </Canvas>
-                                </Viewbox>
+                                <!-- React Bits LatticeLoader Component -->
+                                <Grid Name="LatticeForcedScan" Width="17" Height="17" Margin="0,0,8,0" Visibility="Collapsed" VerticalAlignment="Center">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="5"/>
+                                        <ColumnDefinition Width="5"/>
+                                        <ColumnDefinition Width="5"/>
+                                    </Grid.ColumnDefinitions>
+                                    <Grid.RowDefinitions>
+                                        <RowDefinition Height="5"/>
+                                        <RowDefinition Height="5"/>
+                                        <RowDefinition Height="5"/>
+                                    </Grid.RowDefinitions>
+                                    <Rectangle Name="CellForced_0" Grid.Row="0" Grid.Column="0" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Rectangle Name="CellForced_1" Grid.Row="0" Grid.Column="1" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Rectangle Name="CellForced_2" Grid.Row="0" Grid.Column="2" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Rectangle Name="CellForced_7" Grid.Row="1" Grid.Column="0" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Rectangle Name="CellForced_8" Grid.Row="1" Grid.Column="1" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Rectangle Name="CellForced_3" Grid.Row="1" Grid.Column="2" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Rectangle Name="CellForced_6" Grid.Row="2" Grid.Column="0" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Rectangle Name="CellForced_5" Grid.Row="2" Grid.Column="1" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    <Rectangle Name="CellForced_4" Grid.Row="2" Grid.Column="2" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Grid>
                                 <TextBlock Name="TxtForcedScanIcon" Text="🎯" Margin="0,0,6,0" VerticalAlignment="Center"/>
                                 <TextBlock Name="TxtForcedScanLabel" Text="Start Forced Scan &amp; Remnant Analysis" VerticalAlignment="Center"/>
+                                <TextBlock Name="TxtForcedScanTimer" Text="0.0s" Margin="6,0,0,0" FontSize="11" Opacity="0.85" FontFamily="Consolas, monospace" VerticalAlignment="Center" Visibility="Collapsed"/>
                             </StackPanel>
                         </Button>
                     </StackPanel>
@@ -442,18 +494,31 @@ function Show-HailUninstallerGUI {
                             <TextBlock Text="⚡ Hunter Mode: Active User Processes" FontWeight="SemiBold" FontSize="13"/>
                             <Button Name="BtnRefreshHunter" HorizontalAlignment="Right" Style="{StaticResource SecondaryButton}" Padding="12,6">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                                    <Viewbox Name="SpinnerHunter" Width="12" Height="12" Margin="0,0,6,0" Visibility="Collapsed">
-                                        <Canvas Width="24" Height="24">
-                                            <Path Name="PathHunter" Stroke="#1B1B1B" StrokeThickness="3" StrokeStartLineCap="Round" StrokeEndLineCap="Round"
-                                                  Data="M 12 2 A 10 10 0 0 1 22 12" RenderTransformOrigin="0.5,0.5">
-                                                <Path.RenderTransform>
-                                                    <RotateTransform Angle="0"/>
-                                                </Path.RenderTransform>
-                                            </Path>
-                                        </Canvas>
-                                    </Viewbox>
+                                    <!-- React Bits LatticeLoader Component (Ink colored for secondary button) -->
+                                    <Grid Name="LatticeHunter" Width="16" Height="16" Margin="0,0,6,0" Visibility="Collapsed" VerticalAlignment="Center">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="5"/>
+                                            <ColumnDefinition Width="5"/>
+                                            <ColumnDefinition Width="5"/>
+                                        </Grid.ColumnDefinitions>
+                                        <Grid.RowDefinitions>
+                                            <RowDefinition Height="5"/>
+                                            <RowDefinition Height="5"/>
+                                            <RowDefinition Height="5"/>
+                                        </Grid.RowDefinitions>
+                                        <Rectangle Name="CellHunter_0" Grid.Row="0" Grid.Column="0" Width="3.5" Height="3.5" RadiusX="1.7" RadiusY="1.7" Fill="#0067C0" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <Rectangle Name="CellHunter_1" Grid.Row="0" Grid.Column="1" Width="3.5" Height="3.5" RadiusX="1.7" RadiusY="1.7" Fill="#0067C0" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <Rectangle Name="CellHunter_2" Grid.Row="0" Grid.Column="2" Width="3.5" Height="3.5" RadiusX="1.7" RadiusY="1.7" Fill="#0067C0" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <Rectangle Name="CellHunter_7" Grid.Row="1" Grid.Column="0" Width="3.5" Height="3.5" RadiusX="1.7" RadiusY="1.7" Fill="#0067C0" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <Rectangle Name="CellHunter_8" Grid.Row="1" Grid.Column="1" Width="3.5" Height="3.5" RadiusX="1.7" RadiusY="1.7" Fill="#0067C0" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <Rectangle Name="CellHunter_3" Grid.Row="1" Grid.Column="2" Width="3.5" Height="3.5" RadiusX="1.7" RadiusY="1.7" Fill="#0067C0" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <Rectangle Name="CellHunter_6" Grid.Row="2" Grid.Column="0" Width="3.5" Height="3.5" RadiusX="1.7" RadiusY="1.7" Fill="#0067C0" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <Rectangle Name="CellHunter_5" Grid.Row="2" Grid.Column="1" Width="3.5" Height="3.5" RadiusX="1.7" RadiusY="1.7" Fill="#0067C0" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                        <Rectangle Name="CellHunter_4" Grid.Row="2" Grid.Column="2" Width="3.5" Height="3.5" RadiusX="1.7" RadiusY="1.7" Fill="#0067C0" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                    </Grid>
                                     <TextBlock Name="TxtHunterIcon" Text="🔄" Margin="0,0,4,0" VerticalAlignment="Center"/>
                                     <TextBlock Name="TxtHunterLabel" Text="Refresh Active Processes" VerticalAlignment="Center"/>
+                                    <TextBlock Name="TxtHunterTimer" Text="0.0s" Margin="5,0,0,0" FontSize="11" Opacity="0.85" FontFamily="Consolas, monospace" VerticalAlignment="Center" Visibility="Collapsed"/>
                                 </StackPanel>
                             </Button>
                         </Grid>
@@ -643,11 +708,11 @@ function Show-HailUninstallerGUI {
     $tabBackups = $window.FindName("TabBackups")
 
     $btnScanAction = $window.FindName("BtnScanAction")
-    $spinnerScanAction = $window.FindName("SpinnerScanAction")
-    $pathScanAction = $window.FindName("PathScanAction")
-    $rotScanAction = if ($pathScanAction) { $pathScanAction.RenderTransform } else { $null }
+    $latticeScanAction = $window.FindName("LatticeScanAction")
+    $cellsScanAction = @(0..8 | ForEach-Object { $window.FindName("CellScan_$_") })
     $txtScanActionIcon = $window.FindName("TxtScanActionIcon")
     $txtScanActionLabel = $window.FindName("TxtScanActionLabel")
+    $txtScanActionTimer = $window.FindName("TxtScanActionTimer")
 
     $btnSelectHigh = $window.FindName("BtnSelectHigh")
     $btnSelectAll = $window.FindName("BtnSelectAll")
@@ -666,11 +731,11 @@ function Show-HailUninstallerGUI {
 
     $pnlScanPrompt = $window.FindName("PnlScanPrompt")
     $btnStartScanHero = $window.FindName("BtnStartScanHero")
-    $spinnerStartScanHero = $window.FindName("SpinnerStartScanHero")
-    $pathStartScanHero = $window.FindName("PathStartScanHero")
-    $rotStartScanHero = if ($pathStartScanHero) { $pathStartScanHero.RenderTransform } else { $null }
+    $latticeStartScanHero = $window.FindName("LatticeStartScanHero")
+    $cellsHero = @(0..8 | ForEach-Object { $window.FindName("CellHero_$_") })
     $txtHeroScanIcon = $window.FindName("TxtHeroScanIcon")
     $txtHeroScanLabel = $window.FindName("TxtHeroScanLabel")
+    $txtHeroScanTimer = $window.FindName("TxtHeroScanTimer")
 
     $lstOrphans = $window.FindName("LstOrphans")
     $txtOrphanCount = $window.FindName("TxtOrphanCount")
@@ -679,29 +744,29 @@ function Show-HailUninstallerGUI {
     $btnAppNormalUninstall = $window.FindName("BtnAppNormalUninstall")
     $btnAppQuietUninstall = $window.FindName("BtnAppQuietUninstall")
     $btnAppDeepScan = $window.FindName("BtnAppDeepScan")
-    $spinnerAppDeepScan = $window.FindName("SpinnerAppDeepScan")
-    $pathAppDeepScan = $window.FindName("PathAppDeepScan")
-    $rotAppDeepScan = if ($pathAppDeepScan) { $pathAppDeepScan.RenderTransform } else { $null }
+    $latticeAppDeepScan = $window.FindName("LatticeAppDeepScan")
+    $cellsAppDeep = @(0..8 | ForEach-Object { $window.FindName("CellAppDeep_$_") })
     $txtAppDeepScanIcon = $window.FindName("TxtAppDeepScanIcon")
     $txtAppDeepScanLabel = $window.FindName("TxtAppDeepScanLabel")
+    $txtAppDeepScanTimer = $window.FindName("TxtAppDeepScanTimer")
 
     $txtForcedTarget = $window.FindName("TxtForcedTarget")
     $btnBrowseForcedFolder = $window.FindName("BtnBrowseForcedFolder")
     $btnBrowseForcedExe = $window.FindName("BtnBrowseForcedExe")
     $btnRunForcedScan = $window.FindName("BtnRunForcedScan")
-    $spinnerForcedScan = $window.FindName("SpinnerForcedScan")
-    $pathForcedScan = $window.FindName("PathForcedScan")
-    $rotForcedScan = if ($pathForcedScan) { $pathForcedScan.RenderTransform } else { $null }
+    $latticeForcedScan = $window.FindName("LatticeForcedScan")
+    $cellsForced = @(0..8 | ForEach-Object { $window.FindName("CellForced_$_") })
     $txtForcedScanIcon = $window.FindName("TxtForcedScanIcon")
     $txtForcedScanLabel = $window.FindName("TxtForcedScanLabel")
+    $txtForcedScanTimer = $window.FindName("TxtForcedScanTimer")
 
     $lstHunter = $window.FindName("LstHunter")
     $btnRefreshHunter = $window.FindName("BtnRefreshHunter")
-    $spinnerHunter = $window.FindName("SpinnerHunter")
-    $pathHunter = $window.FindName("PathHunter")
-    $rotHunter = if ($pathHunter) { $pathHunter.RenderTransform } else { $null }
+    $latticeHunter = $window.FindName("LatticeHunter")
+    $cellsHunter = @(0..8 | ForEach-Object { $window.FindName("CellHunter_$_") })
     $txtHunterIcon = $window.FindName("TxtHunterIcon")
     $txtHunterLabel = $window.FindName("TxtHunterLabel")
+    $txtHunterTimer = $window.FindName("TxtHunterTimer")
 
     $btnBackFromCards = $window.FindName("BtnBackFromCards")
     $txtCardsTargetTitle = $window.FindName("TxtCardsTargetTitle")
@@ -770,25 +835,83 @@ function Show-HailUninstallerGUI {
         }
     }
 
-    # Helper: Circular Spinner Controllers
-    $startSpinner = {
-        param($viewbox, $rotTransform, $icon, $label, $scanningText)
-        if ($viewbox) { $viewbox.Visibility = [System.Windows.Visibility]::Visible }
+    # Helper: React Bits LatticeLoader Micro-Interaction Controller (Orbit Wave + Live Stopwatch Timer)
+    $activeLatticeTimers = [System.Collections.Generic.Dictionary[object, object]]::new()
+
+    $startLattice = {
+        param($latticeGrid, $cells, $icon, $label, $timerText, $scanningText)
+        if ($latticeGrid) { $latticeGrid.Visibility = [System.Windows.Visibility]::Visible }
         if ($icon) { $icon.Visibility = [System.Windows.Visibility]::Collapsed }
+        if ($timerText) {
+            $timerText.Text = "0.0s"
+            $timerText.Visibility = [System.Windows.Visibility]::Visible
+        }
         if ($label -and $scanningText) { $label.Text = $scanningText }
-        if ($rotTransform) {
-            $da = [System.Windows.Media.Animation.DoubleAnimation]::new(0, 360, [System.Windows.Duration]::new([TimeSpan]::FromMilliseconds(700)))
-            $da.RepeatBehavior = [System.Windows.Media.Animation.RepeatBehavior]::Forever
-            $rotTransform.BeginAnimation([System.Windows.Media.RotateTransform]::AngleProperty, $da)
+
+        # Animate orbit wave on perimeter cells (0, 1, 2, 3, 4, 5, 6, 7)
+        if ($cells -and $cells.Count -ge 8) {
+            for ($i = 0; $i -lt 8; $i++) {
+                $cell = $cells[$i]
+                if ($cell) {
+                    $da = [System.Windows.Media.Animation.DoubleAnimation]::new()
+                    $da.From = 0.2
+                    $da.To = 1.0
+                    $da.Duration = [System.Windows.Duration]::new([TimeSpan]::FromMilliseconds(180))
+                    $da.AutoReverse = $true
+                    $da.BeginTime = [TimeSpan]::FromMilliseconds($i * 105)
+                    $da.RepeatBehavior = [System.Windows.Media.Animation.RepeatBehavior]::Forever
+                    $cell.BeginAnimation([System.Windows.UIElement]::OpacityProperty, $da)
+                }
+            }
+            # Center cell (index 8) soft pulse
+            if ($cells.Count -gt 8 -and $cells[8]) {
+                $daCenter = [System.Windows.Media.Animation.DoubleAnimation]::new()
+                $daCenter.From = 0.2
+                $daCenter.To = 0.55
+                $daCenter.Duration = [System.Windows.Duration]::new([TimeSpan]::FromMilliseconds(420))
+                $daCenter.AutoReverse = $true
+                $daCenter.RepeatBehavior = [System.Windows.Media.Animation.RepeatBehavior]::Forever
+                $cells[8].BeginAnimation([System.Windows.UIElement]::OpacityProperty, $daCenter)
+            }
+        }
+
+        # Live Stopwatch Timer
+        if ($timerText) {
+            $sw = [System.Diagnostics.Stopwatch]::StartNew()
+            $dt = [System.Windows.Threading.DispatcherTimer]::new()
+            $dt.Interval = [TimeSpan]::FromMilliseconds(100)
+            $dt.Add_Tick({
+                if ($timerText -and $sw.IsRunning) {
+                    $s = $sw.Elapsed.TotalSeconds
+                    $timerText.Text = "$("{0:N1}" -f $s)s"
+                }
+            }.GetNewClosure())
+            $dt.Start()
+            $activeLatticeTimers[$latticeGrid] = @{ Stopwatch = $sw; Timer = $dt }
         }
     }
 
-    $stopSpinner = {
-        param($viewbox, $rotTransform, $icon, $label, $defaultText)
-        if ($rotTransform) {
-            $rotTransform.BeginAnimation([System.Windows.Media.RotateTransform]::AngleProperty, $null)
+    $stopLattice = {
+        param($latticeGrid, $cells, $icon, $label, $timerText, $defaultText)
+        if ($latticeGrid -and $activeLatticeTimers.ContainsKey($latticeGrid)) {
+            $rec = $activeLatticeTimers[$latticeGrid]
+            $rec.Timer.Stop()
+            $rec.Stopwatch.Stop()
+            $activeLatticeTimers.Remove($latticeGrid) | Out-Null
         }
-        if ($viewbox) { $viewbox.Visibility = [System.Windows.Visibility]::Collapsed }
+
+        # Clear cell animations and reset opacity
+        if ($cells) {
+            foreach ($c in $cells) {
+                if ($c) {
+                    $c.BeginAnimation([System.Windows.UIElement]::OpacityProperty, $null)
+                    $c.Opacity = 0.2
+                }
+            }
+        }
+
+        if ($latticeGrid) { $latticeGrid.Visibility = [System.Windows.Visibility]::Collapsed }
+        if ($timerText) { $timerText.Visibility = [System.Windows.Visibility]::Collapsed }
         if ($icon) { $icon.Visibility = [System.Windows.Visibility]::Visible }
         if ($label -and $defaultText) { $label.Text = $defaultText }
     }
@@ -908,8 +1031,8 @@ function Show-HailUninstallerGUI {
         if ($script:isOperationRunning) { return }
 
         Log-GuiConsole -Tag "SCAN" -Message "Storage ghost folder scan initiated across all fixed drives..." -Color Magenta
-        & $startSpinner $spinnerScanAction $rotScanAction $txtScanActionIcon $txtScanActionLabel "Scanning..."
-        & $startSpinner $spinnerStartScanHero $rotStartScanHero $txtHeroScanIcon $txtHeroScanLabel "Scanning Storage..."
+        & $startLattice $latticeScanAction $cellsScanAction $txtScanActionIcon $txtScanActionLabel $txtScanActionTimer "Scanning..."
+        & $startLattice $latticeStartScanHero $cellsHero $txtHeroScanIcon $txtHeroScanLabel $txtHeroScanTimer "Scanning Storage..."
         $btnScanAction.IsEnabled = $false
         $btnStartScanHero.IsEnabled = $false
         $txtOrphanCount.Text = "Analyzing drives in background..."
@@ -976,8 +1099,8 @@ function Show-HailUninstallerGUI {
             $btnScanAction.IsEnabled = $true
             $btnStartScanHero.IsEnabled = $true
 
-            & $stopSpinner $spinnerScanAction $rotScanAction $txtScanActionIcon $txtScanActionLabel "🔄 Rescan Storage"
-            & $stopSpinner $spinnerStartScanHero $rotStartScanHero $txtHeroScanIcon $txtHeroScanLabel "Scan Storage Now"
+            & $stopLattice $latticeScanAction $cellsScanAction $txtScanActionIcon $txtScanActionLabel $txtScanActionTimer "🔄 Rescan Storage"
+            & $stopLattice $latticeStartScanHero $cellsHero $txtHeroScanIcon $txtHeroScanLabel $txtHeroScanTimer "Scan Storage Now"
 
             $totalFormatted = Format-Bytes $totalOrphanBytes
             $txtOrphanCount.Text = "$($script:allOrphans.Count) folders found ($totalFormatted total)"
@@ -987,8 +1110,8 @@ function Show-HailUninstallerGUI {
 
         $onError = {
             param($err)
-            & $stopSpinner $spinnerScanAction $rotScanAction $txtScanActionIcon $txtScanActionLabel "🔄 Rescan Storage"
-            & $stopSpinner $spinnerStartScanHero $rotStartScanHero $txtHeroScanIcon $txtHeroScanLabel "Scan Storage Now"
+            & $stopLattice $latticeScanAction $cellsScanAction $txtScanActionIcon $txtScanActionLabel $txtScanActionTimer "🔄 Rescan Storage"
+            & $stopLattice $latticeStartScanHero $cellsHero $txtHeroScanIcon $txtHeroScanLabel $txtHeroScanTimer "Scan Storage Now"
             $btnScanAction.IsEnabled = $true
             $btnStartScanHero.IsEnabled = $true
             $txtOrphanCount.Text = "Scan stopped: $err"
@@ -1033,7 +1156,7 @@ function Show-HailUninstallerGUI {
         if ($script:isOperationRunning) { return }
 
         Log-GuiConsole -Tag "HUNTER" -Message "Enumerating running user processes..." -Color Magenta
-        & $startSpinner $spinnerHunter $rotHunter $txtHunterIcon $txtHunterLabel "Refreshing..."
+        & $startLattice $latticeHunter $cellsHunter $txtHunterIcon $txtHunterLabel $txtHunterTimer "Refreshing..."
         $btnRefreshHunter.IsEnabled = $false
 
         $workerBlock = {
@@ -1045,14 +1168,14 @@ function Show-HailUninstallerGUI {
         $onComplete = {
             param($targets)
             $lstHunter.ItemsSource = @($targets)
-            & $stopSpinner $spinnerHunter $rotHunter $txtHunterIcon $txtHunterLabel "Refresh Active Processes"
+            & $stopLattice $latticeHunter $cellsHunter $txtHunterIcon $txtHunterLabel $txtHunterTimer "Refresh Active Processes"
             $btnRefreshHunter.IsEnabled = $true
             Log-GuiConsole -Tag "HUNTER" -Message "Discovered $(@($targets).Count) active user target processes." -Color Green
         }
 
         $onError = {
             param($err)
-            & $stopSpinner $spinnerHunter $rotHunter $txtHunterIcon $txtHunterLabel "Refresh Active Processes"
+            & $stopLattice $latticeHunter $cellsHunter $txtHunterIcon $txtHunterLabel $txtHunterTimer "Refresh Active Processes"
             $btnRefreshHunter.IsEnabled = $true
             Log-GuiConsole -Tag "ERROR" -Message "Failed to enumerate hunter processes: $err" -Color Red
         }
@@ -1321,7 +1444,7 @@ function Show-HailUninstallerGUI {
         }
         $app = $lstApps.SelectedItem
         Log-GuiConsole -Tag "SCAN" -Message "Initiating deep leftover scan for '$($app.DisplayName)'..." -Color Cyan
-        & $startSpinner $spinnerAppDeepScan $rotAppDeepScan $txtAppDeepScanIcon $txtAppDeepScanLabel "Scanning..."
+        & $startLattice $latticeAppDeepScan $cellsAppDeep $txtAppDeepScanIcon $txtAppDeepScanLabel $txtAppDeepScanTimer "Scanning..."
         $btnAppDeepScan.IsEnabled = $false
 
         $workerBlock = {
@@ -1350,7 +1473,7 @@ function Show-HailUninstallerGUI {
 
         $onComplete = {
             param($leftovers)
-            & $stopSpinner $spinnerAppDeepScan $rotAppDeepScan $txtAppDeepScanIcon $txtAppDeepScanLabel "Deep Scan Leftovers"
+            & $stopLattice $latticeAppDeepScan $cellsAppDeep $txtAppDeepScanIcon $txtAppDeepScanLabel $txtAppDeepScanTimer "Deep Scan Leftovers"
             $btnAppDeepScan.IsEnabled = $true
             Log-GuiConsole -Tag "SCAN" -Message "Deep scan completed: Discovered $(@($leftovers).Count) remnant item(s) for '$($app.DisplayName)'." -Color Green
             & $displayLeftoverCards $app $leftovers
@@ -1358,7 +1481,7 @@ function Show-HailUninstallerGUI {
 
         $onError = {
             param($err)
-            & $stopSpinner $spinnerAppDeepScan $rotAppDeepScan $txtAppDeepScanIcon $txtAppDeepScanLabel "Deep Scan Leftovers"
+            & $stopLattice $latticeAppDeepScan $cellsAppDeep $txtAppDeepScanIcon $txtAppDeepScanLabel $txtAppDeepScanTimer "Deep Scan Leftovers"
             $btnAppDeepScan.IsEnabled = $true
             Log-GuiConsole -Tag "ERROR" -Message "Deep scan failed: $err" -Color Red
         }
@@ -1397,7 +1520,7 @@ function Show-HailUninstallerGUI {
         if ($script:isOperationRunning) { return }
 
         Log-GuiConsole -Tag "FORCED" -Message "Starting forced remnant analysis on '$target'..." -Color Magenta
-        & $startSpinner $spinnerForcedScan $rotForcedScan $txtForcedScanIcon $txtForcedScanLabel "Analyzing Remnants..."
+        & $startLattice $latticeForcedScan $cellsForced $txtForcedScanIcon $txtForcedScanLabel $txtForcedScanTimer "Analyzing Remnants..."
         $btnRunForcedScan.IsEnabled = $false
 
         $workerBlock = {
@@ -1426,7 +1549,7 @@ function Show-HailUninstallerGUI {
 
         $onComplete = {
             param($res)
-            & $stopSpinner $spinnerForcedScan $rotForcedScan $txtForcedScanIcon $txtForcedScanLabel "Start Forced Scan & Remnant Analysis"
+            & $stopLattice $latticeForcedScan $cellsForced $txtForcedScanIcon $txtForcedScanLabel $txtForcedScanTimer "Start Forced Scan & Remnant Analysis"
             $btnRunForcedScan.IsEnabled = $true
 
             $syntheticApp = [PSCustomObject]@{
@@ -1441,7 +1564,7 @@ function Show-HailUninstallerGUI {
 
         $onError = {
             param($err)
-            & $stopSpinner $spinnerForcedScan $rotForcedScan $txtForcedScanIcon $txtForcedScanLabel "Start Forced Scan & Remnant Analysis"
+            & $stopLattice $latticeForcedScan $cellsForced $txtForcedScanIcon $txtForcedScanLabel $txtForcedScanTimer "Start Forced Scan & Remnant Analysis"
             $btnRunForcedScan.IsEnabled = $true
             Log-GuiConsole -Tag "ERROR" -Message "Forced scan failed: $err" -Color Red
         }
