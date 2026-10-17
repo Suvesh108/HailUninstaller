@@ -155,6 +155,17 @@ function Get-CleanupBackups {
             if (Test-Path -LiteralPath $mPath) {
                 try {
                     $m = Get-Content -LiteralPath $mPath -Raw -Encoding UTF8 | ConvertFrom-Json
+                    $app = if ($m.ApplicationName) { $m.ApplicationName } elseif ($m.Application) { $m.Application } else { "Cleanup Snapshot" }
+                    $ts = if ($m.CreatedAt) {
+                        try { ([datetime]$m.CreatedAt).ToString("yyyy-MM-dd HH:mm") } catch { "$($m.CreatedAt)" }
+                    } else { "Unknown" }
+                    $bytes = if ($null -ne $m.TotalBytes) { [long]$m.TotalBytes } else { 0L }
+                    $fmtSz = if (Get-Command Format-Bytes -ErrorAction SilentlyContinue) { Format-Bytes $bytes } else { "$([math]::Round($bytes / 1MB, 2)) MB" }
+
+                    $m | Add-Member -NotePropertyName "Application" -NotePropertyValue $app -Force -ErrorAction SilentlyContinue
+                    $m | Add-Member -NotePropertyName "Timestamp" -NotePropertyValue $ts -Force -ErrorAction SilentlyContinue
+                    $m | Add-Member -NotePropertyName "FormattedSize" -NotePropertyValue $fmtSz -Force -ErrorAction SilentlyContinue
+
                     $backups.Add($m)
                 } catch { }
             }

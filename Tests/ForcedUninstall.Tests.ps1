@@ -58,6 +58,14 @@ Describe "Forced Uninstall and Backup/Restore Tests" {
             $backup.Success | Should Be $true
             $backup.BackupId | Should Not BeNullOrEmpty
 
+            # Verify Get-CleanupBackups populates UI properties
+            $allB = @(Get-CleanupBackups)
+            $foundB = $allB | Where-Object { $_.BackupId -eq $backup.BackupId }
+            $foundB | Should Not BeNullOrEmpty
+            $foundB.Application | Should Be "UnitTestApp"
+            $foundB.Timestamp | Should Not BeNullOrEmpty
+            $foundB.FormattedSize | Should Not BeNullOrEmpty
+
             # Simulate deletion
             Remove-Item -Path $testFolder -Recurse -Force
 

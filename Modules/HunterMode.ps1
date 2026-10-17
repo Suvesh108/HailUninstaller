@@ -45,14 +45,15 @@ function Get-RunningHunterTargets {
         } catch { }
 
         $targets.Add([PSCustomObject]@{
-            Id          = $proc.Id
-            ProcessName = $proc.ProcessName
-            WindowTitle = if ($proc.MainWindowTitle) { $proc.MainWindowTitle } else { "Background Process" }
-            Path        = $exePath
-            Directory   = Split-Path $exePath -Parent
-            Publisher   = if ($company) { $company } else { "Unknown" }
-            ProductName = if ($prodName) { $prodName } else { $proc.ProcessName }
-            MemoryMB    = [math]::Round($proc.WorkingSet64 / 1MB, 1)
+            Id              = $proc.Id
+            ProcessName     = $proc.ProcessName
+            WindowTitle     = if ($proc.MainWindowTitle) { $proc.MainWindowTitle } else { "Background Process" }
+            Path            = $exePath
+            Directory       = Split-Path $exePath -Parent
+            Publisher       = if ($company) { $company } else { "Unknown" }
+            ProductName     = if ($prodName) { $prodName } else { $proc.ProcessName }
+            MemoryMB        = [math]::Round($proc.WorkingSet64 / 1MB, 1)
+            FormattedMemory = "$([math]::Round($proc.WorkingSet64 / 1MB, 1)) MB"
         })
     }
 

@@ -31,7 +31,7 @@ function Evaluate-CandidateEvidence {
     )
 
     if (-not $ConfigDir) {
-        $ConfigDir = Join-Path (Split-Path (Split-Path $PSScriptRoot -Parent) -Resolve) "Config"
+        $ConfigDir = Join-Path (Split-Path $PSScriptRoot -Parent) "Config"
     }
 
     $protectedConfig = Load-ConfigSafe -Path (Join-Path $ConfigDir "ProtectedPaths.json")
