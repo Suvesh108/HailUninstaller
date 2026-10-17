@@ -6,6 +6,7 @@ function Scan-OrphanedStorageFolders {
     param(
         [string]$ConfigDir = "",
         [switch]$IncludeProgramFiles = $false,
+        [switch]$ScanAllDrives = $true,
         [scriptblock]$ProgressCallback = $null
     )
 
@@ -56,35 +57,61 @@ function Scan-OrphanedStorageFolders {
     # 3. Load ProtectedPaths guardrail
     $protectedConfig = Load-ConfigSafe -Path (Join-Path $ConfigDir "ProtectedPaths.json")
     $protectedNames = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
-    $protectedNames.Add("Microsoft") | Out-Null
-    $protectedNames.Add("Windows") | Out-Null
-    $protectedNames.Add("Windows Defender") | Out-Null
-    $protectedNames.Add("WindowsApps") | Out-Null
-    $protectedNames.Add("Package Cache") | Out-Null
-    $protectedNames.Add("Packages") | Out-Null
-    $protectedNames.Add("Common Files") | Out-Null
-    $protectedNames.Add("Temp") | Out-Null
-    $protectedNames.Add("System") | Out-Null
-    $protectedNames.Add("assembly") | Out-Null
-    $protectedNames.Add("Downloaded Program Files") | Out-Null
-    $protectedNames.Add("System Volume Information") | Out-Null
-    $protectedNames.Add("OEM") | Out-Null
-    $protectedNames.Add("USOShared") | Out-Null
-    $protectedNames.Add("DirectX") | Out-Null
+    
+    # Built-in OS and Framework Protection Whitelist
+    $coreProtectedList = @(
+        "Microsoft", "Windows", "Windows Defender", "WindowsApps", "Package Cache",
+        "Packages", "Common Files", "Temp", "System", "assembly", "Downloaded Program Files",
+        "System Volume Information", "OEM", "USOShared", "USOPrivate", "DirectX",
+        "ConnectedDevicesPlatform", "CrashDumps", "D3DSCache", "VirtualStore",
+        "SoftwareDistribution", "PackageManagement", "PeerDistRepub", "Temporary Internet Files",
+        "fontconfig", "Crypto", "System Certificates", "DeliveryOptimization",
+        "Start Menu", "Templates", "Documents", "History", "Publishers",
+        "ToastNotificationManagerCompat", "ssh", "Comms", "Diagnostics",
+        "INetCache", "INetCookies", "CredentialManager", "Windows Powershell", "PowerShell"
+    )
+    foreach ($cp in $coreProtectedList) { $protectedNames.Add($cp) | Out-Null }
 
-    # 4. Roots to inspect
-    $scanRoots = @(
+    if ($protectedConfig -and $protectedConfig.ProtectedFolderNames) {
+        foreach ($pfn in $protectedConfig.ProtectedFolderNames) {
+            $protectedNames.Add($pfn) | Out-Null
+        }
+    }
+
+    # 4. Roots to inspect across System and All Fixed Drives
+    $scanRoots = [System.Collections.Generic.List[string]]::new()
+    $candidateRoots = @(
         $env:LOCALAPPDATA,
         $env:APPDATA,
         (Join-Path $env:USERPROFILE "AppData\LocalLow"),
         $env:ProgramData
     ) | Where-Object { $_ -and (Test-Path -LiteralPath $_) }
 
+    foreach ($cr in $candidateRoots) { $scanRoots.Add($cr) }
+
     if ($IncludeProgramFiles) {
-        $scanRoots += @(
+        $pfRoots = @(
             $env:ProgramFiles,
             ${env:ProgramFiles(x86)}
         ) | Where-Object { $_ -and (Test-Path -LiteralPath $_) }
+        foreach ($pfr in $pfRoots) { $scanRoots.Add($pfr) }
+    }
+
+    # Multi-Drive support: check secondary drives for games/app storage folders
+    if ($ScanAllDrives) {
+        try {
+            $fixedDrives = Get-CimInstance Win32_LogicalDisk -Filter "DriveType=3" -ErrorAction SilentlyContinue
+            $sysDrive = $env:SystemDrive
+            foreach ($d in $fixedDrives) {
+                if ($d.DeviceID -ieq $sysDrive) { continue }
+                $driveRoot = $d.DeviceID + "\"
+                $extraDirs = @(
+                    (Join-Path $driveRoot "ProgramData"),
+                    (Join-Path $driveRoot "Games")
+                ) | Where-Object { Test-Path -LiteralPath $_ }
+                foreach ($ed in $extraDirs) { $scanRoots.Add($ed) }
+            }
+        } catch { }
     }
 
     $orphanList = [System.Collections.Generic.List[PSCustomObject]]::new()
@@ -173,23 +200,26 @@ function Scan-OrphanedStorageFolders {
                 # C. If application is UNINSTALLED and folder remains -> GHOST FOLDER FOUND!
                 $stat = Get-FolderSizeSafe -Path $dirPath
                 if ($stat.Count -eq 0 -and $stat.Size -eq 0) {
-                    # Skip empty 0-byte ghost folders if desired, or keep if files existed
+                    # Skip completely empty 0-byte placeholder directories to reduce noise
+                    continue
                 }
 
+                # IMPORTANT: Category is 'File' (with SubCategory 'OrphanFolder') so Backup.ps1 and Cleanup.ps1 handle it seamlessly
                 $orphanList.Add([PSCustomObject]@{
-                    Category           = "OrphanFolder"
+                    Category           = "File"
+                    SubCategory        = "OrphanFolder"
                     Type               = "Directory"
                     Path               = $dirPath
                     Name               = $dirName
                     Size               = $stat.Size
                     ItemCount          = $stat.Count
-                    Score              = 85
+                    Score              = 90
                     ConfidenceCategory = "HIGH"
                     Badge              = "[HIGH]"
                     IsProtected        = $false
                     Selected           = $false
                     MatchReason        = "Application is uninstalled but folder remains in disk storage"
-                    EvidenceDetails    = @("No installed application signature matches '$dirName'", "Resides in unmanaged storage location")
+                    EvidenceDetails    = @("No installed application signature matches '$dirName'", "Resides in unmanaged storage location ($root)")
                 })
             }
         } catch { }

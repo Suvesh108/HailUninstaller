@@ -49,9 +49,19 @@ param(
     [Parameter(ParameterSetName = "Orphans")]
     [switch]$ScanOrphans,
 
+    [Parameter(ParameterSetName = "Forced")]
+    [string]$Forced,
+
+    [Parameter(ParameterSetName = "Hunter")]
+    [switch]$Hunter,
+
+    [Parameter(ParameterSetName = "Batch")]
+    [string[]]$Batch,
+
     [Parameter(ParameterSetName = "Interactive")]
     [switch]$Cli,
 
+    [switch]$Quiet,
     [switch]$Silent,
     [switch]$Json
 )
@@ -64,6 +74,7 @@ $ConfigDir = Join-Path $ScriptDir "Config"
 # Load Modules
 $moduleFiles = @(
     "UI.ps1",
+    "QuietEngine.ps1",
     "Applications.ps1",
     "FileScanner.ps1",
     "RegistryScanner.ps1",
@@ -77,6 +88,8 @@ $moduleFiles = @(
     "Cleanup.ps1",
     "Restore.ps1",
     "OrphanScanner.ps1",
+    "ForcedUninstall.ps1",
+    "HunterMode.ps1",
     "GUI.ps1"
 )
 
@@ -148,6 +161,80 @@ if ($Restore) {
     exit 0
 }
 
+if ($Forced) {
+    Write-Host "Running Forced Uninstall scan for target: $Forced..." -ForegroundColor Cyan
+    $res = Start-ForcedUninstall -Target $Forced -ConfigDir $ConfigDir
+    Write-Host "Discovered $($res.Candidates.Count) candidate remnants for '$($res.TargetName)':" -ForegroundColor Green
+    if ($Json) {
+        $res | ConvertTo-Json -Depth 4
+    } else {
+        $res.Candidates | Select-Object Badge, Score, Category, Type, Path, Size | Format-Table -AutoSize
+    }
+
+    if ($DeepClean) {
+        $selected = @($res.Candidates | Where-Object { $_.ConfidenceCategory -eq "HIGH" -and -not $_.IsProtected })
+        if ($selected.Count -gt 0) {
+            Write-Host ""
+            Write-Host "==================== HUMAN APPROVAL REQUIRED ====================" -ForegroundColor Yellow
+            Write-Host "HailUninstaller detected $($selected.Count) leftover items for '$($res.TargetName)':" -ForegroundColor White
+            $selected | Select-Object Badge, Category, Path, Type, Size | Format-Table -AutoSize
+            Write-Host "HUMAN CONFIRMATION: Type 'YES' to approve deletion of these items: " -ForegroundColor Red -NoNewline
+            $approval = Read-Host
+            if ($approval -cne "YES") {
+                Write-Host "Operation cancelled. Human approval was not granted. No items were deleted." -ForegroundColor Green
+                exit 0
+            }
+
+            if ($CreateBackup) {
+                $mockApp = [PSCustomObject]@{ DisplayName = $res.TargetName; Publisher = $res.TargetPublisher; InstallLocation = $res.TargetPath }
+                New-CleanupBackup -Application $mockApp -SelectedItems $selected | Out-Null
+            }
+            Write-Host "Cleaning $($selected.Count) leftover items..." -ForegroundColor Yellow
+            $cRes = Invoke-CleanupItems -SelectedItems $selected -HumanApproved
+            Write-Host "Forced cleanup complete: Freed $(Format-Bytes $cRes.RemovedBytes) across $($cRes.RemovedCount) items." -ForegroundColor Green
+        }
+    }
+    exit 0
+}
+
+if ($Hunter) {
+    $targets = Get-RunningHunterTargets -ConfigDir $ConfigDir
+    Write-Host "Active running user processes available to target:" -ForegroundColor Cyan
+    if ($Json) {
+        $targets | ConvertTo-Json -Depth 3
+    } else {
+        $targets | Select-Object Id, ProcessName, WindowTitle, MemoryMB, Path | Format-Table -AutoSize
+    }
+    exit 0
+}
+
+if ($Batch) {
+    Write-Host "Starting batch uninstallation for $($Batch.Count) application(s)..." -ForegroundColor Cyan
+    foreach ($item in $Batch) {
+        $matching = Get-InstalledApplications -SearchFilter $item | Select-Object -First 1
+        if ($matching) {
+            Write-Host "Processing: $($matching.DisplayName)..." -ForegroundColor Yellow
+            Invoke-NativeUninstall -Application $matching -Quiet:($Quiet -or $Silent)
+            if ($DeepClean) {
+                $leftovers = Start-DeepScan -Application $matching -ConfigDir $ConfigDir
+                $high = @($leftovers | Where-Object { $_.ConfidenceCategory -eq "HIGH" -and -not $_.IsProtected })
+                if ($high.Count -gt 0) {
+                    Write-Host "HUMAN CONFIRMATION: Type 'YES' to delete $($high.Count) leftovers for '$($matching.DisplayName)': " -ForegroundColor Red -NoNewline
+                    $appr = Read-Host
+                    if ($appr -ceq "YES") {
+                        if ($CreateBackup) { New-CleanupBackup -Application $matching -SelectedItems $high | Out-Null }
+                        Invoke-CleanupItems -SelectedItems $high -HumanApproved | Out-Null
+                        Write-Host "Leftovers purged." -ForegroundColor Green
+                    }
+                }
+            }
+        } else {
+            Write-Warning "Could not find installed application matching '$item'."
+        }
+    }
+    exit 0
+}
+
 if ($Uninstall) {
     $matchingApps = Get-InstalledApplications -SearchFilter $Uninstall
     $app = $matchingApps | Select-Object -First 1
@@ -157,8 +244,9 @@ if ($Uninstall) {
         exit 1
     }
 
+    $isQuiet = ($Quiet -or $Silent)
     Write-Host "Uninstalling $($app.DisplayName)..." -ForegroundColor Cyan
-    $uninstalled = Invoke-NativeUninstall -Application $app -Quiet:$Silent
+    $uninstalled = Invoke-NativeUninstall -Application $app -Quiet:$isQuiet
 
     if ($DeepClean) {
         Write-Host "Running leftover scan..." -ForegroundColor Cyan

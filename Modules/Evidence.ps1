@@ -21,8 +21,10 @@ function Load-ConfigSafe {
 function Evaluate-CandidateEvidence {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory = $true)]
-        [array]$Candidates,
+        [Parameter(Mandatory = $false)]
+        [AllowEmptyCollection()]
+        [AllowNull()]
+        [array]$Candidates = @(),
         [Parameter(Mandatory = $true)]
         [PSCustomObject]$Application,
         [string]$ConfigDir = ""
@@ -97,6 +99,17 @@ function Evaluate-CandidateEvidence {
                     if ($nameToCheck -ieq $proc) {
                         $isProtected = $true
                         $protectReason = "Protected Windows Core Process ($proc)"
+                        break
+                    }
+                }
+            }
+
+            if (-not $isProtected -and $pathToCheck -and $protectedConfig.ProtectedFolderNames) {
+                $leaf = Split-Path $pathToCheck -Leaf
+                foreach ($pfn in $protectedConfig.ProtectedFolderNames) {
+                    if ($leaf -ieq $pfn) {
+                        $isProtected = $true
+                        $protectReason = "Protected Windows system component name ($pfn)"
                         break
                     }
                 }

@@ -32,21 +32,29 @@ function Restore-CleanupBackup {
         }
 
         try {
-            if ($item.Category -eq "File" -and $item.BackupLocation -and (Test-Path -LiteralPath $item.BackupLocation)) {
+            $isFolderOrFile = ($item.Category -in @("File", "OrphanFolder") -or $item.Type -eq "Directory")
+            if ($isFolderOrFile -and $item.BackupLocation -and (Test-Path -LiteralPath $item.BackupLocation)) {
                 $targetParent = Split-Path $item.OriginalPath -Parent
-                if (-not (Test-Path -LiteralPath $targetParent)) {
+                if ($targetParent -and -not (Test-Path -LiteralPath $targetParent)) {
                     New-Item -ItemType Directory -Path $targetParent -Force | Out-Null
                 }
 
-                if ($item.Type -eq "Directory") {
-                    Copy-Item -LiteralPath "$($item.BackupLocation)\*" -Destination $item.OriginalPath -Recurse -Force -ErrorAction SilentlyContinue
+                if ($item.Type -eq "Directory" -or (Test-Path -LiteralPath $item.BackupLocation -PathType Container)) {
+                    if (-not (Test-Path -LiteralPath $item.OriginalPath)) {
+                        New-Item -ItemType Directory -Path $item.OriginalPath -Force | Out-Null
+                    }
+                    Get-ChildItem -LiteralPath $item.BackupLocation -Force -ErrorAction SilentlyContinue |
+                        Copy-Item -Destination $item.OriginalPath -Recurse -Force -ErrorAction SilentlyContinue
+                    $restoredCount++
                 } else {
-                    $srcFile = Get-ChildItem -LiteralPath $item.BackupLocation -File | Select-Object -First 1
+                    $srcFile = Get-ChildItem -LiteralPath $item.BackupLocation -File -ErrorAction SilentlyContinue | Select-Object -First 1
                     if ($srcFile) {
                         Copy-Item -LiteralPath $srcFile.FullName -Destination $item.OriginalPath -Force -ErrorAction SilentlyContinue
+                        $restoredCount++
+                    } else {
+                        $failedCount++
                     }
                 }
-                $restoredCount++
             } elseif ($item.Category -eq "Registry" -and $item.BackupLocation -and (Test-Path -LiteralPath $item.BackupLocation)) {
                 $p = Start-Process -FilePath "reg.exe" -ArgumentList "import `"$($item.BackupLocation)`"" -Wait -PassThru -WindowStyle Hidden
                 if ($p.ExitCode -eq 0) {
@@ -55,7 +63,10 @@ function Restore-CleanupBackup {
                     $failedCount++
                 }
             } else {
-                $restoredCount++
+                # Skipped or not found
+                if ($item.BackupLocation) {
+                    $failedCount++
+                }
             }
         } catch {
             $failedCount++

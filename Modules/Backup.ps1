@@ -9,17 +9,52 @@ function Get-BackupRootDirectory {
     return $dir
 }
 
+function New-SystemRestorePoint {
+    [CmdletBinding()]
+    param(
+        [string]$Description = "HailUninstaller Safety Snapshot"
+    )
+
+    try {
+        # Check if System Restore service is available and create restore point
+        if (Get-Command Checkpoint-Computer -ErrorAction SilentlyContinue) {
+            Checkpoint-Computer -Description $Description -RestorePointType "APPLICATION_UNINSTALL" -ErrorAction Stop
+            return $true
+        }
+    } catch {
+        # SystemRestore might be disabled on Windows client/server SKU or recent point exists within 24hr cooldown
+        try {
+            $sr = Get-CimClass -Namespace root/default -ClassName SystemRestore -ErrorAction SilentlyContinue
+            if ($sr) {
+                Invoke-CimMethod -Namespace root/default -ClassName SystemRestore -MethodName CreateRestorePoint -Arguments @{
+                    Description      = $Description
+                    RestorePointType = 1 # APPLICATION_UNINSTALL
+                    EventType        = 100 # BEGIN_SYSTEM_CHANGE
+                } -ErrorAction SilentlyContinue | Out-Null
+                return $true
+            }
+        } catch { }
+    }
+    return $false
+}
+
 function New-CleanupBackup {
     [CmdletBinding()]
     param(
         [Parameter(Mandatory = $true)]
         [PSCustomObject]$Application,
         [Parameter(Mandatory = $true)]
-        [array]$SelectedItems
+        [array]$SelectedItems,
+        [switch]$CreateSystemRestorePoint = $false
     )
+
+    if ($CreateSystemRestorePoint) {
+        New-SystemRestorePoint -Description "HailUninstaller - $($Application.DisplayName)" | Out-Null
+    }
 
     $root = Get-BackupRootDirectory
     $safeName = ($Application.DisplayName -replace '[^a-zA-Z0-9_\-]', '_').Trim('_')
+    if (-not $safeName) { $safeName = "Cleanup" }
     $backupId = "$(Get-Date -Format 'yyyy-MM-dd_HHmmss')_$safeName"
     $backupFolder = Join-Path $root $backupId
 
@@ -48,11 +83,12 @@ function New-CleanupBackup {
             BackupLocation = ""
         }
 
-        if ($item.Category -eq "File" -and (Test-Path -LiteralPath $item.Path)) {
+        # Backup Files and Directories (including OrphanFolders)
+        if (($item.Category -in @("File", "OrphanFolder") -or $item.Type -eq "Directory") -and (Test-Path -LiteralPath $item.Path)) {
             $fileIndex++
             $destSub = Join-Path $filesDir "item_$fileIndex"
             try {
-                if ($item.Type -eq "Directory") {
+                if ($item.Type -eq "Directory" -or (Test-Path -LiteralPath $item.Path -PathType Container)) {
                     Copy-Item -LiteralPath $item.Path -Destination $destSub -Recurse -Force -ErrorAction SilentlyContinue
                 } else {
                     New-Item -ItemType Directory -Path $destSub -Force | Out-Null

@@ -16,7 +16,10 @@ function Invoke-CleanupItems {
         throw "HUMAN_APPROVAL_REQUIRED: HailUninstaller is hard-coded to require explicit human confirmation before deleting any items."
     }
 
-    $itemsToDelete = @($SelectedItems | Where-Object { $_.Selected -and -not $_.IsProtected })
+    $itemsToDelete = @($SelectedItems | Where-Object { 
+        $isSelected = if ($null -ne $_.PSObject.Properties['Selected']) { [bool]$_.Selected } else { $true }
+        $isSelected -and -not $_.IsProtected 
+    })
     $total = $itemsToDelete.Count
 
     $removedBytes = 0L

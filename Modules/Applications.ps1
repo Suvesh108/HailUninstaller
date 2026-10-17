@@ -5,7 +5,7 @@ function Get-InstalledApplications {
     [CmdletBinding()]
     param(
         [string]$SearchFilter = "",
-        [switch]$IncludeAppX = $false
+        [switch]$IncludeAppX = $true
     )
 
     $apps = [System.Collections.Generic.List[PSCustomObject]]::new()
@@ -49,6 +49,23 @@ function Get-InstalledApplications {
                 $appType = "MSI"
             }
 
+            $quietString = if ($k.QuietUninstallString) { "$($k.QuietUninstallString)" } else { "" }
+            
+            # If no quiet string, attempt heuristic synthesis via QuietEngine
+            if (-not $quietString -and $k.UninstallString -and (Get-Command Build-QuietUninstallCommand -ErrorAction SilentlyContinue)) {
+                $tempApp = [PSCustomObject]@{
+                    DisplayName          = $name
+                    InstallLocation      = $installLocation
+                    UninstallString      = "$($k.UninstallString)"
+                    QuietUninstallString = ""
+                    Id                   = $k.PSChildName
+                }
+                $synth = Build-QuietUninstallCommand -Application $tempApp
+                if ($synth -and $synth.FullCommand) {
+                    $quietString = $synth.FullCommand
+                }
+            }
+
             $item = [PSCustomObject]@{
                 Id                   = $k.PSChildName
                 DisplayName          = $name
@@ -56,11 +73,12 @@ function Get-InstalledApplications {
                 Publisher            = if ($k.Publisher) { "$($k.Publisher)" } else { "Unknown" }
                 InstallLocation      = if ($installLocation) { "$installLocation" } else { "" }
                 UninstallString      = if ($k.UninstallString) { "$($k.UninstallString)" } else { "" }
-                QuietUninstallString = if ($k.QuietUninstallString) { "$($k.QuietUninstallString)" } else { "" }
+                QuietUninstallString = $quietString
                 InstallDate          = if ($k.InstallDate) { "$($k.InstallDate)" } else { "" }
                 Size                 = $sizeBytes
                 Type                 = $appType
                 RegistryPath         = $k.PSPath
+                Selected             = $false
             }
 
             if ([string]::IsNullOrWhiteSpace($SearchFilter) -or 
@@ -84,7 +102,7 @@ function Get-InstalledApplications {
                     Id                   = $appx.PackageFullName
                     DisplayName          = $appx.Name
                     DisplayVersion       = $appx.Version
-                    Publisher            = $appx.PublisherId
+                    Publisher            = if ($appx.PublisherId) { $appx.PublisherId } else { "Microsoft Store" }
                     InstallLocation      = $appx.InstallLocation
                     UninstallString      = "Remove-AppxPackage -Package $($appx.PackageFullName)"
                     QuietUninstallString = "Remove-AppxPackage -Package $($appx.PackageFullName)"
@@ -92,6 +110,7 @@ function Get-InstalledApplications {
                     Size                 = 0
                     Type                 = "MSIX"
                     RegistryPath         = ""
+                    Selected             = $false
                 }
 
                 if ([string]::IsNullOrWhiteSpace($SearchFilter) -or 
@@ -100,9 +119,7 @@ function Get-InstalledApplications {
                     $apps.Add($item)
                 }
             }
-        } catch {
-            # AppX retrieval might fail under limited permissions
-        }
+        } catch { }
     }
 
     return ($apps | Sort-Object DisplayName)
@@ -113,15 +130,22 @@ function Invoke-NativeUninstall {
     param(
         [Parameter(Mandatory = $true)]
         [PSCustomObject]$Application,
-        [switch]$Quiet = $false
+        [switch]$Quiet = $false,
+        [switch]$DeprovisionStoreApp = $true
     )
 
-    $cmd = if ($Quiet -and $Application.QuietUninstallString) { 
-        $Application.QuietUninstallString 
-    } elseif ($Application.UninstallString) { 
-        $Application.UninstallString 
-    } else { 
-        $null 
+    $cmd = ""
+    if ($Quiet) {
+        if ($Application.QuietUninstallString) {
+            $cmd = $Application.QuietUninstallString
+        } elseif (Get-Command Build-QuietUninstallCommand -ErrorAction SilentlyContinue) {
+            $synth = Build-QuietUninstallCommand -Application $Application
+            if ($synth) { $cmd = $synth.FullCommand }
+        }
+    }
+
+    if (-not $cmd) {
+        $cmd = $Application.UninstallString
     }
 
     if (-not $cmd) {
@@ -129,12 +153,21 @@ function Invoke-NativeUninstall {
         return $false
     }
 
-    Write-Host "Executing official uninstaller for: $($Application.DisplayName)" -ForegroundColor Cyan
+    Write-Host "Executing uninstaller for: $($Application.DisplayName)" -ForegroundColor Cyan
     Write-Host "Command: $cmd" -ForegroundColor Gray
 
     try {
         if ($Application.Type -eq "MSIX") {
-            Invoke-Expression $cmd
+            # User level removal
+            Remove-AppxPackage -Package $Application.Id -ErrorAction Stop
+            
+            # System wide deprovisioning if requested
+            if ($DeprovisionStoreApp) {
+                try {
+                    Get-AppxProvisionedPackage -Online | Where-Object { $_.DisplayName -ieq $Application.DisplayName -or $_.PackageName -ieq $Application.Id } |
+                        ForEach-Object { Remove-AppxProvisionedPackage -Online -PackageName $_.PackageName -ErrorAction SilentlyContinue }
+                } catch { }
+            }
             return $true
         }
 
@@ -142,7 +175,7 @@ function Invoke-NativeUninstall {
         if ($cmd -match 'msiexec(\.exe)?\s+(\/I|\/X|\/i|\/x)\s*(\{[A-F0-9\-]{36}\})' -or $cmd -match '(\{[A-F0-9\-]{36}\})') {
             $guid = $matches[$matches.Count - 1]
             $args = "/x $guid"
-            if ($Quiet) { $args += " /qn" }
+            if ($Quiet) { $args += " /qn /norestart" }
             $proc = Start-Process -FilePath "msiexec.exe" -ArgumentList $args -Wait -PassThru
             return ($proc.ExitCode -eq 0 -or $proc.ExitCode -eq 3010)
         }
@@ -153,18 +186,20 @@ function Invoke-NativeUninstall {
         if ($cmd -match '^"([^"]+)"\s*(.*)$') {
             $exe = $matches[1]
             $arguments = $matches[2]
-        } elseif ($cmd -match '^(\S+)\s*(.*)$') {
+        } elseif ($cmd -match '^(\S+\.exe)\s*(.*)$') {
             $exe = $matches[1]
             $arguments = $matches[2]
+        } else {
+            $exe = $cmd
         }
 
-        if (Test-Path $exe) {
+        if (Test-Path -LiteralPath $exe) {
             $proc = Start-Process -FilePath $exe -ArgumentList $arguments -Wait -PassThru
-            return ($proc.ExitCode -eq 0)
+            return ($proc.ExitCode -eq 0 -or $proc.ExitCode -eq 3010)
         } else {
             # Fallback to cmd execution
             $proc = Start-Process -FilePath "cmd.exe" -ArgumentList "/c `"$cmd`"" -Wait -PassThru
-            return ($proc.ExitCode -eq 0)
+            return ($proc.ExitCode -eq 0 -or $proc.ExitCode -eq 3010)
         }
     } catch {
         Write-Error "Failed to launch native uninstaller: $_"
