@@ -1,5 +1,5 @@
 # Modules/GUI.ps1
-# Windows 11 Fluent WPF GUI v2.1 for HailUninstaller
+# Windows 11 Fluent WPF GUI v0.0.1 for HailUninstaller
 # Features:
 # - Zero-freeze Asynchronous Runspace Execution Engine (60 FPS responsiveness)
 # - Real-Time CMD Console Logging Synchronization (timestamped, color-coded stream)
@@ -37,9 +37,9 @@ function Show-HailUninstallerGUI {
     $modulesDir = Join-Path $scriptDir "Modules"
     $logoPath = Join-Path $scriptDir "logo.png"
 
-    Log-GuiConsole -Tag "INIT" -Message "Initializing HailUninstaller v2.1 Fluent GUI..." -Color Green
+    Log-GuiConsole -Tag "INIT" -Message "Initializing HailUninstaller v0.0.1 Fluent GUI..." -Color Green
 
-    # Define XAML for Windows 11 Fluent UI v2.1
+    # Define XAML for Windows 11 Fluent UI v0.0.1
     [xml]$xaml = @"
 <Window xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
@@ -187,7 +187,7 @@ function Show-HailUninstallerGUI {
                     <Image Name="TitleLogo" Width="20" Height="20" Margin="0,0,8,0"/>
                     <TextBlock Text="HailUninstaller" FontSize="13" FontWeight="SemiBold" Foreground="#1B1B1B"/>
                     <Border Background="#E1DFDD" CornerRadius="4" Padding="6,1" Margin="8,0,0,0" VerticalAlignment="Center">
-                        <TextBlock Text="v2.1 Pro" FontSize="10" FontWeight="Bold" Foreground="#444444"/>
+                        <TextBlock Text="v0.0.1" FontSize="10" FontWeight="Bold" Foreground="#444444"/>
                     </Border>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
@@ -1971,7 +1971,7 @@ function Show-HailUninstallerGUI {
 
     # Window Loaded: Immediate instant launch
     $window.Add_Loaded({
-        $txtBottomSummary.Text = "HailUninstaller v2.1 ready. Click 'Scan Storage Leftovers' or switch tabs."
+        $txtBottomSummary.Text = "HailUninstaller v0.0.1 ready. Click 'Scan Storage Leftovers' or switch tabs."
         Log-GuiConsole -Tag "READY" -Message "HailUninstaller ready. Console log synchronized with GUI." -Color Green
         # Preload installed software in background for instantaneous responsiveness when switching tabs
         & $loadInstalledApps

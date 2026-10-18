@@ -6,13 +6,13 @@
     official distribution ZIP archive, calculates cryptographic SHA-256 checksums,
     updates Config/Releases.json, and produces release verification artifacts.
 .PARAMETER Version
-    The semantic version string to package (e.g. "2.1.0").
+    The semantic version string to package (e.g. "0.0.1").
 .PARAMETER OutputDir
     The target directory where release archives and checksums will be saved.
 .PARAMETER UpdateManifest
     Update Config/Releases.json with the generated SHA-256 hash.
 .EXAMPLE
-    .\Tools\New-ReleasePackage.ps1 -Version "2.1.0" -UpdateManifest
+    .\Tools\New-ReleasePackage.ps1 -Version "0.0.1" -UpdateManifest
 #>
 [CmdletBinding()]
 param(
@@ -80,7 +80,7 @@ try {
     $configDest = Join-Path $stagingDir "Config"
     New-Item -ItemType Directory -Path $configDest -Force | Out-Null
     $configSrc = Join-Path $RepoRoot "Config"
-    Get-ChildItem -LiteralPath $configSrc -Filter "*.json" | ForEach-Object {
+    Get-ChildItem -LiteralPath $configSrc -Filter "*.json" | Where-Object { $_.Name -ne "Releases.json" } | ForEach-Object {
         Copy-Item -LiteralPath $_.FullName -Destination (Join-Path $configDest $_.Name) -Force
     }
 

@@ -7,7 +7,7 @@
     SHA-256 checksums from independent trusted anchors, extracts to user app data,
     and safely launches HailUninstaller with passthrough arguments.
 .PARAMETER Version
-    The release version to launch (default: "2.1.0").
+    The release version to launch (default: "0.0.1").
 .PARAMETER InstallDir
     Target directory for installation (default: "$env:LOCALAPPDATA\HailUninstaller\app").
 .PARAMETER ReleaseUrl
@@ -58,7 +58,7 @@ $script:KnownReleases = @{
     "0.0.1" = @{
         Version     = "0.0.1"
         ArchiveName = "HailUninstaller-v0.0.1.zip"
-        Sha256      = "32D05D1D768A9ED411A47E907ADAD1DB991B76EC91C82DC124A6B4EEBE88456F"
+        Sha256      = "CA75C778614C909949BDEF46395A80217C8C4BC7E444E5C8D0F62669CD3042CB"
         MinPS       = "5.1"
         MinOS       = "10.0"
     }
@@ -97,7 +97,7 @@ if ($Help) {
     Write-Host "  irm `"https://raw.githubusercontent.com/$($script:DefaultRepository)/main/bootstrap.ps1`" | iex" -ForegroundColor White
     Write-Host ""
     Write-Host "OPTIONS (via scriptblock or file execution):" -ForegroundColor Yellow
-    Write-Host "  -Version <string>       Specify release version to run (default: 2.1.0)" -ForegroundColor White
+    Write-Host "  -Version <string>       Specify release version to run (default: 0.0.1)" -ForegroundColor White
     Write-Host "  -InstallDir <path>      Specify local install/cache directory" -ForegroundColor White
     Write-Host "  -ReleaseUrl <url/path>  Specify custom archive URL or local zip path" -ForegroundColor White
     Write-Host "  -ExpectedHash <sha256>  Provide expected SHA-256 hash for custom builds" -ForegroundColor White

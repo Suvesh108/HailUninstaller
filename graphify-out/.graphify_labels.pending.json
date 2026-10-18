@@ -1,10 +1,10 @@
 {
   "1": "Invoke-CleanupItems",
   "3": "Start-ForcedUninstall",
-  "4": "2.1.0",
+  "4": "0.0.1",
   "5": "HailUninstaller.ps1",
   "6": "bootstrap.ps1",
   "7": "Bootstrap.Tests.ps1",
   "8": "New-ReleasePackage.ps1",
-  "9": "HailUninstaller"
+  "9": "README.md"
 }

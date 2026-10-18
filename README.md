@@ -210,64 +210,7 @@ HailUninstaller adheres to rigorous defensive security guardrails:
    - User profile roots (`C:\Users\<User>`), desktop roots, system volume info
    - Root registry keys (`HKLM\SAM`, `HKLM\SECURITY`, `HKLM\SYSTEM`)
 
----
 
-## 📂 Repository Architecture
-
-```
-HailUninstaller/
-├── bootstrap.ps1              # Zero-install bootstrap launcher with SHA-256 verification
-├── HailUninstaller.ps1        # Main application entrypoint (Fluent GUI, TUI & CLI)
-├── Run.bat                    # Double-click launcher with auto-elevation
-├── LICENSE                    # MIT License
-├── README.md                  # Comprehensive project documentation
-├── logo.png                   # Brand icon asset
-│
-├── .github/
-│   └── workflows/
-│       ├── ci.yml             # Automated Pester test pipeline on Windows runners
-│       └── release.yml        # Automated release packaging & checksum publishing
-│
-├── Config/                    # Heuristic rules & safety configurations
-│   ├── Applications.json      # Curated application profiles
-│   ├── ProtectedPaths.json    # Critical system safety blacklist
-│   ├── Releases.json          # Official release catalog and verified SHA-256 hashes
-│   └── Rules.json             # Confidence scoring heuristics and weights
-│
-├── Modules/                   # Modular architecture
-│   ├── UI.ps1                 # Terminal UI, ANSI styling, and progress bars
-│   ├── Applications.ps1       # Registry, MSI, AppX, and WinGet application detector
-│   ├── Scanner.ps1            # Subsystem scan orchestrator
-│   ├── FileScanner.ps1        # AppData, ProgramData, and Temp file scanner
-│   ├── RegistryScanner.ps1    # HKCU & HKLM software & startup scanner
-│   ├── ServiceScanner.ps1     # Windows service footprint scanner
-│   ├── TaskScanner.ps1        # Windows scheduled tasks scanner
-│   ├── ProcessScanner.ps1     # Active app process manager
-│   ├── ShortcutScanner.ps1    # Desktop & Start menu shortcut detector
-│   ├── Evidence.ps1           # Multi-factor confidence scoring engine
-│   ├── Cleanup.ps1            # Safe surgical deletion engine
-│   ├── Backup.ps1             # Snapshot backup & manifest creator
-│   ├── Restore.ps1            # Reversible snapshot restore engine
-│   ├── GUI.ps1                # Windows 11 Fluent WPF graphical user interface
-│   ├── QuietEngine.ps1        # Silent uninstaller synthesis engine
-│   ├── OrphanScanner.ps1      # Ghost storage folder scanner
-│   ├── ForcedUninstall.ps1    # Target purge & remnants scanner
-│   └── HunterMode.ps1         # Process inspector & desktop crosshair
-│
-├── Tools/                     # Build and release tooling
-│   └── New-ReleasePackage.ps1 # Packages ZIP archives and computes SHA-256 checksums
-│
-└── Tests/                     # Automated Pester test suite (38+ tests)
-    ├── AsyncEngine.Tests.ps1  # GUI async runspace & queue safety tests
-    ├── Bootstrap.Tests.ps1    # Launcher, checksum, and security verification tests
-    ├── Cleanup.Tests.ps1      # Deletion safety & human confirmation tests
-    ├── ForcedUninstall.Tests.ps1 # Target purge & remnant analysis tests
-    ├── QuietEngine.Tests.ps1  # Heuristic quiet flag synthesis tests
-    ├── Registry.Tests.ps1     # Registry scanner & path normalization tests
-    └── Scanner.Tests.ps1      # Application discovery & folder size calculation tests
-```
-
----
 
 ## 🧪 Automated Testing & Verification
 
@@ -348,32 +291,7 @@ Describing Scanner Tests
 Passed: 38 Failed: 0 Skipped: 0 Pending: 0 (100% Success)
 ```
 
----
 
-## 📦 Publishing Releases (Maintainer Guide)
-
-To build and publish an official release with verified cryptographic SHA-256 signatures:
-
-```powershell
-# 1. Package the distribution archive and compute SHA-256
-.\Tools\New-ReleasePackage.ps1 -Version "0.0.1" -UpdateManifest
-
-# 2. Run the full automated test suite
-Invoke-Pester -Path ./Tests/
-
-# 3. Commit changes and push tag to GitHub
-git add .
-git commit -m "chore: release v0.0.1"
-git tag v0.0.1
-git push origin main --tags
-
-# 4. Publish release with binary and checksum artifacts via GitHub CLI:
-gh release create v0.0.1 release\HailUninstaller-v0.0.1.zip release\checksums.sha256 --title "HailUninstaller v0.0.1" --notes "Official First Release v0.0.1"
-```
-
-The GitHub Actions workflow (`.github/workflows/release.yml`) will automatically trigger on tag push to verify tests and publish release assets.
-
----
 
 ## 📄 License
 

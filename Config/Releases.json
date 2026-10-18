@@ -4,20 +4,11 @@
     "latest":  "0.0.1",
     "repository":  "https://github.com/Suvesh108/HailUninstaller",
     "releases":  {
-                     "2.1.0":  {
-                                   "version":  "2.1.0",
-                                   "releaseDate":  "2026-10-18",
-                                   "archiveName":  "HailUninstaller-v2.1.0.zip",
-                                   "sha256":  "898330AFBA4BBAF645AE0436ED87216C3C87FBBCF501F6A7C8A2552D01704A14",
-                                   "minPowerShellVersion":  "5.1",
-                                   "minWindowsVersion":  "10.0",
-                                   "notes":  "HailUninstaller v2.1.0 official release package."
-                               },
                      "0.0.1":  {
                                    "version":  "0.0.1",
                                    "releaseDate":  "2026-10-18",
                                    "archiveName":  "HailUninstaller-v0.0.1.zip",
-                                   "sha256":  "32D05D1D768A9ED411A47E907ADAD1DB991B76EC91C82DC124A6B4EEBE88456F",
+                                   "sha256":  "CA75C778614C909949BDEF46395A80217C8C4BC7E444E5C8D0F62669CD3042CB",
                                    "minPowerShellVersion":  "5.1",
                                    "minWindowsVersion":  "10.0",
                                    "notes":  "HailUninstaller v0.0.1 official release package."
