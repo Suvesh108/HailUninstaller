@@ -16,6 +16,10 @@
     <strong>Zero-installation, high-precision removal tool that launches official uninstallers first, deeply isolates leftover remnants across file systems, registry hives, background services, and scheduled tasks, scores evidence with heuristic safety guardrails, and provides automated restorable backups before surgical deletion.</strong>
   </p>
 
+  <br>
+
+  <img src="screenshot.png" alt="HailUninstaller Storage & Application Cleaner Interface" width="900">
+
 </div>
 
 ---
