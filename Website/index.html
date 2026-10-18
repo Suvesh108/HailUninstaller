@@ -5,11 +5,11 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>HailUninstaller - Deep Application Removal Tool for Windows</title>
   <meta name="description" content="Lightweight, zero-installation PowerShell tool to completely identify and remove application leftover files, registry keys, services, and tasks.">
-  <link rel="icon" type="image/png" href="assets/logo.png">
+  <link rel="icon" type="image/png" href="assets/images/logo.png">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="styles.css">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 <body>
 
@@ -17,14 +17,14 @@
   <header class="navbar">
     <div class="nav-container">
       <a href="#" class="brand">
-        <img src="assets/logo.png" alt="HailUninstaller Logo" class="brand-logo">
+        <img src="assets/images/logo.png" alt="HailUninstaller Logo" class="brand-logo">
         <span class="brand-name">HailUninstaller</span>
       </a>
       <nav class="nav-links">
+        <a href="#gui">Fluent GUI</a>
         <a href="#how-it-works">How It Works</a>
         <a href="#evidence-engine">Evidence Engine</a>
         <a href="#cli">CLI Mode</a>
-        <a href="#architecture">Architecture</a>
       </nav>
       <div class="nav-actions">
         <a href="https://github.com/Suvesh108/HailUninstaller" target="_blank" class="btn btn-outline" rel="noreferrer">
@@ -41,7 +41,7 @@
     <div class="container hero-content">
       <div class="pill-badge">
         <span class="badge-dot"></span>
-        <span>Zero-Installation â€¢ Pure PowerShell â€¢ Safe Rollback</span>
+        <span>Zero-Installation • Pure PowerShell • Safe Rollback</span>
       </div>
 
       <h1 class="hero-title">
@@ -70,12 +70,26 @@
     </div>
   </section>
 
+  <!-- Fluent GUI Showcase -->
+  <section id="gui" class="gui-showcase">
+    <div class="container">
+      <div class="section-header text-center">
+        <span class="section-tag">Windows 11 Fluent GUI</span>
+        <h2>High-Density Fluent Interface</h2>
+        <p>Isolate uninstalled app ghost folders, execute quiet batch uninstalls, or purge stubborn software with real-time console telemetry.</p>
+      </div>
+      <div class="gui-preview-window">
+        <img src="assets/images/screenshot.png" alt="HailUninstaller Windows 11 Fluent GUI Screenshot" class="gui-screenshot-img">
+      </div>
+    </div>
+  </section>
+
   <!-- Interactive Terminal Showcase -->
   <section class="showcase">
     <div class="container">
       <div class="section-header">
         <span class="section-tag">Interactive Terminal UI</span>
-        <h2>Download â†’ Scan â†’ Preview â†’ Clean â†’ Exit</h2>
+        <h2>Download → Scan → Preview → Clean → Exit</h2>
         <p>No bulky installer. No telemetry. It runs in your terminal, performs the surgical work, and cleanly exits.</p>
       </div>
 
@@ -86,7 +100,7 @@
             <span class="dot yellow"></span>
             <span class="dot green"></span>
           </div>
-          <div class="terminal-title">Windows PowerShell â€” HailUninstaller.ps1</div>
+          <div class="terminal-title">Windows PowerShell — HailUninstaller.ps1</div>
           <div class="terminal-tabs">
             <button class="term-tab active" data-step="menu">1. Menu</button>
             <button class="term-tab" data-step="scan">2. Deep Scan</button>
@@ -150,11 +164,11 @@
 
           <div class="evidence-metrics">
             <div class="metric-row">
-              <span class="metric-badge green">ðŸŸ¢ 98% HIGH CONFIDENCE</span>
+              <span class="metric-badge green">🟢 98% HIGH CONFIDENCE</span>
               <p>Direct rule match, exact executable path, or install directory match. Pre-selected for cleanup.</p>
             </div>
             <div class="metric-row">
-              <span class="metric-badge yellow">ðŸŸ¡ 68% REVIEW</span>
+              <span class="metric-badge yellow">🟡 68% REVIEW</span>
               <p>Subfolder with shared name or ambiguous registry key. Deselected by default for user review.</p>
             </div>
             <div class="metric-row">
@@ -245,35 +259,41 @@
 
       <div class="tree-display">
         <pre><code>HailUninstaller/
-â”œâ”€â”€ HailUninstaller.ps1          <span class="comment"># Main interactive TUI & CLI entrypoint</span>
-â”œâ”€â”€ Run.bat                      <span class="comment"># Double-click launcher with auto-elevation</span>
-â”œâ”€â”€ README.md                    <span class="comment"># Documentation & guides</span>
-â”œâ”€â”€ LICENSE                      <span class="comment"># MIT License</span>
-â”‚
-â”œâ”€â”€ Config/                      <span class="comment"># Deterministic JSON policies</span>
-â”‚   â”œâ”€â”€ Applications.json        <span class="comment"># Curated rules for Discord, Chrome, VS Code, etc.</span>
-â”‚   â”œâ”€â”€ ProtectedPaths.json      <span class="comment"># Guardrails for System32, WinSxS, and core hives</span>
-â”‚   â””â”€â”€ Rules.json               <span class="comment"># Confidence scoring weights and thresholds</span>
-â”‚
-â”œâ”€â”€ Modules/                     <span class="comment"># Zero-dependency PowerShell modules</span>
-â”‚   â”œâ”€â”€ UI.ps1                   <span class="comment"># ANSI terminal styling, banners, and progress bars</span>
-â”‚   â”œâ”€â”€ Applications.ps1         <span class="comment"># Registry & MSI & AppX discovery & uninstaller</span>
-â”‚   â”œâ”€â”€ Scanner.ps1              <span class="comment"># Coordinator for parallelized subsystem scans</span>
-â”‚   â”œâ”€â”€ FileScanner.ps1          <span class="comment"># AppData, ProgramData, and Temp file scanner</span>
-â”‚   â”œâ”€â”€ RegistryScanner.ps1      <span class="comment"># HKCU, HKLM, WOW6432Node and startup scanner</span>
-â”‚   â”œâ”€â”€ ServiceScanner.ps1       <span class="comment"># Background service scanner</span>
-â”‚   â”œâ”€â”€ TaskScanner.ps1          <span class="comment"># Scheduled tasks scanner</span>
-â”‚   â”œâ”€â”€ ProcessScanner.ps1       <span class="comment"># Active process detector</span>
-â”‚   â”œâ”€â”€ ShortcutScanner.ps1      <span class="comment"># Desktop & Start menu shortcut cleaner</span>
-â”‚   â”œâ”€â”€ Evidence.ps1             <span class="comment"># Multi-factor evidence scoring engine</span>
-â”‚   â”œâ”€â”€ Cleanup.ps1              <span class="comment"># Surgical deletion execution engine</span>
-â”‚   â”œâ”€â”€ Backup.ps1               <span class="comment"># Snapshot backup with manifest tracking</span>
-â”‚   â””â”€â”€ Restore.ps1              <span class="comment"># 1-Click rollback from saved snapshots</span>
-â”‚
-â””â”€â”€ Tests/                       <span class="comment"># Automated Pester test suite</span>
-    â”œâ”€â”€ Scanner.Tests.ps1
-    â”œâ”€â”€ Registry.Tests.ps1
-    â””â”€â”€ Cleanup.Tests.ps1</code></pre>
+├── bootstrap.ps1          <span class="comment"># Zero-install launcher with SHA-256 verification</span>
+├── HailUninstaller.ps1    <span class="comment"># Main Fluent GUI, interactive TUI & CLI entrypoint</span>
+├── Run.bat                <span class="comment"># Double-click launcher with auto-elevation</span>
+├── README.md              <span class="comment"># Documentation & guides</span>
+├── LICENSE                <span class="comment"># MIT License</span>
+│
+├── Config/                <span class="comment"># Deterministic JSON policies</span>
+│   ├── Applications.json  <span class="comment"># Curated rules for Discord, Chrome, VS Code, etc.</span>
+│   ├── ProtectedPaths.json<span class="comment"># Guardrails for System32, WinSxS, and core hives</span>
+│   └── Rules.json         <span class="comment"># Confidence scoring weights and thresholds</span>
+│
+├── Modules/               <span class="comment"># Zero-dependency PowerShell modules</span>
+│   ├── GUI.ps1            <span class="comment"># Windows 11 Fluent WPF graphical user interface</span>
+│   ├── UI.ps1             <span class="comment"># ANSI terminal styling, banners, and progress bars</span>
+│   ├── Applications.ps1   <span class="comment"># Registry & MSI & AppX discovery & uninstaller</span>
+│   ├── Scanner.ps1        <span class="comment"># Coordinator for parallelized subsystem scans</span>
+│   ├── FileScanner.ps1    <span class="comment"># AppData, ProgramData, and Temp file scanner</span>
+│   ├── RegistryScanner.ps1<span class="comment"># HKCU, HKLM, WOW6432Node and startup scanner</span>
+│   ├── ServiceScanner.ps1 <span class="comment"># Background service scanner</span>
+│   ├── TaskScanner.ps1    <span class="comment"># Scheduled tasks scanner</span>
+│   ├── ProcessScanner.ps1 <span class="comment"># Active process detector</span>
+│   ├── ShortcutScanner.ps1<span class="comment"># Desktop & Start menu shortcut cleaner</span>
+│   ├── Evidence.ps1       <span class="comment"># Multi-factor evidence scoring engine</span>
+│   ├── Cleanup.ps1        <span class="comment"># Surgical deletion execution engine</span>
+│   ├── Backup.ps1         <span class="comment"># Snapshot backup with manifest tracking</span>
+│   └── Restore.ps1        <span class="comment"># 1-Click rollback from saved snapshots</span>
+│
+└── Tests/                 <span class="comment"># Automated Pester test suite (38 tests)</span>
+    ├── AsyncEngine.Tests.ps1
+    ├── Bootstrap.Tests.ps1
+    ├── Cleanup.Tests.ps1
+    ├── ForcedUninstall.Tests.ps1
+    ├── QuietEngine.Tests.ps1
+    ├── Registry.Tests.ps1
+    └── Scanner.Tests.ps1</code></pre>
       </div>
     </div>
   </section>
@@ -281,7 +301,7 @@
   <!-- Download & Footer CTA -->
   <section id="download" class="cta-section">
     <div class="container text-center">
-      <img src="assets/logo.png" alt="HailUninstaller Logo" class="cta-logo">
+      <img src="assets/images/logo.png" alt="HailUninstaller Logo" class="cta-logo">
       <h2>Ready for Clean, Zero-Leftover Uninstalls?</h2>
       <p>No installer required. Run with a single PowerShell line or download the standalone launcher.</p>
       
@@ -289,8 +309,8 @@
         <button class="btn btn-primary btn-lg" onclick="navigator.clipboard.writeText('irm \&quot;https://raw.githubusercontent.com/Suvesh108/HailUninstaller/main/bootstrap.ps1\&quot; | iex'); alert('Copied command to clipboard!');">
           Copy PowerShell Command
         </button>
-        <a href="https://github.com/Suvesh108/HailUninstaller/archive/refs/heads/main.zip" class="btn btn-outline btn-lg">
-          Download ZIP Release
+        <a href="https://github.com/Suvesh108/HailUninstaller/releases/tag/v0.0.1" class="btn btn-outline btn-lg" target="_blank" rel="noreferrer">
+          Download v0.0.1 Release
         </a>
       </div>
     </div>
@@ -299,8 +319,8 @@
   <footer class="footer">
     <div class="container footer-content">
       <div class="footer-left">
-        <img src="assets/logo.png" alt="HailUninstaller Logo" class="footer-logo">
-        <span>Â© 2026 HailUninstaller. Open source under MIT License.</span>
+        <img src="assets/images/logo.png" alt="HailUninstaller Logo" class="footer-logo">
+        <span>© 2026 HailUninstaller. Open source under MIT License.</span>
       </div>
       <div class="footer-right">
         <a href="https://github.com/Suvesh108/HailUninstaller" target="_blank" rel="noreferrer">GitHub</a>
@@ -310,6 +330,6 @@
     </div>
   </footer>
 
-  <script src="app.js"></script>
+  <script src="js/app.js"></script>
 </body>
 </html>

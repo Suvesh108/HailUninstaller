@@ -131,12 +131,6 @@
     "ast_hash": "d39e47096285e57090bfbfa829c2ec7d",
     "semantic_hash": ""
   },
-  "Website/app.js": {
-    "mtime": 1790921760.1759713,
-    "seen": 1790926181.4992342,
-    "ast_hash": "a23ac7d01cd94236eabd9035a5ef4dd2",
-    "semantic_hash": "a23ac7d01cd94236eabd9035a5ef4dd2"
-  },
   "Modules/ForcedUninstall.ps1": {
     "mtime": 1792269231.6842809,
     "seen": 1792269256.8125167,
@@ -180,9 +174,9 @@
     "semantic_hash": ""
   },
   "Website/index.html": {
-    "mtime": 1792300303.5055733,
-    "seen": 1792300361.5060654,
-    "ast_hash": "517c2f661748bab2d622c4e6a6d16bde",
+    "mtime": 1792303271.7434566,
+    "seen": 1792303311.8671365,
+    "ast_hash": "e2c1add6ed69889f330735a8d8c5ccf3",
     "semantic_hash": ""
   },
   "core technical architecture.pdf": {
@@ -240,9 +234,33 @@
     "semantic_hash": ""
   },
   "screenshot.png": {
-    "mtime": 1792301875.094188,
-    "seen": 1792302721.1949747,
-    "ast_hash": "7351b19df27725e7a2a825547b10478e",
+    "mtime": 1792302699.5033977,
+    "seen": 1792303311.8671458,
+    "ast_hash": "0c0bf49b64e1593e53996613d4240838",
+    "semantic_hash": ""
+  },
+  "Website/js/app.js": {
+    "mtime": 1790921760.1759713,
+    "seen": 1792303311.8671296,
+    "ast_hash": "a23ac7d01cd94236eabd9035a5ef4dd2",
+    "semantic_hash": ""
+  },
+  "Website/assets/images/logo.png": {
+    "mtime": 1790921028.5501926,
+    "seen": 1792303311.8671393,
+    "ast_hash": "d3bce7a5676f67de8da10937e0c8d67c",
+    "semantic_hash": ""
+  },
+  "Website/assets/images/screenshot.png": {
+    "mtime": 1792302699.5033977,
+    "seen": 1792303311.8671405,
+    "ast_hash": "0c0bf49b64e1593e53996613d4240838",
+    "semantic_hash": ""
+  },
+  "Website/assets/screenshot.png": {
+    "mtime": 1792302699.5033977,
+    "seen": 1792303311.8671434,
+    "ast_hash": "0c0bf49b64e1593e53996613d4240838",
     "semantic_hash": ""
   }
 }

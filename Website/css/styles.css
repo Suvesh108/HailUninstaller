@@ -702,6 +702,33 @@ a {
   color: var(--text-primary);
 }
 
+/* GUI Showcase */
+.gui-showcase {
+  padding: 80px 0;
+  position: relative;
+}
+
+.gui-preview-window {
+  margin-top: 40px;
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-lg);
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.4), 0 0 40px rgba(0, 140, 255, 0.1);
+  overflow: hidden;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.gui-preview-window:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 24px 60px rgba(0, 0, 0, 0.5), 0 0 50px rgba(0, 140, 255, 0.15);
+}
+
+.gui-screenshot-img {
+  width: 100%;
+  height: auto;
+  display: block;
+}
+
 @media (max-width: 768px) {
   .hero-title { font-size: 2.5rem; }
   .evidence-layout { grid-template-columns: 1fr; }

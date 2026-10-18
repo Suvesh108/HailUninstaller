@@ -1,6 +1,5 @@
 {
   "0": "Show-CleanupPreviewTui",
   "2": "Get-BackupRootDirectory",
-  "11": "GUI.ps1",
   "12": "Cleanup.Tests.ps1"
 }

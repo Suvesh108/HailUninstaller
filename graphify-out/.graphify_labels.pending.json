@@ -6,5 +6,6 @@
   "6": "bootstrap.ps1",
   "7": "Bootstrap.Tests.ps1",
   "8": "New-ReleasePackage.ps1",
-  "9": "README.md"
+  "9": "README.md",
+  "10": "app.js"
 }
