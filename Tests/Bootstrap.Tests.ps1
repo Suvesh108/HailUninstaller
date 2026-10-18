@@ -141,7 +141,8 @@ Describe "HailUninstaller Bootstrap & Security Launcher" {
         }
 
         It "Successfully extracts and deploys from verified archive when hash matches" {
-            $output = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $script:bootstrapScript -ReleaseUrl $script:releaseZip -InstallDir $script:localTestDir -ForceUpdate -List 2>&1
+            $expectedHash = (Get-FileHash -Path $script:releaseZip -Algorithm SHA256).Hash
+            $output = & cmd.exe /c "powershell.exe -NoProfile -ExecutionPolicy Bypass -File `"$($script:bootstrapScript)`" -ReleaseUrl `"$($script:releaseZip)`" -InstallDir `"$($script:localTestDir)`" -ForceUpdate -ExpectedHash `"$expectedHash`" -List 2>&1"
             $outputStr = ($output | Out-String)
 
             $outputStr | Should -Match "Checksum verified:"
@@ -155,7 +156,7 @@ Describe "HailUninstaller Bootstrap & Security Launcher" {
             $tamperInstallDir = Join-Path $env:TEMP ("HailTamper_" + [System.IO.Path]::GetRandomFileName())
             try {
                 $badHash = "0000000000000000000000000000000000000000000000000000000000000000"
-                $output = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $script:bootstrapScript -ReleaseUrl $script:releaseZip -InstallDir $tamperInstallDir -ForceUpdate -ExpectedHash $badHash 2>&1
+                $output = & cmd.exe /c "powershell.exe -NoProfile -ExecutionPolicy Bypass -File `"$($script:bootstrapScript)`" -ReleaseUrl `"$($script:releaseZip)`" -InstallDir `"$tamperInstallDir`" -ForceUpdate -ExpectedHash `"$badHash`" 2>&1"
                 $outputStr = ($output | Out-String)
 
                 $outputStr | Should -Match "SECURITY FATAL"
@@ -169,7 +170,7 @@ Describe "HailUninstaller Bootstrap & Security Launcher" {
         }
 
         It "Handles network 404 download errors gracefully with clear fatal message" {
-            $output = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $script:bootstrapScript -ReleaseUrl "https://raw.githubusercontent.com/Suvesh108/HailUninstaller/main/non_existent.zip" -ForceUpdate 2>&1
+            $output = & cmd.exe /c "powershell.exe -NoProfile -ExecutionPolicy Bypass -File `"$($script:bootstrapScript)`" -ReleaseUrl `"https://raw.githubusercontent.com/Suvesh108/HailUninstaller/main/non_existent.zip`" -ForceUpdate 2>&1"
             $outputStr = ($output | Out-String)
 
             $outputStr | Should -Match "Failed to download or deploy"

@@ -17,8 +17,8 @@ Describe "Forced Uninstall and Backup/Restore Tests" {
 
     Context "Start-ForcedUninstall" {
         It "Generates scored candidates for a mock target path" {
-            $tempDir = Join-Path $env:TEMP "HailUninstaller_TestTarget_$(Get-Random)"
-            New-Item -ItemType Directory -Path $tempDir -Force | Out-Null
+            $createdDir = New-Item -ItemType Directory -Path (Join-Path $env:TEMP "HailUninstaller_TestTarget_$(Get-Random)") -Force
+            $tempDir = $createdDir.FullName
             $subFile = Join-Path $tempDir "dummy.txt"
             Set-Content -Path $subFile -Value "Dummy data"
 
@@ -26,7 +26,7 @@ Describe "Forced Uninstall and Backup/Restore Tests" {
                 $res = Start-ForcedUninstall -Target $tempDir
                 $candidatesList = @($res.Candidates)
                 $candidatesList.Count | Should -BeGreaterThan 0
-                $primary = $candidatesList | Where-Object { $_.Path -eq $tempDir }
+                $primary = $candidatesList | Where-Object { $_.Path -ieq $tempDir }
                 $primary | Should -Not -BeNullOrEmpty
             } finally {
                 Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
@@ -34,15 +34,17 @@ Describe "Forced Uninstall and Backup/Restore Tests" {
         }
 
         It "Preserves generic parent directory and targets only the file for standalone executables" {
-            $standaloneExe = Join-Path $env:TEMP "standalone_tool_$(Get-Random).exe"
+            $createdExe = New-Item -ItemType File -Path (Join-Path $env:TEMP "standalone_tool_$(Get-Random).exe") -Force
+            $standaloneExe = $createdExe.FullName
             Set-Content -Path $standaloneExe -Value "MZ_TEST"
 
             try {
                 $res = Start-ForcedUninstall -Target $standaloneExe
                 $res.TargetPath | Should -Be $standaloneExe
                 # Verify $env:TEMP is not targeted as a directory candidate
+                $resolvedTemp = (Get-Item -LiteralPath $env:TEMP).FullName
                 $candidatesList = @($res.Candidates)
-                $tempCand = $candidatesList | Where-Object { $_.Path -eq $env:TEMP }
+                $tempCand = $candidatesList | Where-Object { $_.Path -ieq $resolvedTemp -or $_.Path -ieq $env:TEMP }
                 $tempCand | Should -BeNullOrEmpty
             } finally {
                 Remove-Item -LiteralPath $standaloneExe -Force -ErrorAction SilentlyContinue
