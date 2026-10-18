@@ -114,22 +114,22 @@
     "semantic_hash": ""
   },
   "Tests/Cleanup.Tests.ps1": {
-    "mtime": 1792269134.8996124,
-    "seen": 1792269256.8125346,
-    "ast_hash": "8b68b30d4995d24d6d0289d4722310a8",
+    "mtime": 1792302472.4338176,
+    "seen": 1792302721.194956,
+    "ast_hash": "76ae814f4f775767aa971173b015280d",
     "semantic_hash": ""
   },
   "Tests/Registry.Tests.ps1": {
-    "mtime": 1792269154.573912,
-    "seen": 1792269256.8125386,
-    "ast_hash": "e639ab8e2c8f2a7d1715c9de808ab735",
+    "mtime": 1792302388.6371067,
+    "seen": 1792302721.1949596,
+    "ast_hash": "5b4ebac755639c13227e3acdc62c82f9",
     "semantic_hash": ""
   },
   "Tests/Scanner.Tests.ps1": {
-    "mtime": 1790922054.809455,
-    "seen": 1790926181.4992332,
-    "ast_hash": "5ec39ab4159b2c7cdb4ee9189d50c280",
-    "semantic_hash": "5ec39ab4159b2c7cdb4ee9189d50c280"
+    "mtime": 1792302441.2254283,
+    "seen": 1792302721.1949608,
+    "ast_hash": "d39e47096285e57090bfbfa829c2ec7d",
+    "semantic_hash": ""
   },
   "Website/app.js": {
     "mtime": 1790921760.1759713,
@@ -156,27 +156,27 @@
     "semantic_hash": ""
   },
   "Tests/AsyncEngine.Tests.ps1": {
-    "mtime": 1792270424.9658663,
-    "seen": 1792270452.748518,
-    "ast_hash": "a221fd2ac1ac335d672422d33936e17e",
+    "mtime": 1792302549.384226,
+    "seen": 1792302721.1949527,
+    "ast_hash": "d9733519a75e67c47b03063ba6439e47",
     "semantic_hash": ""
   },
   "Tests/ForcedUninstall.Tests.ps1": {
-    "mtime": 1792269145.1845987,
-    "seen": 1792269256.8125358,
-    "ast_hash": "43a4137ce24a3c23aad30da0450985f5",
+    "mtime": 1792302499.7810159,
+    "seen": 1792302721.1949573,
+    "ast_hash": "363c3dbd80c1248ab8c8882840f16277",
     "semantic_hash": ""
   },
   "Tests/QuietEngine.Tests.ps1": {
-    "mtime": 1792269124.070494,
-    "seen": 1792269256.8125374,
-    "ast_hash": "e65daff1b861ab2f08322f315d8b4f5f",
+    "mtime": 1792302414.3287249,
+    "seen": 1792302721.1949587,
+    "ast_hash": "2877dc9a2d3eaa24a817288507000345",
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1792301446.7231421,
-    "seen": 1792301695.0363066,
-    "ast_hash": "e50f10a927f2c4fef8c2a275326fc218",
+    "mtime": 1792301940.2392614,
+    "seen": 1792302721.1949685,
+    "ast_hash": "f4bb300877e8e44587baeb437769afef",
     "semantic_hash": ""
   },
   "Website/index.html": {
@@ -210,9 +210,9 @@
     "semantic_hash": ""
   },
   "Tests/Bootstrap.Tests.ps1": {
-    "mtime": 1792300758.8651893,
-    "seen": 1792301695.036292,
-    "ast_hash": "6a66d080baee4e446c5386241d6379ca",
+    "mtime": 1792302606.402419,
+    "seen": 1792302721.1949544,
+    "ast_hash": "6c1cc21dfd59ea0d599441ff42dde424",
     "semantic_hash": ""
   },
   "Tools/New-ReleasePackage.ps1": {
@@ -228,15 +228,21 @@
     "semantic_hash": ""
   },
   ".github/workflows/ci.yml": {
-    "mtime": 1792300234.8425443,
-    "seen": 1792300361.5060594,
-    "ast_hash": "71dc688dbe77e4524ade2d81ef30c7c7",
+    "mtime": 1792302698.3210545,
+    "seen": 1792302721.1949666,
+    "ast_hash": "192e0c19c02c0257fcb790f38d886cb3",
     "semantic_hash": ""
   },
   ".github/workflows/release.yml": {
-    "mtime": 1792300241.8689563,
-    "seen": 1792300361.5060613,
-    "ast_hash": "d0c365286e5c00bf7d50f68e2537715e",
+    "mtime": 1792302703.9843402,
+    "seen": 1792302721.1949673,
+    "ast_hash": "20500b20e1cc34525b587c6eb5172ff8",
+    "semantic_hash": ""
+  },
+  "screenshot.png": {
+    "mtime": 1792301875.094188,
+    "seen": 1792302721.1949747,
+    "ast_hash": "7351b19df27725e7a2a825547b10478e",
     "semantic_hash": ""
   }
 }

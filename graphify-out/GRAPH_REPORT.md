@@ -1,7 +1,7 @@
 # Graph Report - HailUninstaller  (2026-10-18)
 
 ## Corpus Check
-- 34 files · ~84,662 words
+- 34 files · ~88,636 words
 - Verdict: corpus is large enough that graph structure adds value.
 - Unclassified: 5 file(s) not represented in the graph (top: (none) 3, .bat 1, .css 1)
 
@@ -11,7 +11,7 @@
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `29293e2d`
+- Built from commit: `aeadc793`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 

@@ -1,10 +1,12 @@
 # Pester Tests for HailUninstaller Bootstrap & Zero-Install Launcher
-$script:scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
-$script:repoRoot = Split-Path -Parent $script:scriptDir
-$script:bootstrapScript = Join-Path $script:repoRoot "bootstrap.ps1"
-$script:releaseZip = Join-Path $script:repoRoot "release\HailUninstaller-v0.0.1.zip"
 
 Describe "HailUninstaller Bootstrap & Security Launcher" {
+    BeforeAll {
+        $script:scriptDir = $PSScriptRoot
+        $script:repoRoot = Split-Path -Parent $script:scriptDir
+        $script:bootstrapScript = Join-Path $script:repoRoot "bootstrap.ps1"
+        $script:releaseZip = Join-Path $script:repoRoot "release\HailUninstaller-v0.0.1.zip"
+    }
     
     Context "Pre-flight Compatibility Validation" {
         It "Approves Windows 10/11 and Windows Server 2016+ NT version" {
@@ -14,8 +16,8 @@ Describe "HailUninstaller Bootstrap & Security Launcher" {
                 return ($mockOS.Platform -eq [System.PlatformID]::Win32NT -and $mockOS.Version.Major -ge 10)
             }
 
-            (& $compatCheck "10.0.22631") | Should Be $true
-            (& $compatCheck "10.0.26100") | Should Be $true
+            (& $compatCheck "10.0.22631") | Should -Be $true
+            (& $compatCheck "10.0.26100") | Should -Be $true
         }
 
         It "Rejects unsupported older Windows versions" {
@@ -25,8 +27,8 @@ Describe "HailUninstaller Bootstrap & Security Launcher" {
                 return ($mockOS.Platform -eq [System.PlatformID]::Win32NT -and $mockOS.Version.Major -ge 10)
             }
 
-            (& $compatCheck "6.1.7601") | Should Be $false # Windows 7
-            (& $compatCheck "6.3.9600") | Should Be $false # Windows 8.1
+            (& $compatCheck "6.1.7601") | Should -Be $false # Windows 7
+            (& $compatCheck "6.3.9600") | Should -Be $false # Windows 8.1
         }
 
         It "Rejects non-Windows platforms" {
@@ -35,7 +37,7 @@ Describe "HailUninstaller Bootstrap & Security Launcher" {
                 return ($plat -eq [System.PlatformID]::Win32NT)
             }
 
-            (& $compatCheck ([System.PlatformID]::Unix)) | Should Be $false
+            (& $compatCheck ([System.PlatformID]::Unix)) | Should -Be $false
         }
 
         It "Requires PowerShell 5.1 or newer" {
@@ -45,9 +47,9 @@ Describe "HailUninstaller Bootstrap & Security Launcher" {
                 return ($ver.Major -ge 5)
             }
 
-            (& $psCheck "5.1.26100.1") | Should Be $true
-            (& $psCheck "7.4.2") | Should Be $true
-            (& $psCheck "4.0.0.0") | Should Be $false
+            (& $psCheck "5.1.26100.1") | Should -Be $true
+            (& $psCheck "7.4.2") | Should -Be $true
+            (& $psCheck "4.0.0.0") | Should -Be $false
         }
     }
 
@@ -74,7 +76,7 @@ Describe "HailUninstaller Bootstrap & Security Launcher" {
                 return ($hash -ieq $expected.Trim())
             }
 
-            (& $verifyFunc $sampleFile $actualHash) | Should Be $true
+            (& $verifyFunc $sampleFile $actualHash) | Should -Be $true
         }
 
         It "Detects tampered file and fails verification" {
@@ -88,7 +90,7 @@ Describe "HailUninstaller Bootstrap & Security Launcher" {
                 return ($hash -ieq $expected.Trim())
             }
 
-            (& $verifyFunc $sampleFile $bogusHash) | Should Be $false
+            (& $verifyFunc $sampleFile $bogusHash) | Should -Be $false
         }
     }
 
@@ -96,17 +98,17 @@ Describe "HailUninstaller Bootstrap & Security Launcher" {
         It "Executes -Help flag successfully and outputs usage information" {
             $output = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $script:bootstrapScript -Help 2>&1
             $outputStr = ($output | Out-String)
-            $outputStr | Should Match "HailUninstaller"
-            $outputStr | Should Match "USAGE:"
-            $outputStr | Should Match "OPTIONS"
+            $outputStr | Should -Match "HailUninstaller"
+            $outputStr | Should -Match "USAGE:"
+            $outputStr | Should -Match "OPTIONS"
         }
 
         It "Executes -Diagnostic flag successfully and reports system status" {
             $output = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $script:bootstrapScript -Diagnostic 2>&1
             $outputStr = ($output | Out-String)
-            $outputStr | Should Match "SYSTEM DIAGNOSTIC REPORT"
-            $outputStr | Should Match "Operating System:"
-            $outputStr | Should Match "PowerShell Version:"
+            $outputStr | Should -Match "SYSTEM DIAGNOSTIC REPORT"
+            $outputStr | Should -Match "Operating System:"
+            $outputStr | Should -Match "PowerShell Version:"
         }
 
         It "Executes -DryRun mode without modifying target directory" {
@@ -114,8 +116,8 @@ Describe "HailUninstaller Bootstrap & Security Launcher" {
             try {
                 $output = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $script:bootstrapScript -DryRun -InstallDir $dryInstallDir 2>&1
                 $outputStr = ($output | Out-String)
-                $outputStr | Should Match "\[DRY-RUN\] Simulation only"
-                (Test-Path -LiteralPath $dryInstallDir) | Should Be $false
+                $outputStr | Should -Match "\[DRY-RUN\] Simulation only"
+                (Test-Path -LiteralPath $dryInstallDir) | Should -Be $false
             } finally {
                 if (Test-Path -LiteralPath $dryInstallDir) {
                     Remove-Item -LiteralPath $dryInstallDir -Recurse -Force -ErrorAction SilentlyContinue
@@ -142,11 +144,11 @@ Describe "HailUninstaller Bootstrap & Security Launcher" {
             $output = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $script:bootstrapScript -ReleaseUrl $script:releaseZip -InstallDir $script:localTestDir -ForceUpdate -List 2>&1
             $outputStr = ($output | Out-String)
 
-            $outputStr | Should Match "Checksum verified:"
-            $outputStr | Should Match "Installed to:"
-            (Test-Path -LiteralPath (Join-Path $script:localTestDir "HailUninstaller.ps1")) | Should Be $true
-            (Test-Path -LiteralPath (Join-Path $script:localTestDir "Modules\UI.ps1")) | Should Be $true
-            (Test-Path -LiteralPath (Join-Path $script:localTestDir "Config\ProtectedPaths.json")) | Should Be $true
+            $outputStr | Should -Match "Checksum verified:"
+            $outputStr | Should -Match "Installed to:"
+            (Test-Path -LiteralPath (Join-Path $script:localTestDir "HailUninstaller.ps1")) | Should -Be $true
+            (Test-Path -LiteralPath (Join-Path $script:localTestDir "Modules\UI.ps1")) | Should -Be $true
+            (Test-Path -LiteralPath (Join-Path $script:localTestDir "Config\ProtectedPaths.json")) | Should -Be $true
         }
 
         It "Aborts immediately with security error when archive has mismatched hash" {
@@ -156,9 +158,9 @@ Describe "HailUninstaller Bootstrap & Security Launcher" {
                 $output = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $script:bootstrapScript -ReleaseUrl $script:releaseZip -InstallDir $tamperInstallDir -ForceUpdate -ExpectedHash $badHash 2>&1
                 $outputStr = ($output | Out-String)
 
-                $outputStr | Should Match "SECURITY FATAL"
-                $outputStr | Should Match "checksum mismatch"
-                (Test-Path -LiteralPath (Join-Path $tamperInstallDir "HailUninstaller.ps1")) | Should Be $false
+                $outputStr | Should -Match "SECURITY FATAL"
+                $outputStr | Should -Match "checksum mismatch"
+                (Test-Path -LiteralPath (Join-Path $tamperInstallDir "HailUninstaller.ps1")) | Should -Be $false
             } finally {
                 if (Test-Path -LiteralPath $tamperInstallDir) {
                     Remove-Item -LiteralPath $tamperInstallDir -Recurse -Force -ErrorAction SilentlyContinue
@@ -170,8 +172,8 @@ Describe "HailUninstaller Bootstrap & Security Launcher" {
             $output = & powershell.exe -NoProfile -ExecutionPolicy Bypass -File $script:bootstrapScript -ReleaseUrl "https://raw.githubusercontent.com/Suvesh108/HailUninstaller/main/non_existent.zip" -ForceUpdate 2>&1
             $outputStr = ($output | Out-String)
 
-            $outputStr | Should Match "Failed to download or deploy"
-            $outputStr | Should Match "404"
+            $outputStr | Should -Match "Failed to download or deploy"
+            $outputStr | Should -Match "404"
         }
     }
 }

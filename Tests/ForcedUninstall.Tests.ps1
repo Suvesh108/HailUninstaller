@@ -1,18 +1,20 @@
 # Tests/ForcedUninstall.Tests.ps1
 
-$baseDir = Split-Path $PSScriptRoot -Parent
-. (Join-Path $baseDir "Modules\UI.ps1")
-. (Join-Path $baseDir "Modules\Evidence.ps1")
-. (Join-Path $baseDir "Modules\FileScanner.ps1")
-. (Join-Path $baseDir "Modules\RegistryScanner.ps1")
-. (Join-Path $baseDir "Modules\ServiceScanner.ps1")
-. (Join-Path $baseDir "Modules\TaskScanner.ps1")
-. (Join-Path $baseDir "Modules\ShortcutScanner.ps1")
-. (Join-Path $baseDir "Modules\Backup.ps1")
-. (Join-Path $baseDir "Modules\Restore.ps1")
-. (Join-Path $baseDir "Modules\ForcedUninstall.ps1")
-
 Describe "Forced Uninstall and Backup/Restore Tests" {
+    BeforeAll {
+        $baseDir = Split-Path $PSScriptRoot -Parent
+        . (Join-Path $baseDir "Modules\UI.ps1")
+        . (Join-Path $baseDir "Modules\Evidence.ps1")
+        . (Join-Path $baseDir "Modules\FileScanner.ps1")
+        . (Join-Path $baseDir "Modules\RegistryScanner.ps1")
+        . (Join-Path $baseDir "Modules\ServiceScanner.ps1")
+        . (Join-Path $baseDir "Modules\TaskScanner.ps1")
+        . (Join-Path $baseDir "Modules\ShortcutScanner.ps1")
+        . (Join-Path $baseDir "Modules\Backup.ps1")
+        . (Join-Path $baseDir "Modules\Restore.ps1")
+        . (Join-Path $baseDir "Modules\ForcedUninstall.ps1")
+    }
+
     Context "Start-ForcedUninstall" {
         It "Generates scored candidates for a mock target path" {
             $tempDir = Join-Path $env:TEMP "HailUninstaller_TestTarget_$(Get-Random)"
@@ -23,9 +25,9 @@ Describe "Forced Uninstall and Backup/Restore Tests" {
             try {
                 $res = Start-ForcedUninstall -Target $tempDir
                 $candidatesList = @($res.Candidates)
-                $candidatesList.Count | Should BeGreaterThan 0
+                $candidatesList.Count | Should -BeGreaterThan 0
                 $primary = $candidatesList | Where-Object { $_.Path -eq $tempDir }
-                $primary | Should Not BeNullOrEmpty
+                $primary | Should -Not -BeNullOrEmpty
             } finally {
                 Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
             }
@@ -37,11 +39,11 @@ Describe "Forced Uninstall and Backup/Restore Tests" {
 
             try {
                 $res = Start-ForcedUninstall -Target $standaloneExe
-                $res.TargetPath | Should Be $standaloneExe
+                $res.TargetPath | Should -Be $standaloneExe
                 # Verify $env:TEMP is not targeted as a directory candidate
                 $candidatesList = @($res.Candidates)
                 $tempCand = $candidatesList | Where-Object { $_.Path -eq $env:TEMP }
-                $tempCand | Should BeNullOrEmpty
+                $tempCand | Should -BeNullOrEmpty
             } finally {
                 Remove-Item -LiteralPath $standaloneExe -Force -ErrorAction SilentlyContinue
             }
@@ -71,28 +73,28 @@ Describe "Forced Uninstall and Backup/Restore Tests" {
             }
 
             $backup = New-CleanupBackup -Application $mockApp -SelectedItems @($mockItem)
-            $backup.Success | Should Be $true
-            $backup.BackupId | Should Not BeNullOrEmpty
+            $backup.Success | Should -Be $true
+            $backup.BackupId | Should -Not -BeNullOrEmpty
 
             # Verify Get-CleanupBackups populates UI properties
             $allB = @(Get-CleanupBackups)
             $foundB = $allB | Where-Object { $_.BackupId -eq $backup.BackupId }
-            $foundB | Should Not BeNullOrEmpty
-            $foundB.Application | Should Be "UnitTestApp"
-            $foundB.Timestamp | Should Not BeNullOrEmpty
-            $foundB.FormattedSize | Should Not BeNullOrEmpty
+            $foundB | Should -Not -BeNullOrEmpty
+            $foundB.Application | Should -Be "UnitTestApp"
+            $foundB.Timestamp | Should -Not -BeNullOrEmpty
+            $foundB.FormattedSize | Should -Not -BeNullOrEmpty
 
             # Simulate deletion
             Remove-Item -Path $testFolder -Recurse -Force
 
-            (Test-Path -LiteralPath $testFolder) | Should Be $false
+            (Test-Path -LiteralPath $testFolder) | Should -Be $false
 
             # Restore
             $rRes = Restore-CleanupBackup -BackupId $backup.BackupId
-            $rRes.RestoredCount | Should BeGreaterThan 0
+            $rRes.RestoredCount | Should -BeGreaterThan 0
 
             # Verify restoration
-            (Test-Path -LiteralPath (Join-Path $testFolder "file1.txt")) | Should Be $true
+            (Test-Path -LiteralPath (Join-Path $testFolder "file1.txt")) | Should -Be $true
 
             # Cleanup
             Remove-Item -Path $testFolder -Recurse -Force -ErrorAction SilentlyContinue

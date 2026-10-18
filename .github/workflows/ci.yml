@@ -18,8 +18,11 @@ jobs:
       - name: Run Pester Test Suite
         shell: powershell
         run: |
-          $pesterModule = Get-Module -ListAvailable -Name Pester | Sort-Object Version -Descending | Select-Object -First 1
-          Write-Host "Using Pester version: $($pesterModule.Version)"
+          $pesterModule = Get-Module -ListAvailable -Name Pester | Where-Object { $_.Version.Major -ge 5 } | Sort-Object Version -Descending | Select-Object -First 1
+          if ($pesterModule) {
+              Import-Module $pesterModule.Path -Force
+              Write-Host "Imported Pester version: $($pesterModule.Version)"
+          }
           $result = Invoke-Pester -Path ./Tests/ -PassThru
           if ($result.FailedCount -gt 0) {
               Write-Error "Tests failed! Failed count: $($result.FailedCount)"

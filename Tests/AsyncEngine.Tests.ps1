@@ -2,6 +2,11 @@
 # Unit tests for asynchronous background execution and concurrent progress queue streaming
 
 Describe "Async Background Engine and Queue Streaming Tests" {
+    BeforeAll {
+        $baseDir = Split-Path $PSScriptRoot -Parent
+        . (Join-Path $baseDir "Modules\GUI.ps1")
+    }
+
     Context "ConcurrentQueue Thread Safety" {
         It "Successfully enqueues and dequeues progress events across threads" {
             $queue = [System.Collections.Concurrent.ConcurrentQueue[psobject]]::new()
@@ -29,10 +34,10 @@ Describe "Async Background Engine and Queue Streaming Tests" {
             $res = $ps.EndInvoke($handle)
             $ps.Dispose()
 
-            $res | Should Be 42
-            $dequeuedItems.Count | Should Be 5
-            $dequeuedItems[0].Step | Should Be 1
-            $dequeuedItems[4].Step | Should Be 5
+            $res | Should -Be 42
+            $dequeuedItems.Count | Should -Be 5
+            $dequeuedItems[0].Step | Should -Be 1
+            $dequeuedItems[4].Step | Should -Be 5
         }
     }
 
@@ -82,18 +87,15 @@ Describe "Async Background Engine and Queue Streaming Tests" {
             $timeoutTimer.Start()
             [System.Windows.Threading.Dispatcher]::PushFrame($frame)
 
-            $results.Count | Should Be 2
-            $results[0] | Should Be "Active"
-            $results[1] | Should Be "Complete"
+            $results.Count | Should -Be 2
+            $results[0] | Should -Be "Active"
+            $results[1] | Should -Be "Complete"
         }
     }
 
     Context "Real-Time Console Logging" {
         It "Executes Log-GuiConsole without throwing exceptions" {
-            $baseDir = Split-Path $PSScriptRoot -Parent
-            . (Join-Path $baseDir "Modules\GUI.ps1")
-
-            { Log-GuiConsole -Tag "TEST" -Message "Unit test message" -Color Yellow } | Should Not Throw
+            { Log-GuiConsole -Tag "TEST" -Message "Unit test message" -Color Yellow } | Should -Not -Throw
         }
     }
 
@@ -117,9 +119,9 @@ Describe "Async Background Engine and Queue Streaming Tests" {
                 $sharedTasks.Remove($taskKey) | Out-Null
             }.GetNewClosure()
 
-            { & $cleanupBlock } | Should Not Throw
-            $sharedState.ActiveJobs.Count | Should Be 0
-            $sharedState.RunningTasks.Count | Should Be 0
+            { & $cleanupBlock } | Should -Not -Throw
+            $sharedState.ActiveJobs.Count | Should -Be 0
+            $sharedState.RunningTasks.Count | Should -Be 0
         }
     }
 }
