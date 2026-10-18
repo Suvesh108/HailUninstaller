@@ -96,4 +96,30 @@ Describe "Async Background Engine and Queue Streaming Tests" {
             { Log-GuiConsole -Tag "TEST" -Message "Unit test message" -Color Yellow } | Should Not Throw
         }
     }
+
+    Context "Shared Reference Async Task Isolation" {
+        It "Disposes runspace and removes task record without null-reference exceptions" {
+            $sharedState = [hashtable]::Synchronized(@{
+                ActiveJobs   = [System.Collections.Generic.List[psobject]]::new()
+                RunningTasks = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+            })
+
+            $taskKey = "TestJob"
+            $sharedState.RunningTasks.Add($taskKey) | Out-Null
+            $jobRecord = [PSCustomObject]@{ TaskName = $taskKey }
+            $sharedState.ActiveJobs.Add($jobRecord)
+
+            $sharedJobs = $sharedState.ActiveJobs
+            $sharedTasks = $sharedState.RunningTasks
+
+            $cleanupBlock = {
+                $sharedJobs.Remove($jobRecord) | Out-Null
+                $sharedTasks.Remove($taskKey) | Out-Null
+            }.GetNewClosure()
+
+            { & $cleanupBlock } | Should Not Throw
+            $sharedState.ActiveJobs.Count | Should Be 0
+            $sharedState.RunningTasks.Count | Should Be 0
+        }
+    }
 }

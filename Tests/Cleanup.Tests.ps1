@@ -65,5 +65,55 @@ Describe "Evidence and Cleanup Tests" {
             $res = Invoke-CleanupItems -SelectedItems @() -HumanApproved
             $res.RemovedCount | Should Be 0
         }
+
+        It "Successfully deletes directories containing ReadOnly child files" {
+            $testFolder = Join-Path $env:TEMP "HailUninstaller_ReadOnlyTest_$(Get-Random)"
+            New-Item -ItemType Directory -Path $testFolder -Force | Out-Null
+            $subFile = Join-Path $testFolder "readonly_child.txt"
+            Set-Content -Path $subFile -Value "Locked content"
+            Set-ItemProperty -Path $subFile -Name IsReadOnly -Value $true
+
+            $mockItem = [PSCustomObject]@{
+                Category    = "File"
+                Type        = "Directory"
+                Path        = $testFolder
+                Name        = (Split-Path $testFolder -Leaf)
+                Size        = 20
+                IsProtected = $false
+                Selected    = $true
+            }
+
+            try {
+                $res = Invoke-CleanupItems -SelectedItems @($mockItem) -HumanApproved
+                $res.RemovedCount | Should Be 1
+                (Test-Path -LiteralPath $testFolder) | Should Be $false
+            } finally {
+                if (Test-Path -LiteralPath $testFolder) {
+                    Get-ChildItem -LiteralPath $testFolder -Recurse -Force -ErrorAction SilentlyContinue | ForEach-Object { $_.IsReadOnly = $false }
+                    Remove-Item -LiteralPath $testFolder -Recurse -Force -ErrorAction SilentlyContinue
+                }
+            }
+        }
+
+        It "Filters out evidence with score below 20 to eliminate noise" {
+            $candidates = @(
+                [PSCustomObject]@{
+                    Category    = "File"
+                    Type        = "Directory"
+                    Path        = "C:\SomeRandomFolder"
+                    Name        = "UnrelatedFolder"
+                    MatchReason = "Loose substring"
+                }
+            )
+
+            $mockApp = [PSCustomObject]@{
+                DisplayName     = "SpecificProductXYZ"
+                Publisher       = "SpecificPublisherABC"
+                InstallLocation = "C:\SpecificProductXYZ"
+            }
+
+            $scored = Evaluate-CandidateEvidence -Candidates $candidates -Application $mockApp -ConfigDir (Join-Path $baseDir "Config")
+            $scored.Count | Should Be 0
+        }
     }
 }

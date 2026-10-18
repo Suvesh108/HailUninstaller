@@ -32,7 +32,7 @@ function Restore-CleanupBackup {
         }
 
         try {
-            $isFolderOrFile = ($item.Category -in @("File", "OrphanFolder") -or $item.Type -eq "Directory")
+            $isFolderOrFile = ($item.Category -in @("File", "OrphanFolder", "Shortcut") -or $item.Type -eq "Directory")
             if ($isFolderOrFile -and $item.BackupLocation -and (Test-Path -LiteralPath $item.BackupLocation)) {
                 $targetParent = Split-Path $item.OriginalPath -Parent
                 if ($targetParent -and -not (Test-Path -LiteralPath $targetParent)) {
@@ -55,10 +55,24 @@ function Restore-CleanupBackup {
                         $failedCount++
                     }
                 }
-            } elseif ($item.Category -eq "Registry" -and $item.BackupLocation -and (Test-Path -LiteralPath $item.BackupLocation)) {
-                $p = Start-Process -FilePath "reg.exe" -ArgumentList "import `"$($item.BackupLocation)`"" -Wait -PassThru -WindowStyle Hidden
-                if ($p.ExitCode -eq 0) {
-                    $restoredCount++
+            } elseif ($item.Category -eq "Registry") {
+                if ($item.BackupLocation -eq "MANIFEST_VALUE" -or ($item.Type -eq "Value" -and $item.ValueName)) {
+                    try {
+                        if (-not (Test-Path -LiteralPath $item.OriginalPath)) {
+                            New-Item -Path $item.OriginalPath -Force -ErrorAction SilentlyContinue | Out-Null
+                        }
+                        Set-ItemProperty -LiteralPath $item.OriginalPath -Name $item.ValueName -Value $item.ValueData -Force -ErrorAction Stop
+                        $restoredCount++
+                    } catch {
+                        $failedCount++
+                    }
+                } elseif ($item.BackupLocation -and (Test-Path -LiteralPath $item.BackupLocation)) {
+                    $p = Start-Process -FilePath "reg.exe" -ArgumentList "import `"$($item.BackupLocation)`"" -Wait -PassThru -WindowStyle Hidden
+                    if ($p.ExitCode -eq 0) {
+                        $restoredCount++
+                    } else {
+                        $failedCount++
+                    }
                 } else {
                     $failedCount++
                 }

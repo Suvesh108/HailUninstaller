@@ -38,15 +38,20 @@ param(
     [string]$Uninstall,
 
     [Parameter(ParameterSetName = "Uninstall")]
+    [Parameter(ParameterSetName = "Forced")]
+    [Parameter(ParameterSetName = "Batch")]
     [switch]$DeepClean,
 
     [Parameter(ParameterSetName = "Uninstall")]
+    [Parameter(ParameterSetName = "Forced")]
+    [Parameter(ParameterSetName = "Batch")]
     [switch]$CreateBackup,
 
     [Parameter(ParameterSetName = "Restore")]
     [string]$Restore,
 
     [Parameter(ParameterSetName = "Orphans")]
+    [Alias("Orphans")]
     [switch]$ScanOrphans,
 
     [Parameter(ParameterSetName = "Forced")]
@@ -58,7 +63,6 @@ param(
     [Parameter(ParameterSetName = "Batch")]
     [string[]]$Batch,
 
-    [Parameter(ParameterSetName = "Interactive")]
     [switch]$Cli,
 
     [switch]$Quiet,
@@ -67,7 +71,49 @@ param(
 )
 
 $ErrorActionPreference = "Stop"
-$ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
+
+# Detect whether running in standalone web/iex mode or missing local modules
+$invokedPath = $MyInvocation.MyCommand.Path
+$ScriptDir = if (-not [string]::IsNullOrWhiteSpace($invokedPath)) { Split-Path -Parent $invokedPath } else { $PSScriptRoot }
+$hasLocalModules = (-not [string]::IsNullOrWhiteSpace($ScriptDir)) -and (Test-Path -LiteralPath (Join-Path $ScriptDir "Modules"))
+
+if (-not $hasLocalModules) {
+    Write-Host "[HailUninstaller] Web/Standalone execution detected (local modules not present)." -ForegroundColor Cyan
+    Write-Host "[HailUninstaller] Delegating to official secure bootstrap launcher..." -ForegroundColor Gray
+    
+    $bootstrapUri = "https://raw.githubusercontent.com/Suvesh108/HailUninstaller/main/bootstrap.ps1"
+    try {
+        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12 -bor [System.Net.SecurityProtocolType]::Tls13
+    } catch {
+        [System.Net.ServicePointManager]::SecurityProtocol = [System.Net.SecurityProtocolType]::Tls12
+    }
+    
+    $wc = New-Object System.Net.WebClient
+    try {
+        $wc.Headers.Add("User-Agent", "HailUninstaller-Entrypoint")
+        $bootstrapCode = $wc.DownloadString($bootstrapUri)
+    } finally {
+        $wc.Dispose()
+    }
+    
+    $bootstrapBlock = [scriptblock]::Create($bootstrapCode)
+    
+    $forwardArgs = @()
+    if ($PSBoundParameters) {
+        foreach ($key in $PSBoundParameters.Keys) {
+            $val = $PSBoundParameters[$key]
+            if ($val -is [System.Management.Automation.SwitchParameter]) {
+                if ($val.IsPresent) { $forwardArgs += "-$key" }
+            } else {
+                $forwardArgs += "-$key"
+                $forwardArgs += "$val"
+            }
+        }
+    }
+    & $bootstrapBlock @forwardArgs
+    return
+}
+
 $ModulesDir = Join-Path $ScriptDir "Modules"
 $ConfigDir = Join-Path $ScriptDir "Config"
 
@@ -509,7 +555,9 @@ function Show-RestoreMenuTui {
         for ($i = 0; $i -lt $backups.Count; $i++) {
             $b = $backups[$i]
             $num = "{0,2}" -f ($i + 1)
-            $date = if ($b.CreatedAt) { ([datetime]$b.CreatedAt).ToString("yyyy-MM-dd HH:mm") } else { "Unknown" }
+            $date = if ($b.CreatedAt) {
+                try { ([datetime]$b.CreatedAt).ToString("yyyy-MM-dd HH:mm") } catch { "$($b.CreatedAt)" }
+            } else { "Unknown" }
             $sz = Format-Bytes $b.TotalBytes
             Write-Host "[$num] " -ForegroundColor Cyan -NoNewline
             Write-Host ("{0,-28}" -f $b.ApplicationName) -ForegroundColor White -NoNewline

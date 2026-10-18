@@ -47,5 +47,36 @@ Describe "Heuristic Quiet Engine Tests" {
             $cmd.Type | Should Be "InnoSetup"
             $cmd.FullCommand | Should Match "/VERYSILENT"
         }
+
+        It "Extracts MSI GUID correctly into RecommendedArgs without .exe suffix" {
+            $res = Detect-InstallerType -UninstallString 'MsiExec.exe /X{12345678-ABCD-1234-ABCD-1234567890AB}'
+            $res.InstallerType | Should Be "MSI"
+            $res.RecommendedArgs | Should Match '\{12345678-ABCD-1234-ABCD-1234567890AB\}'
+            $res.RecommendedArgs | Should Not Match '\.exe'
+        }
+
+        It "Correctly separates unquoted executable path containing spaces from arguments" {
+            $cmd = Build-QuietUninstallCommand -Application ([PSCustomObject]@{
+                DisplayName          = "Space App"
+                InstallLocation      = "C:\Program Files (x86)\Space App"
+                UninstallString      = 'C:\Program Files (x86)\Space App\uninstall.exe /custom'
+                QuietUninstallString = ""
+                Id                   = "SpaceApp"
+            })
+            $cmd.Executable | Should Be "C:\Program Files (x86)\Space App\uninstall.exe"
+            $cmd.Arguments | Should Match "/custom"
+        }
+
+        It "Appends _?=InstallLocation for NSIS uninstaller" {
+            $cmd = Build-QuietUninstallCommand -Application ([PSCustomObject]@{
+                DisplayName          = "NSIS App"
+                InstallLocation      = "C:\Program Files\NSIS App"
+                UninstallString      = '"C:\Program Files\NSIS App\uninstall.exe"'
+                QuietUninstallString = ""
+                Id                   = "NsisApp"
+            })
+            $cmd.Type | Should Be "NSIS"
+            $cmd.Arguments | Should Match '_?='
+        }
     }
 }

@@ -191,7 +191,7 @@ function Show-HailUninstallerGUI {
                     </Border>
                 </StackPanel>
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" VerticalAlignment="Center">
-                    <TextBlock Name="TxtLiveStatusIndicator" Text="● Ready" FontSize="11" Foreground="#107C41" Margin="0,0,16,0" FontWeight="SemiBold"/>
+                    <TextBlock Name="TxtLiveStatusIndicator" Text="Ready" FontSize="11" Foreground="#107C41" Margin="0,0,16,0" FontWeight="SemiBold"/>
                     <TextBlock Text="Deep Application &amp; Storage Removal Suite" FontSize="11" Foreground="#707070"/>
                 </StackPanel>
             </Grid>
@@ -206,11 +206,11 @@ function Show-HailUninstallerGUI {
         <!-- Mode Selector Tabs -->
         <Border Grid.Row="2" Margin="24,0,24,6" BorderBrush="#E5E5E5" BorderThickness="0,0,0,1">
             <StackPanel Orientation="Horizontal">
-                <Button Name="TabOrphans" Content="🧹 Ghost Folders" Style="{StaticResource TabButton}" BorderBrush="#0067C0" Foreground="#0067C0"/>
-                <Button Name="TabInstalled" Content="📦 Installed Applications" Style="{StaticResource TabButton}" Margin="8,0,0,0"/>
-                <Button Name="TabForced" Content="🎯 Forced Uninstall" Style="{StaticResource TabButton}" Margin="8,0,0,0"/>
-                <Button Name="TabHunter" Content="⚡ Hunter Mode" Style="{StaticResource TabButton}" Margin="8,0,0,0"/>
-                <Button Name="TabBackups" Content="🕒 Backups &amp; Rollback" Style="{StaticResource TabButton}" Margin="8,0,0,0"/>
+                <Button Name="TabOrphans" Content="Ghost Folders" Style="{StaticResource TabButton}" BorderBrush="#0067C0" Foreground="#0067C0"/>
+                <Button Name="TabInstalled" Content="Installed Applications" Style="{StaticResource TabButton}" Margin="8,0,0,0"/>
+                <Button Name="TabForced" Content="Forced Uninstall" Style="{StaticResource TabButton}" Margin="8,0,0,0"/>
+                <Button Name="TabHunter" Content="Hunter Mode" Style="{StaticResource TabButton}" Margin="8,0,0,0"/>
+                <Button Name="TabBackups" Content="Backups &amp; Rollback" Style="{StaticResource TabButton}" Margin="8,0,0,0"/>
             </StackPanel>
         </Border>
 
@@ -241,7 +241,7 @@ function Show-HailUninstallerGUI {
                             <Rectangle Name="CellScan_5" Grid.Row="2" Grid.Column="1" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                             <Rectangle Name="CellScan_4" Grid.Row="2" Grid.Column="2" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                         </Grid>
-                        <TextBlock Name="TxtScanActionIcon" Text="🔍" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                        <TextBlock Name="TxtScanActionIcon" Text="" Margin="0" VerticalAlignment="Center"/>
                         <TextBlock Name="TxtScanActionLabel" Text="Scan Storage Leftovers" VerticalAlignment="Center"/>
                         <TextBlock Name="TxtScanActionTimer" Text="0.0s" Margin="6,0,0,0" FontSize="11" Opacity="0.85" FontFamily="Consolas, monospace" VerticalAlignment="Center" Visibility="Collapsed"/>
                     </StackPanel>
@@ -254,8 +254,7 @@ function Show-HailUninstallerGUI {
 
             <Border HorizontalAlignment="Right" Background="#FFFFFF" BorderBrush="#E0E0E0" BorderThickness="1" CornerRadius="5" Padding="8,4" Width="260">
                 <Grid>
-                    <TextBlock Text="🔍" Foreground="#888888" VerticalAlignment="Center" Margin="2,0,6,0"/>
-                    <TextBox Name="TxtSearch" BorderThickness="0" Background="Transparent" Margin="22,0,0,0" FontSize="12" VerticalAlignment="Center" ToolTip="Search current items..."/>
+                    <TextBox Name="TxtSearch" BorderThickness="0" Background="Transparent" Margin="4,0,0,0" FontSize="12" VerticalAlignment="Center" ToolTip="Search current items..."/>
                 </Grid>
             </Border>
         </Grid>
@@ -282,7 +281,7 @@ function Show-HailUninstallerGUI {
                         <!-- Empty State Prompt -->
                         <Border Name="PnlScanPrompt" Grid.Row="1" Background="#FAFAFA" BorderBrush="#EEEEEE" BorderThickness="1" CornerRadius="6" Padding="32" VerticalAlignment="Center" HorizontalAlignment="Center">
                             <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center" MaxWidth="500">
-                                <TextBlock Text="💾" FontSize="38" HorizontalAlignment="Center" Margin="0,0,0,10"/>
+                                <TextBlock Text="[STORAGE SCAN]" FontSize="13" FontWeight="Bold" Foreground="#0067C0" HorizontalAlignment="Center" Margin="0,0,0,10"/>
                                 <TextBlock Text="Ready to Deep-Scan Storage Drives" FontSize="17" FontWeight="Bold" Foreground="#1B1B1B" HorizontalAlignment="Center" Margin="0,0,0,4"/>
                                 <TextBlock Text="HailUninstaller will deeply analyze AppData, ProgramData, and secondary fixed drive roots to safely discover folders whose applications have already been uninstalled." FontSize="12" Foreground="#666666" TextWrapping="Wrap" TextAlignment="Center" Margin="0,0,0,18"/>
                                 <Button Name="BtnStartScanHero" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Center" Padding="24,8" FontSize="13">
@@ -309,7 +308,7 @@ function Show-HailUninstallerGUI {
                                             <Rectangle Name="CellHero_5" Grid.Row="2" Grid.Column="1" Width="4" Height="4" RadiusX="2" RadiusY="2" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                             <Rectangle Name="CellHero_4" Grid.Row="2" Grid.Column="2" Width="4" Height="4" RadiusX="2" RadiusY="2" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         </Grid>
-                                        <TextBlock Name="TxtHeroScanIcon" Text="🔍" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                        <TextBlock Name="TxtHeroScanIcon" Text="" Margin="0" VerticalAlignment="Center"/>
                                         <TextBlock Name="TxtHeroScanLabel" Text="Scan Storage Now" VerticalAlignment="Center"/>
                                         <TextBlock Name="TxtHeroScanTimer" Text="0.0s" Margin="6,0,0,0" FontSize="11" Opacity="0.85" FontFamily="Consolas, monospace" VerticalAlignment="Center" Visibility="Collapsed"/>
                                     </StackPanel>
@@ -470,7 +469,7 @@ function Show-HailUninstallerGUI {
                                     <Rectangle Name="CellForced_5" Grid.Row="2" Grid.Column="1" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     <Rectangle Name="CellForced_4" Grid.Row="2" Grid.Column="2" Width="3.6" Height="3.6" RadiusX="1.8" RadiusY="1.8" Fill="#FFFFFF" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                 </Grid>
-                                <TextBlock Name="TxtForcedScanIcon" Text="🎯" Margin="0,0,6,0" VerticalAlignment="Center"/>
+                                <TextBlock Name="TxtForcedScanIcon" Text="" Margin="0" VerticalAlignment="Center"/>
                                 <TextBlock Name="TxtForcedScanLabel" Text="Start Forced Scan &amp; Remnant Analysis" VerticalAlignment="Center"/>
                                 <TextBlock Name="TxtForcedScanTimer" Text="0.0s" Margin="6,0,0,0" FontSize="11" Opacity="0.85" FontFamily="Consolas, monospace" VerticalAlignment="Center" Visibility="Collapsed"/>
                             </StackPanel>
@@ -491,7 +490,7 @@ function Show-HailUninstallerGUI {
                             <RowDefinition Height="*"/>
                         </Grid.RowDefinitions>
                         <Grid Margin="4,0,0,8">
-                            <TextBlock Text="⚡ Hunter Mode: Active User Processes" FontWeight="SemiBold" FontSize="13"/>
+                            <TextBlock Text="Hunter Mode: Active User Processes" FontWeight="SemiBold" FontSize="13"/>
                             <Button Name="BtnRefreshHunter" HorizontalAlignment="Right" Style="{StaticResource SecondaryButton}" Padding="12,6">
                                 <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
                                     <!-- React Bits LatticeLoader Component (Ink colored for secondary button) -->
@@ -516,7 +515,7 @@ function Show-HailUninstallerGUI {
                                         <Rectangle Name="CellHunter_5" Grid.Row="2" Grid.Column="1" Width="3.5" Height="3.5" RadiusX="1.7" RadiusY="1.7" Fill="#0067C0" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                         <Rectangle Name="CellHunter_4" Grid.Row="2" Grid.Column="2" Width="3.5" Height="3.5" RadiusX="1.7" RadiusY="1.7" Fill="#0067C0" Opacity="0.2" HorizontalAlignment="Center" VerticalAlignment="Center"/>
                                     </Grid>
-                                    <TextBlock Name="TxtHunterIcon" Text="🔄" Margin="0,0,4,0" VerticalAlignment="Center"/>
+                                    <TextBlock Name="TxtHunterIcon" Text="" Margin="0" VerticalAlignment="Center"/>
                                     <TextBlock Name="TxtHunterLabel" Text="Refresh Active Processes" VerticalAlignment="Center"/>
                                     <TextBlock Name="TxtHunterTimer" Text="0.0s" Margin="5,0,0,0" FontSize="11" Opacity="0.85" FontFamily="Consolas, monospace" VerticalAlignment="Center" Visibility="Collapsed"/>
                                 </StackPanel>
@@ -537,7 +536,7 @@ function Show-HailUninstallerGUI {
                                                 <TextBlock Text="{Binding Path}" FontSize="11" Foreground="#707070" ToolTip="{Binding Path}"/>
                                             </StackPanel>
                                             <TextBlock Grid.Column="1" Text="{Binding FormattedMemory}" FontSize="11" Foreground="#707070" VerticalAlignment="Center" Margin="12,0"/>
-                                            <Button Grid.Column="2" Name="BtnTargetProcess" Tag="{Binding}" Content="🎯 Target &amp; Trace" Style="{StaticResource SecondaryButton}" Padding="10,4"/>
+                                            <Button Grid.Column="2" Name="BtnTargetProcess" Tag="{Binding}" Content="Target &amp; Trace" Style="{StaticResource SecondaryButton}" Padding="10,4"/>
                                         </Grid>
                                     </Border>
                                 </DataTemplate>
@@ -560,7 +559,7 @@ function Show-HailUninstallerGUI {
 
                     <Grid Margin="6,4,6,8">
                         <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
-                            <Button Name="BtnBackFromCards" Content="← Back" Style="{StaticResource SecondaryButton}" Margin="0,0,12,0" Padding="10,4"/>
+                            <Button Name="BtnBackFromCards" Content="&lt; Back" Style="{StaticResource SecondaryButton}" Margin="0,0,12,0" Padding="10,4"/>
                             <TextBlock Name="TxtCardsTargetTitle" Text="Detected Remnants" FontSize="14" FontWeight="Bold" Foreground="#1B1B1B" VerticalAlignment="Center"/>
                         </StackPanel>
                         <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
@@ -583,7 +582,7 @@ function Show-HailUninstallerGUI {
                             <!-- Card 1: Files & Folders -->
                             <Border Grid.Row="0" Grid.Column="0" Style="{StaticResource CardBorder}">
                                 <StackPanel>
-                                    <TextBlock Text="📁 AppData &amp; Disk Residuals" FontSize="13" FontWeight="Bold" Foreground="#1B1B1B" Margin="0,0,0,8"/>
+                                    <TextBlock Text="AppData &amp; Disk Residuals" FontSize="13" FontWeight="Bold" Foreground="#1B1B1B" Margin="0,0,0,8"/>
                                     <StackPanel Name="PnlFilesList"/>
                                 </StackPanel>
                             </Border>
@@ -591,7 +590,7 @@ function Show-HailUninstallerGUI {
                             <!-- Card 2: Registry Keys -->
                             <Border Grid.Row="0" Grid.Column="1" Style="{StaticResource CardBorder}">
                                 <StackPanel>
-                                    <TextBlock Text="🔑 Registry Remnants (HKCU / HKLM)" FontSize="13" FontWeight="Bold" Foreground="#1B1B1B" Margin="0,0,0,8"/>
+                                    <TextBlock Text="Registry Remnants (HKCU / HKLM)" FontSize="13" FontWeight="Bold" Foreground="#1B1B1B" Margin="0,0,0,8"/>
                                     <StackPanel Name="PnlRegistryList"/>
                                 </StackPanel>
                             </Border>
@@ -599,7 +598,7 @@ function Show-HailUninstallerGUI {
                             <!-- Card 3: Services & Scheduled Tasks -->
                             <Border Grid.Row="1" Grid.Column="0" Style="{StaticResource CardBorder}">
                                 <StackPanel>
-                                    <TextBlock Text="⚙️ Background Services &amp; Tasks" FontSize="13" FontWeight="Bold" Foreground="#1B1B1B" Margin="0,0,0,8"/>
+                                    <TextBlock Text="Background Services &amp; Tasks" FontSize="13" FontWeight="Bold" Foreground="#1B1B1B" Margin="0,0,0,8"/>
                                     <StackPanel Name="PnlServicesList"/>
                                 </StackPanel>
                             </Border>
@@ -607,7 +606,7 @@ function Show-HailUninstallerGUI {
                             <!-- Card 4: Shortcuts -->
                             <Border Grid.Row="1" Grid.Column="1" Style="{StaticResource CardBorder}">
                                 <StackPanel>
-                                    <TextBlock Text="🔗 Shortcuts &amp; Startup Entries" FontSize="13" FontWeight="Bold" Foreground="#1B1B1B" Margin="0,0,0,8"/>
+                                    <TextBlock Text="Shortcuts &amp; Startup Entries" FontSize="13" FontWeight="Bold" Foreground="#1B1B1B" Margin="0,0,0,8"/>
                                     <StackPanel Name="PnlShortcutsList"/>
                                 </StackPanel>
                             </Border>
@@ -629,7 +628,7 @@ function Show-HailUninstallerGUI {
                         </Grid.RowDefinitions>
                         <Grid Margin="4,0,0,8">
                             <TextBlock Text="Safety Snapshots (All deletions create restorable manifests)" FontWeight="SemiBold" FontSize="13"/>
-                            <Button Name="BtnRestoreSelectedBackup" Content="↺ Restore Selected Snapshot" HorizontalAlignment="Right" Style="{StaticResource PrimaryButton}" Padding="14,4"/>
+                            <Button Name="BtnRestoreSelectedBackup" Content="Restore Selected Snapshot" HorizontalAlignment="Right" Style="{StaticResource PrimaryButton}" Padding="14,4"/>
                         </Grid>
                         <ListBox Name="LstBackups" Grid.Row="1" BorderThickness="0" Background="Transparent" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
                             <ListBox.ItemTemplate>
@@ -665,7 +664,7 @@ function Show-HailUninstallerGUI {
                 </Grid.RenderTransform>
                 <Border Style="{StaticResource CardBorder}" Margin="6" VerticalAlignment="Center" HorizontalAlignment="Center" Padding="40" MaxWidth="600">
                     <StackPanel HorizontalAlignment="Center">
-                        <TextBlock Text="✅" FontSize="44" HorizontalAlignment="Center" Margin="0,0,0,12"/>
+                        <TextBlock Text="[SUCCESS]" FontSize="16" FontWeight="Bold" Foreground="#107C41" HorizontalAlignment="Center" Margin="0,0,0,12"/>
                         <TextBlock Text="Cleanup Successfully Executed!" FontSize="20" FontWeight="Bold" Foreground="#107C41" HorizontalAlignment="Center" Margin="0,0,0,8"/>
                         <TextBlock Name="TxtResultStats" Text="Freed 0 MB across 0 items" FontSize="14" Foreground="#1B1B1B" HorizontalAlignment="Center" Margin="0,0,0,6"/>
                         <TextBlock Name="TxtBackupId" Text="Backup: N/A" FontSize="11" Foreground="#707070" HorizontalAlignment="Center" Margin="0,0,0,24"/>
@@ -679,7 +678,7 @@ function Show-HailUninstallerGUI {
         <Border Grid.Row="5" Background="#FFFFFF" BorderBrush="#EAEAEA" BorderThickness="0,1,0,0" Padding="24,10">
             <Grid>
                 <TextBlock Name="TxtBottomSummary" Text="Ready to scan. Select an action above." VerticalAlignment="Center" FontSize="12" Foreground="#555555"/>
-                <Button Name="BtnNext" Content="Clean Selected Items →" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
+                <Button Name="BtnNext" Content="Clean Selected Items" Style="{StaticResource PrimaryButton}" HorizontalAlignment="Right" VerticalAlignment="Center"/>
             </Grid>
         </Border>
     </Grid>
@@ -789,13 +788,20 @@ function Show-HailUninstallerGUI {
 
     # Reactive State Store
     $script:activeTab = "Orphans"
+    $script:originTab = "Orphans"
     $script:allOrphans = [System.Collections.ObjectModel.ObservableCollection[PSCustomObject]]::new()
     $script:allInstalledApps = @()
     $script:currentLeftoverItems = @()
     $script:activeTargetApp = $null
     $script:latestBackupId = ""
     $script:isOperationRunning = $false
-    $script:activeAsyncJobs = [System.Collections.Generic.List[psobject]]::new()
+
+    # Thread-safe async coordination store (shared reference across event closures)
+    $guiAsyncState = [hashtable]::Synchronized(@{
+        ActiveJobs   = [System.Collections.Generic.List[psobject]]::new()
+        RunningTasks = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
+    })
+    $script:activeAsyncJobs = $guiAsyncState.ActiveJobs
 
     # Helper: Set Tab Active UI
     $setTabActive = {
@@ -916,9 +922,10 @@ function Show-HailUninstallerGUI {
         if ($label -and $defaultText) { $label.Text = $defaultText }
     }
 
-    # Helper: Universal Asynchronous Worker
+    # Helper: Universal Asynchronous Worker (Task-Isolated, Shared-Reference Safe)
     $invokeAsyncWorker = {
         param(
+            [string]$TaskName = "Worker",
             [scriptblock]$WorkerScript,
             [array]$ScriptArgs = @(),
             [scriptblock]$OnProgress = $null,
@@ -926,10 +933,17 @@ function Show-HailUninstallerGUI {
             [scriptblock]$OnError = $null
         )
 
-        if ($script:isOperationRunning) { return }
+        if ($guiAsyncState.RunningTasks.Contains($TaskName)) {
+            Log-GuiConsole -Tag "INFO" -Message "Task '$TaskName' is already in progress." -Color DarkGray
+            return
+        }
+        $guiAsyncState.RunningTasks.Add($TaskName) | Out-Null
         $script:isOperationRunning = $true
-        $txtLiveStatusIndicator.Text = "● Scanning..."
-        $txtLiveStatusIndicator.Foreground = [System.Windows.Media.BrushConverter]::new().ConvertFromString("#0067C0")
+
+        if ($txtLiveStatusIndicator) {
+            $txtLiveStatusIndicator.Text = "Scanning..."
+            $txtLiveStatusIndicator.Foreground = [System.Windows.Media.BrushConverter]::new().ConvertFromString("#0067C0")
+        }
 
         $queue = [System.Collections.Concurrent.ConcurrentQueue[psobject]]::new()
         $ps = [powershell]::Create()
@@ -944,16 +958,25 @@ function Show-HailUninstallerGUI {
         $pollTimer = [System.Windows.Threading.DispatcherTimer]::new()
         $pollTimer.Interval = [TimeSpan]::FromMilliseconds(50)
 
-        # Track active job in script scope to prevent early garbage collection
+        # Track active job in shared collection
         $jobRecord = [PSCustomObject]@{
+            TaskName = $TaskName
             Timer    = $pollTimer
             Runspace = $ps
             Handle   = $asyncHandle
             Queue    = $queue
         }
-        $script:activeAsyncJobs.Add($jobRecord) | Out-Null
+        $guiAsyncState.ActiveJobs.Add($jobRecord)
+
+        # Reference captures for closure
+        $sharedJobs = $guiAsyncState.ActiveJobs
+        $sharedTasks = $guiAsyncState.RunningTasks
+        $taskKey = $TaskName
+        $isFinished = $false
 
         $tickAction = {
+            if ($isFinished) { return }
+
             try {
                 # Drain queue and stream events
                 if ($queue) {
@@ -966,12 +989,8 @@ function Show-HailUninstallerGUI {
                 }
 
                 if ($asyncHandle -and $asyncHandle.IsCompleted) {
+                    $isFinished = $true
                     $pollTimer.Stop()
-                    $script:isOperationRunning = $false
-                    if ($txtLiveStatusIndicator) {
-                        $txtLiveStatusIndicator.Text = "● Ready"
-                        $txtLiveStatusIndicator.Foreground = [System.Windows.Media.BrushConverter]::new().ConvertFromString("#107C41")
-                    }
 
                     try {
                         $res = $ps.EndInvoke($asyncHandle)
@@ -989,17 +1008,33 @@ function Show-HailUninstallerGUI {
                             & $OnError $_
                         }
                     } finally {
-                        $ps.Dispose()
-                        $script:activeAsyncJobs.Remove($jobRecord) | Out-Null
+                        try { $ps.Dispose() } catch { }
+                        try { $sharedJobs.Remove($jobRecord) | Out-Null } catch { }
+                        try { $sharedTasks.Remove($taskKey) | Out-Null } catch { }
+
+                        if ($sharedTasks.Count -eq 0) {
+                            $script:isOperationRunning = $false
+                            if ($txtLiveStatusIndicator) {
+                                $txtLiveStatusIndicator.Text = "Ready"
+                                $txtLiveStatusIndicator.Foreground = [System.Windows.Media.BrushConverter]::new().ConvertFromString("#107C41")
+                            }
+                        }
                     }
                 }
             } catch {
-                Log-GuiConsole -Tag "ERROR" -Message "Timer tick exception: $_" -Color Red
+                $isFinished = $true
                 $pollTimer.Stop()
-                $script:isOperationRunning = $false
-                if ($txtLiveStatusIndicator) {
-                    $txtLiveStatusIndicator.Text = "● Ready"
-                    $txtLiveStatusIndicator.Foreground = [System.Windows.Media.BrushConverter]::new().ConvertFromString("#107C41")
+                Log-GuiConsole -Tag "ERROR" -Message "Timer tick exception: $_" -Color Red
+                try { $ps.Dispose() } catch { }
+                try { $sharedJobs.Remove($jobRecord) | Out-Null } catch { }
+                try { $sharedTasks.Remove($taskKey) | Out-Null } catch { }
+
+                if ($sharedTasks.Count -eq 0) {
+                    $script:isOperationRunning = $false
+                    if ($txtLiveStatusIndicator) {
+                        $txtLiveStatusIndicator.Text = "Ready"
+                        $txtLiveStatusIndicator.Foreground = [System.Windows.Media.BrushConverter]::new().ConvertFromString("#107C41")
+                    }
                 }
                 if ($OnError) {
                     & $OnError $_
@@ -1028,7 +1063,7 @@ function Show-HailUninstallerGUI {
 
     # Load Orphans Function (Async, Non-blocking)
     $loadOrphansData = {
-        if ($script:isOperationRunning) { return }
+        if ($guiAsyncState.RunningTasks.Contains("ScanOrphans")) { return }
 
         Log-GuiConsole -Tag "SCAN" -Message "Storage ghost folder scan initiated across all fixed drives..." -Color Magenta
         & $startLattice $latticeScanAction $cellsScanAction $txtScanActionIcon $txtScanActionLabel $txtScanActionTimer "Scanning..."
@@ -1099,7 +1134,7 @@ function Show-HailUninstallerGUI {
             $btnScanAction.IsEnabled = $true
             $btnStartScanHero.IsEnabled = $true
 
-            & $stopLattice $latticeScanAction $cellsScanAction $txtScanActionIcon $txtScanActionLabel $txtScanActionTimer "🔄 Rescan Storage"
+            & $stopLattice $latticeScanAction $cellsScanAction $txtScanActionIcon $txtScanActionLabel $txtScanActionTimer "Rescan Storage"
             & $stopLattice $latticeStartScanHero $cellsHero $txtHeroScanIcon $txtHeroScanLabel $txtHeroScanTimer "Scan Storage Now"
 
             $totalFormatted = Format-Bytes $totalOrphanBytes
@@ -1110,7 +1145,7 @@ function Show-HailUninstallerGUI {
 
         $onError = {
             param($err)
-            & $stopLattice $latticeScanAction $cellsScanAction $txtScanActionIcon $txtScanActionLabel $txtScanActionTimer "🔄 Rescan Storage"
+            & $stopLattice $latticeScanAction $cellsScanAction $txtScanActionIcon $txtScanActionLabel $txtScanActionTimer "Rescan Storage"
             & $stopLattice $latticeStartScanHero $cellsHero $txtHeroScanIcon $txtHeroScanLabel $txtHeroScanTimer "Scan Storage Now"
             $btnScanAction.IsEnabled = $true
             $btnStartScanHero.IsEnabled = $true
@@ -1118,12 +1153,12 @@ function Show-HailUninstallerGUI {
             Log-GuiConsole -Tag "ERROR" -Message "Storage scan failed: $err" -Color Red
         }
 
-        & $invokeAsyncWorker $workerBlock @($modulesDir, $ConfigDir) $onProgress $onComplete $onError
+        & $invokeAsyncWorker "ScanOrphans" $workerBlock @($modulesDir, $ConfigDir) $onProgress $onComplete $onError
     }
 
     # Load Installed Applications (Async)
     $loadInstalledApps = {
-        if ($script:allInstalledApps.Count -gt 0 -or $script:isOperationRunning) { return }
+        if ($script:allInstalledApps.Count -gt 0 -or $guiAsyncState.RunningTasks.Contains("LoadInstalledApps")) { return }
 
         Log-GuiConsole -Tag "APP" -Message "Loading installed applications and AppX/MSIX packages..." -Color Blue
         $txtBottomSummary.Text = "Discovering installed software..."
@@ -1136,7 +1171,13 @@ function Show-HailUninstallerGUI {
 
         $onComplete = {
             param($apps)
-            $script:allInstalledApps = @($apps)
+            $script:allInstalledApps = @($apps | ForEach-Object {
+                if ($_ -and $_.PSObject.Properties['Selected'] -eq $null) {
+                    $_ | Add-Member -MemberType NoteProperty -Name "Selected" -Value $false -PassThru
+                } else {
+                    $_
+                }
+            })
             $lstApps.ItemsSource = $script:allInstalledApps
             $txtBottomSummary.Text = "$($script:allInstalledApps.Count) applications loaded. Select an app to uninstall or deep scan."
             Log-GuiConsole -Tag "APP" -Message "Successfully loaded $($script:allInstalledApps.Count) installed applications." -Color Green
@@ -1148,12 +1189,12 @@ function Show-HailUninstallerGUI {
             Log-GuiConsole -Tag "ERROR" -Message "Failed to load installed applications: $err" -Color Red
         }
 
-        & $invokeAsyncWorker $workerBlock @($modulesDir) $null $onComplete $onError
+        & $invokeAsyncWorker "LoadInstalledApps" $workerBlock @($modulesDir) $null $onComplete $onError
     }
 
     # Load Hunter Processes (Async)
     $loadHunterProcesses = {
-        if ($script:isOperationRunning) { return }
+        if ($guiAsyncState.RunningTasks.Contains("LoadHunterProcesses")) { return }
 
         Log-GuiConsole -Tag "HUNTER" -Message "Enumerating running user processes..." -Color Magenta
         & $startLattice $latticeHunter $cellsHunter $txtHunterIcon $txtHunterLabel $txtHunterTimer "Refreshing..."
@@ -1180,12 +1221,12 @@ function Show-HailUninstallerGUI {
             Log-GuiConsole -Tag "ERROR" -Message "Failed to enumerate hunter processes: $err" -Color Red
         }
 
-        & $invokeAsyncWorker $workerBlock @($modulesDir, $ConfigDir) $null $onComplete $onError
+        & $invokeAsyncWorker "LoadHunterProcesses" $workerBlock @($modulesDir, $ConfigDir) $null $onComplete $onError
     }
 
     # Load Backups (Async)
     $loadBackupsData = {
-        if ($script:isOperationRunning) { return }
+        if ($guiAsyncState.RunningTasks.Contains("LoadBackups")) { return }
 
         Log-GuiConsole -Tag "BACKUP" -Message "Retrieving backup restore manifests..." -Color Cyan
         $workerBlock = {
@@ -1205,12 +1246,13 @@ function Show-HailUninstallerGUI {
             Log-GuiConsole -Tag "ERROR" -Message "Failed to load backups: $err" -Color Red
         }
 
-        & $invokeAsyncWorker $workerBlock @($modulesDir) $null $onComplete $onError
+        & $invokeAsyncWorker "LoadBackups" $workerBlock @($modulesDir) $null $onComplete $onError
     }
 
     # Display Leftover Cards for any Scored Result Set
     $displayLeftoverCards = {
         param($app, $leftovers)
+        $script:originTab = $script:activeTab
         $script:activeTargetApp = $app
         $script:currentLeftoverItems = @($leftovers)
         $txtCardsTargetTitle.Text = "Leftovers: $($app.DisplayName)"
@@ -1244,7 +1286,7 @@ function Show-HailUninstallerGUI {
         }
 
         & $switchView $viewLeftoverCards
-        $btnNext.Content = "Clean Selected Items →"
+        $btnNext.Content = "Clean Selected Items"
         $btnNext.Visibility = [System.Windows.Visibility]::Visible
         $txtBottomSummary.Text = "Review detected remnants. Uncheck any items you wish to preserve."
         Log-GuiConsole -Tag "CARDS" -Message "Displaying $(@($leftovers).Count) leftover items for '$($app.DisplayName)' across 4 card categories." -Color Cyan
@@ -1253,6 +1295,7 @@ function Show-HailUninstallerGUI {
     # Tab 1: Orphans
     $tabOrphans.Add_Click({
         $script:activeTab = "Orphans"
+        $script:originTab = "Orphans"
         Log-GuiConsole -Tag "NAV" -Message "Switched to tab: Ghost Folders" -Color Blue
         & $setTabActive $tabOrphans
         & $switchView $viewOrphans
@@ -1261,7 +1304,7 @@ function Show-HailUninstallerGUI {
         $btnSelectAll.Visibility = [System.Windows.Visibility]::Visible
         $btnSelectHeavy.Visibility = [System.Windows.Visibility]::Visible
         $btnClearSelection.Visibility = [System.Windows.Visibility]::Visible
-        $btnNext.Content = "Delete Selected Ghost Folders →"
+        $btnNext.Content = "Delete Selected Ghost Folders"
         $btnNext.Visibility = [System.Windows.Visibility]::Visible
         & $updateOrphanSummary
     })
@@ -1269,6 +1312,7 @@ function Show-HailUninstallerGUI {
     # Tab 2: Installed Apps
     $tabInstalled.Add_Click({
         $script:activeTab = "Installed"
+        $script:originTab = "Installed"
         Log-GuiConsole -Tag "NAV" -Message "Switched to tab: Installed Applications" -Color Blue
         & $setTabActive $tabInstalled
         & $switchView $viewInstalled
@@ -1277,7 +1321,7 @@ function Show-HailUninstallerGUI {
         $btnSelectAll.Visibility = [System.Windows.Visibility]::Visible
         $btnSelectHeavy.Visibility = [System.Windows.Visibility]::Collapsed
         $btnClearSelection.Visibility = [System.Windows.Visibility]::Visible
-        $btnNext.Content = "Scan Leftovers For App →"
+        $btnNext.Content = "Scan Leftovers For App"
         $btnNext.Visibility = [System.Windows.Visibility]::Visible
         & $loadInstalledApps
     })
@@ -1285,6 +1329,7 @@ function Show-HailUninstallerGUI {
     # Tab 3: Forced Uninstall
     $tabForced.Add_Click({
         $script:activeTab = "Forced"
+        $script:originTab = "Forced"
         Log-GuiConsole -Tag "NAV" -Message "Switched to tab: Forced Target Purge" -Color Blue
         & $setTabActive $tabForced
         & $switchView $viewForced
@@ -1300,6 +1345,7 @@ function Show-HailUninstallerGUI {
     # Tab 4: Hunter Mode
     $tabHunter.Add_Click({
         $script:activeTab = "Hunter"
+        $script:originTab = "Hunter"
         Log-GuiConsole -Tag "NAV" -Message "Switched to tab: Hunter Mode" -Color Blue
         & $setTabActive $tabHunter
         & $switchView $viewHunter
@@ -1316,6 +1362,7 @@ function Show-HailUninstallerGUI {
     # Tab 5: Backups
     $tabBackups.Add_Click({
         $script:activeTab = "Backups"
+        $script:originTab = "Backups"
         Log-GuiConsole -Tag "NAV" -Message "Switched to tab: Backups & Rollback" -Color Blue
         & $setTabActive $tabBackups
         & $switchView $viewBackups
@@ -1392,24 +1439,62 @@ function Show-HailUninstallerGUI {
         }
     })
 
+    # Live checkbox sync handlers
+    $lstOrphans.AddHandler([System.Windows.Controls.Primitives.ToggleButton]::CheckedEvent, [System.Windows.RoutedEventHandler]{
+        & $updateOrphanSummary
+    })
+    $lstOrphans.AddHandler([System.Windows.Controls.Primitives.ToggleButton]::UncheckedEvent, [System.Windows.RoutedEventHandler]{
+        & $updateOrphanSummary
+    })
+    $lstApps.AddHandler([System.Windows.Controls.Primitives.ToggleButton]::CheckedEvent, [System.Windows.RoutedEventHandler]{
+        $selCount = @($script:allInstalledApps | Where-Object { $_.Selected }).Count
+        if ($selCount -gt 0) {
+            $txtBottomSummary.Text = "$selCount application(s) selected for batch operations."
+        }
+    })
+    $lstApps.AddHandler([System.Windows.Controls.Primitives.ToggleButton]::UncheckedEvent, [System.Windows.RoutedEventHandler]{
+        $selCount = @($script:allInstalledApps | Where-Object { $_.Selected }).Count
+        if ($selCount -gt 0) {
+            $txtBottomSummary.Text = "$selCount application(s) selected for batch operations."
+        } else {
+            $txtBottomSummary.Text = "$($script:allInstalledApps.Count) applications loaded. Select an app to uninstall or deep scan."
+        }
+    })
+
     # Trigger Orphan Scan
     $btnScanAction.Add_Click({ & $loadOrphansData })
     if ($btnStartScanHero) { $btnStartScanHero.Add_Click({ & $loadOrphansData }) }
 
+    # Helper: Resolve target installed application(s)
+    $getSelectedInstalledApps = {
+        $checked = @($script:allInstalledApps | Where-Object { $_.Selected })
+        if ($checked.Count -gt 0) {
+            return $checked
+        }
+        if ($lstApps.SelectedItem) {
+            return @($lstApps.SelectedItem)
+        }
+        return @()
+    }
+
     # App Actions: Standard Uninstall
     $btnAppNormalUninstall.Add_Click({
-        if (-not $lstApps.SelectedItem) {
-            [System.Windows.MessageBox]::Show("Please select an application to uninstall.", "HailUninstaller", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information) | Out-Null
+        $selectedApps = & $getSelectedInstalledApps
+        if ($selectedApps.Count -eq 0) {
+            [System.Windows.MessageBox]::Show("Please select or check an application to uninstall.", "HailUninstaller", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information) | Out-Null
             return
         }
-        $app = $lstApps.SelectedItem
-        $res = [System.Windows.MessageBox]::Show("Launch official uninstaller for '$($app.DisplayName)'?", "Standard Uninstall", [System.Windows.MessageBoxButton]::YesNo, [System.Windows.MessageBoxImage]::Question)
+        $appNames = ($selectedApps | ForEach-Object { $_.DisplayName }) -join ", "
+        if ($appNames.Length -gt 100) { $appNames = $appNames.Substring(0, 97) + "..." }
+        $res = [System.Windows.MessageBox]::Show("Launch official uninstaller for $($selectedApps.Count) application(s)?`n`n$appNames", "Standard Uninstall", [System.Windows.MessageBoxButton]::YesNo, [System.Windows.MessageBoxImage]::Question)
         if ($res -eq [System.Windows.MessageBoxResult]::Yes) {
-            Log-GuiConsole -Tag "UNINSTALL" -Message "Invoking standard uninstaller for '$($app.DisplayName)'..." -Color Yellow
-            $window.Cursor = [System.Windows.Input.Cursors]::Wait
-            Invoke-NativeUninstall -Application $app -Quiet:$false
-            $window.Cursor = [System.Windows.Input.Cursors]::Arrow
-            Log-GuiConsole -Tag "UNINSTALL" -Message "Uninstaller completed for '$($app.DisplayName)'." -Color Green
+            foreach ($app in $selectedApps) {
+                Log-GuiConsole -Tag "UNINSTALL" -Message "Invoking standard uninstaller for '$($app.DisplayName)'..." -Color Yellow
+                $window.Cursor = [System.Windows.Input.Cursors]::Wait
+                Invoke-NativeUninstall -Application $app -Quiet:$false
+                $window.Cursor = [System.Windows.Input.Cursors]::Arrow
+                Log-GuiConsole -Tag "UNINSTALL" -Message "Uninstaller completed for '$($app.DisplayName)'." -Color Green
+            }
             $script:allInstalledApps = @()
             & $loadInstalledApps
         }
@@ -1417,18 +1502,22 @@ function Show-HailUninstallerGUI {
 
     # App Actions: Quiet Uninstall
     $btnAppQuietUninstall.Add_Click({
-        if (-not $lstApps.SelectedItem) {
-            [System.Windows.MessageBox]::Show("Please select an application to quietly uninstall.", "HailUninstaller", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information) | Out-Null
+        $selectedApps = & $getSelectedInstalledApps
+        if ($selectedApps.Count -eq 0) {
+            [System.Windows.MessageBox]::Show("Please select or check an application to quietly uninstall.", "HailUninstaller", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information) | Out-Null
             return
         }
-        $app = $lstApps.SelectedItem
-        $res = [System.Windows.MessageBox]::Show("Run silent / unattended uninstaller for '$($app.DisplayName)'?`n`nHailUninstaller will automatically inject quiet parameters.", "Quiet Uninstall", [System.Windows.MessageBoxButton]::YesNo, [System.Windows.MessageBoxImage]::Question)
+        $appNames = ($selectedApps | ForEach-Object { $_.DisplayName }) -join ", "
+        if ($appNames.Length -gt 100) { $appNames = $appNames.Substring(0, 97) + "..." }
+        $res = [System.Windows.MessageBox]::Show("Run silent / unattended uninstaller for $($selectedApps.Count) application(s)?`n`n$appNames`n`nHailUninstaller will automatically inject quiet parameters.", "Quiet Uninstall", [System.Windows.MessageBoxButton]::YesNo, [System.Windows.MessageBoxImage]::Question)
         if ($res -eq [System.Windows.MessageBoxResult]::Yes) {
-            Log-GuiConsole -Tag "QUIET" -Message "Executing quiet unattended uninstallation for '$($app.DisplayName)'..." -Color Magenta
-            $window.Cursor = [System.Windows.Input.Cursors]::Wait
-            Invoke-NativeUninstall -Application $app -Quiet:$true
-            $window.Cursor = [System.Windows.Input.Cursors]::Arrow
-            Log-GuiConsole -Tag "QUIET" -Message "Quiet uninstallation finished for '$($app.DisplayName)'." -Color Green
+            foreach ($app in $selectedApps) {
+                Log-GuiConsole -Tag "QUIET" -Message "Executing quiet unattended uninstallation for '$($app.DisplayName)'..." -Color Magenta
+                $window.Cursor = [System.Windows.Input.Cursors]::Wait
+                Invoke-NativeUninstall -Application $app -Quiet:$true
+                $window.Cursor = [System.Windows.Input.Cursors]::Arrow
+                Log-GuiConsole -Tag "QUIET" -Message "Quiet uninstallation finished for '$($app.DisplayName)'." -Color Green
+            }
             $script:allInstalledApps = @()
             & $loadInstalledApps
         }
@@ -1436,13 +1525,14 @@ function Show-HailUninstallerGUI {
 
     # App Actions: Deep Scan (Async)
     $btnAppDeepScan.Add_Click({
-        if (-not $lstApps.SelectedItem -or $script:isOperationRunning) {
-            if (-not $lstApps.SelectedItem) {
+        $selectedApps = & $getSelectedInstalledApps
+        if ($selectedApps.Count -eq 0 -or $guiAsyncState.RunningTasks.Contains("AppDeepScan")) {
+            if ($selectedApps.Count -eq 0) {
                 [System.Windows.MessageBox]::Show("Please select an application to deep-scan.", "HailUninstaller", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information) | Out-Null
             }
             return
         }
-        $app = $lstApps.SelectedItem
+        $app = $selectedApps[0]
         Log-GuiConsole -Tag "SCAN" -Message "Initiating deep leftover scan for '$($app.DisplayName)'..." -Color Cyan
         & $startLattice $latticeAppDeepScan $cellsAppDeep $txtAppDeepScanIcon $txtAppDeepScanLabel $txtAppDeepScanTimer "Scanning..."
         $btnAppDeepScan.IsEnabled = $false
@@ -1486,7 +1576,7 @@ function Show-HailUninstallerGUI {
             Log-GuiConsole -Tag "ERROR" -Message "Deep scan failed: $err" -Color Red
         }
 
-        & $invokeAsyncWorker $workerBlock @($modulesDir, $ConfigDir, $app) $onProgress $onComplete $onError
+        & $invokeAsyncWorker "AppDeepScan" $workerBlock @($modulesDir, $ConfigDir, $app) $onProgress $onComplete $onError
     })
 
     # Forced Uninstall: Browse Folder
@@ -1512,12 +1602,12 @@ function Show-HailUninstallerGUI {
 
     # Forced Uninstall: Run Scan (Async)
     $btnRunForcedScan.Add_Click({
-        $target = $txtForcedTarget.Text.Trim()
+        $target = $txtForcedTarget.Text.Trim().Trim('"', "'", ' ')
         if ([string]::IsNullOrWhiteSpace($target)) {
             [System.Windows.MessageBox]::Show("Please enter or browse to a target folder or program name.", "Forced Uninstall", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information) | Out-Null
             return
         }
-        if ($script:isOperationRunning) { return }
+        if ($guiAsyncState.RunningTasks.Contains("ForcedScan")) { return }
 
         Log-GuiConsole -Tag "FORCED" -Message "Starting forced remnant analysis on '$target'..." -Color Magenta
         & $startLattice $latticeForcedScan $cellsForced $txtForcedScanIcon $txtForcedScanLabel $txtForcedScanTimer "Analyzing Remnants..."
@@ -1569,7 +1659,7 @@ function Show-HailUninstallerGUI {
             Log-GuiConsole -Tag "ERROR" -Message "Forced scan failed: $err" -Color Red
         }
 
-        & $invokeAsyncWorker $workerBlock @($modulesDir, $ConfigDir, $target) $onProgress $onComplete $onError
+        & $invokeAsyncWorker "ForcedScan" $workerBlock @($modulesDir, $ConfigDir, $target) $onProgress $onComplete $onError
     })
 
     # Hunter Mode: Target Running Process
@@ -1622,9 +1712,25 @@ function Show-HailUninstallerGUI {
     })
 
     $btnBackFromCards.Add_Click({
-        Log-GuiConsole -Tag "NAV" -Message "Returning from leftover cards to installed view" -Color Blue
-        & $switchView $viewInstalled
-        $btnNext.Content = "Scan Leftovers For App →"
+        Log-GuiConsole -Tag "NAV" -Message "Returning from leftover cards to $script:originTab view" -Color Blue
+        switch ($script:originTab) {
+            "Forced" {
+                & $switchView $viewForced
+                $btnNext.Visibility = [System.Windows.Visibility]::Collapsed
+                $txtBottomSummary.Text = "Specify a leftover folder or executable to purge broken software."
+            }
+            "Hunter" {
+                & $switchView $viewHunter
+                $btnNext.Visibility = [System.Windows.Visibility]::Collapsed
+                $txtBottomSummary.Text = "Inspect active processes to trace their origin and remove."
+            }
+            Default {
+                & $switchView $viewInstalled
+                $btnNext.Content = "Scan Leftovers For App"
+                $btnNext.Visibility = [System.Windows.Visibility]::Visible
+                $txtBottomSummary.Text = "$($script:allInstalledApps.Count) applications loaded. Select an app to uninstall or deep scan."
+            }
+        }
     })
 
     # Restore Button
@@ -1645,8 +1751,65 @@ function Show-HailUninstallerGUI {
         }
     })
 
+    # Return Home Button from Step 3 (CRITICAL FIX: Zero invalid invocation, origin-aware return)
     $btnReturnHome.Add_Click({
-        & $tabOrphans.RaiseEvent([System.Windows.RoutedEventArgs]::new([System.Windows.Controls.Button]::ClickEvent))
+        try {
+            switch ($script:originTab) {
+                "Installed" {
+                    $script:activeTab = "Installed"
+                    & $setTabActive $tabInstalled
+                    & $switchView $viewInstalled
+                    $btnScanAction.Visibility = [System.Windows.Visibility]::Collapsed
+                    $btnSelectHigh.Visibility = [System.Windows.Visibility]::Collapsed
+                    $btnSelectAll.Visibility = [System.Windows.Visibility]::Visible
+                    $btnSelectHeavy.Visibility = [System.Windows.Visibility]::Collapsed
+                    $btnClearSelection.Visibility = [System.Windows.Visibility]::Visible
+                    $btnNext.Content = "Scan Leftovers For App"
+                    $btnNext.Visibility = [System.Windows.Visibility]::Visible
+                    & $loadInstalledApps
+                }
+                "Forced" {
+                    $script:activeTab = "Forced"
+                    & $setTabActive $tabForced
+                    & $switchView $viewForced
+                    $btnScanAction.Visibility = [System.Windows.Visibility]::Collapsed
+                    $btnSelectHigh.Visibility = [System.Windows.Visibility]::Collapsed
+                    $btnSelectAll.Visibility = [System.Windows.Visibility]::Collapsed
+                    $btnSelectHeavy.Visibility = [System.Windows.Visibility]::Collapsed
+                    $btnClearSelection.Visibility = [System.Windows.Visibility]::Collapsed
+                    $btnNext.Visibility = [System.Windows.Visibility]::Collapsed
+                    $txtBottomSummary.Text = "Specify a leftover folder or executable to purge broken software."
+                }
+                "Hunter" {
+                    $script:activeTab = "Hunter"
+                    & $setTabActive $tabHunter
+                    & $switchView $viewHunter
+                    $btnScanAction.Visibility = [System.Windows.Visibility]::Collapsed
+                    $btnSelectHigh.Visibility = [System.Windows.Visibility]::Collapsed
+                    $btnSelectAll.Visibility = [System.Windows.Visibility]::Collapsed
+                    $btnSelectHeavy.Visibility = [System.Windows.Visibility]::Collapsed
+                    $btnClearSelection.Visibility = [System.Windows.Visibility]::Collapsed
+                    $btnNext.Visibility = [System.Windows.Visibility]::Collapsed
+                    & $loadHunterProcesses
+                    $txtBottomSummary.Text = "Inspect active processes to trace their origin and remove."
+                }
+                Default {
+                    $script:activeTab = "Orphans"
+                    & $setTabActive $tabOrphans
+                    & $switchView $viewOrphans
+                    $btnScanAction.Visibility = [System.Windows.Visibility]::Visible
+                    $btnSelectHigh.Visibility = [System.Windows.Visibility]::Visible
+                    $btnSelectAll.Visibility = [System.Windows.Visibility]::Visible
+                    $btnSelectHeavy.Visibility = [System.Windows.Visibility]::Visible
+                    $btnClearSelection.Visibility = [System.Windows.Visibility]::Visible
+                    $btnNext.Content = "Delete Selected Ghost Folders"
+                    $btnNext.Visibility = [System.Windows.Visibility]::Visible
+                    & $updateOrphanSummary
+                }
+            }
+        } catch {
+            Log-GuiConsole -Tag "ERROR" -Message "Navigation error returning from results: $_" -Color Red
+        }
     })
 
     # Bottom Main Action Button ($btnNext)
@@ -1688,18 +1851,36 @@ function Show-HailUninstallerGUI {
             $window.Cursor = [System.Windows.Input.Cursors]::Arrow
             Log-GuiConsole -Tag "CLEANUP" -Message "Orphan purge complete! Freed $(Format-Bytes $cRes.RemovedBytes) across $($cRes.RemovedCount) folders." -Color Green
 
+            # In-place purge of deleted orphans from observable collection
+            for ($i = $script:allOrphans.Count - 1; $i -ge 0; $i--) {
+                if ($script:allOrphans[$i].Selected) {
+                    $script:allOrphans.RemoveAt($i)
+                }
+            }
+            $remBytes = 0L
+            foreach ($rem in $script:allOrphans) { $remBytes += [long]$rem.Size }
+            if ($script:allOrphans.Count -gt 0) {
+                $txtOrphanCount.Text = "$($script:allOrphans.Count) folders found ($(Format-Bytes $remBytes) total)"
+            } else {
+                $txtOrphanCount.Text = "No orphan folders remaining."
+                if ($pnlScanPrompt) { $pnlScanPrompt.Visibility = [System.Windows.Visibility]::Visible }
+                if ($lstOrphans) { $lstOrphans.Visibility = [System.Windows.Visibility]::Collapsed }
+            }
+
             & $switchView $viewStep3
             $txtResultStats.Text = "Freed: $(Format-Bytes $cRes.RemovedBytes) across $($cRes.RemovedCount) orphaned folder(s)!"
             $txtBackupId.Text = "Backup Snapshot: $($backupRes.BackupId)"
             $btnNext.Visibility = [System.Windows.Visibility]::Collapsed
+            $btnReturnHome.Content = "← Return to Ghost Folders"
 
         # SCENARIO 2: Scanning Selected App from Installed List
         } elseif ($viewInstalled.Visibility -eq [System.Windows.Visibility]::Visible) {
-            if (-not $lstApps.SelectedItem) {
+            $selectedApps = & $getSelectedInstalledApps
+            if ($selectedApps.Count -eq 0) {
                 [System.Windows.MessageBox]::Show("Please select an application to scan.", "HailUninstaller", [System.Windows.MessageBoxButton]::OK, [System.Windows.MessageBoxImage]::Information) | Out-Null
                 return
             }
-            $app = $lstApps.SelectedItem
+            $app = $selectedApps[0]
             Log-GuiConsole -Tag "SCAN" -Message "Deep scanning leftovers for application: $($app.DisplayName)..." -Color Cyan
             $window.Cursor = [System.Windows.Input.Cursors]::Wait
             $leftovers = @(Start-DeepScan -Application $app -ConfigDir $ConfigDir)
@@ -1753,13 +1934,47 @@ function Show-HailUninstallerGUI {
             $txtResultStats.Text = "Freed: $(Format-Bytes $cRes.RemovedBytes) across $($cRes.RemovedCount) remnant item(s)!"
             $txtBackupId.Text = "Backup Snapshot: $($backupRes.BackupId)"
             $btnNext.Visibility = [System.Windows.Visibility]::Collapsed
+
+            if ($script:originTab -eq "Installed") {
+                $btnReturnHome.Content = "← Return to Installed Applications"
+            } elseif ($script:originTab -eq "Forced") {
+                $btnReturnHome.Content = "← Return to Forced Purge"
+            } elseif ($script:originTab -eq "Hunter") {
+                $btnReturnHome.Content = "← Return to Hunter Mode"
+            } else {
+                $btnReturnHome.Content = "← Return to Ghost Folders"
+            }
         }
+    })
+
+    # Window Closing: Cleanly dispose background runspaces and stop timers
+    $window.Add_Closing({
+        try {
+            if ($guiAsyncState.ActiveJobs) {
+                foreach ($job in @($guiAsyncState.ActiveJobs)) {
+                    try {
+                        if ($job.Timer) { $job.Timer.Stop() }
+                        if ($job.Runspace) { $job.Runspace.Dispose() }
+                    } catch { }
+                }
+                $guiAsyncState.ActiveJobs.Clear()
+                $guiAsyncState.RunningTasks.Clear()
+            }
+            if ($activeLatticeTimers) {
+                foreach ($kv in $activeLatticeTimers.GetEnumerator()) {
+                    try { $kv.Value.Timer.Stop() } catch { }
+                }
+                $activeLatticeTimers.Clear()
+            }
+        } catch { }
     })
 
     # Window Loaded: Immediate instant launch
     $window.Add_Loaded({
         $txtBottomSummary.Text = "HailUninstaller v2.1 ready. Click 'Scan Storage Leftovers' or switch tabs."
         Log-GuiConsole -Tag "READY" -Message "HailUninstaller ready. Console log synchronized with GUI." -Color Green
+        # Preload installed software in background for instantaneous responsiveness when switching tabs
+        & $loadInstalledApps
     })
 
     # Launch GUI dialog

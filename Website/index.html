@@ -1,4 +1,4 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -57,7 +57,7 @@
         <div class="command-label">Launch instantly in Windows PowerShell (Admin):</div>
         <div class="command-box">
           <span class="prompt-sign">&gt;</span>
-          <code id="install-command">irm https://hailuninstaller.dev | iex</code>
+          <code id="install-command">irm "https://raw.githubusercontent.com/Suvesh108/HailUninstaller/main/bootstrap.ps1" | iex</code>
           <button id="copy-btn" class="copy-button" aria-label="Copy Command">
             <svg class="copy-icon" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2" ry="2"></rect><path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1"></path></svg>
             <span class="copy-text">Copy</span>
@@ -286,7 +286,7 @@
       <p>No installer required. Run with a single PowerShell line or download the standalone launcher.</p>
       
       <div class="cta-actions">
-        <button class="btn btn-primary btn-lg" onclick="navigator.clipboard.writeText('irm https://hailuninstaller.dev | iex'); alert('Copied command to clipboard!');">
+        <button class="btn btn-primary btn-lg" onclick="navigator.clipboard.writeText('irm \&quot;https://raw.githubusercontent.com/Suvesh108/HailUninstaller/main/bootstrap.ps1\&quot; | iex'); alert('Copied command to clipboard!');">
           Copy PowerShell Command
         </button>
         <a href="https://github.com/Suvesh108/HailUninstaller/archive/refs/heads/main.zip" class="btn btn-outline btn-lg">

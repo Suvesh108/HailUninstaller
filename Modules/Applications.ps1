@@ -33,8 +33,10 @@ function Get-InstalledApplications {
 
             $installLocation = $k.InstallLocation
             if (-not $installLocation -and $k.UninstallString) {
-                $raw = $k.UninstallString
+                $raw = $k.UninstallString.Trim()
                 if ($raw -match '["'']([^"'']+\.exe)["'']') {
+                    $installLocation = Split-Path $matches[1] -ErrorAction SilentlyContinue
+                } elseif ($raw -match '^(.*?\.(?:exe|bat|cmd))\b') {
                     $installLocation = Split-Path $matches[1] -ErrorAction SilentlyContinue
                 }
             }
@@ -172,8 +174,8 @@ function Invoke-NativeUninstall {
         }
 
         # Check for MsiExec
-        if ($cmd -match 'msiexec(\.exe)?\s+(\/I|\/X|\/i|\/x)\s*(\{[A-F0-9\-]{36}\})' -or $cmd -match '(\{[A-F0-9\-]{36}\})') {
-            $guid = $matches[$matches.Count - 1]
+        if ($cmd -match '(?<guid>\{[A-F0-9\-]{36}\})') {
+            $guid = $matches['guid']
             $args = "/x $guid"
             if ($Quiet) { $args += " /qn /norestart" }
             $proc = Start-Process -FilePath "msiexec.exe" -ArgumentList $args -Wait -PassThru
@@ -186,7 +188,7 @@ function Invoke-NativeUninstall {
         if ($cmd -match '^"([^"]+)"\s*(.*)$') {
             $exe = $matches[1]
             $arguments = $matches[2]
-        } elseif ($cmd -match '^(\S+\.exe)\s*(.*)$') {
+        } elseif ($cmd -match '^(.*?\.(?:exe|bat|cmd))\b\s*(.*)$') {
             $exe = $matches[1]
             $arguments = $matches[2]
         } else {

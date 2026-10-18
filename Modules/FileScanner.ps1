@@ -55,8 +55,10 @@ function Scan-FileLeftovers {
         $words = $AppName -split '[\s\-_]+' | Where-Object { $_.Length -ge 4 -and $_ -notmatch '^(Microsoft|Google|Windows|Installer|Setup)$' }
         foreach ($w in $words) { $tokens.Add($w) }
     }
-    if ($Publisher -and $Publisher -notmatch '^(Microsoft|Google|Apple|Corp|Corporation|Inc|LLC)$') {
-        $pubWords = $Publisher -split '[\s\-_]+' | Where-Object { $_.Length -ge 4 }
+    if ($Publisher) {
+        $pubWords = $Publisher -split '[\s\-_]+' | Where-Object { 
+            $_.Length -ge 4 -and $_ -notmatch '^(Microsoft|Google|Apple|Corp|Corporation|Inc|LLC|Technologies|Technology|Software)$' 
+        }
         foreach ($pw in $pubWords) { $tokens.Add($pw) }
     }
 

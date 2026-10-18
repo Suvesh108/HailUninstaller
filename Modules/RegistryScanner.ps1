@@ -38,8 +38,10 @@ function Scan-RegistryLeftovers {
         $words = $AppName -split '[\s\-_]+' | Where-Object { $_.Length -ge 4 -and $_ -notmatch '^(Microsoft|Windows|Installer|Setup)$' }
         foreach ($w in $words) { $tokens.Add($w) }
     }
-    if ($Publisher -and $Publisher -notmatch '^(Microsoft|Corporation|Inc|LLC)$') {
-        $pubWords = $Publisher -split '[\s\-_]+' | Where-Object { $_.Length -ge 4 }
+    if ($Publisher) {
+        $pubWords = $Publisher -split '[\s\-_]+' | Where-Object { 
+            $_.Length -ge 4 -and $_ -notmatch '^(Microsoft|Google|Apple|Corp|Corporation|Inc|LLC|Technologies|Technology|Software)$' 
+        }
         foreach ($pw in $pubWords) { $tokens.Add($pw) }
     }
 
@@ -56,15 +58,19 @@ function Scan-RegistryLeftovers {
         try {
             $subkeys = Get-ChildItem -LiteralPath $hive -ErrorAction SilentlyContinue
             foreach ($sub in $subkeys) {
-                if ($seenKeys.Contains($sub.PSPath)) { continue }
+                $cleanPath = $sub.PSPath -replace '^Microsoft\.PowerShell\.Core\\Registry::HKEY_LOCAL_MACHINE\\?', 'HKLM:\' `
+                                         -replace '^Microsoft\.PowerShell\.Core\\Registry::HKEY_CURRENT_USER\\?', 'HKCU:\'
+
+                if ($seenKeys.Contains($cleanPath) -or $seenKeys.Contains($sub.PSPath)) { continue }
 
                 foreach ($token in $tokens) {
                     if ($sub.PSChildName -like "*$token*") {
+                        $seenKeys.Add($cleanPath) | Out-Null
                         $seenKeys.Add($sub.PSPath) | Out-Null
                         $results.Add([PSCustomObject]@{
                             Category     = "Registry"
                             Type         = "Key"
-                            Path         = $sub.PSPath
+                            Path         = $cleanPath
                             ValueName    = ""
                             Size         = 0
                             ItemCount    = 1

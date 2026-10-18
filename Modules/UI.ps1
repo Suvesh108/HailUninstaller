@@ -105,3 +105,20 @@ function Show-AppDetails {
     Write-Host ("  Location:  " + $App.InstallLocation)
     Write-Host ""
 }
+
+function Load-ConfigSafe {
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory = $true)]
+        [string]$Path
+    )
+
+    if (Test-Path -LiteralPath $Path) {
+        try {
+            return (Get-Content -LiteralPath $Path -Raw -Encoding UTF8 | ConvertFrom-Json)
+        } catch {
+            Write-Warning "Could not parse JSON configuration at '$Path': $_"
+        }
+    }
+    return $null
+}

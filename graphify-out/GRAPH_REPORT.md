@@ -1,48 +1,48 @@
-# Graph Report - HailUninstaller  (2026-10-02)
+# Graph Report - HailUninstaller  (2026-10-18)
 
 ## Corpus Check
-- cluster-only mode — file stats not available
+- 34 files · ~83,834 words
+- Verdict: corpus is large enough that graph structure adds value.
+- Unclassified: 7 file(s) not represented in the graph (top: (none) 3, .bat 1, .css 1)
 
 ## Summary
-- 49 nodes · 64 edges · 15 communities (3 shown, 12 thin omitted)
-- Extraction: 58% EXTRACTED · 42% INFERRED · 0% AMBIGUOUS · INFERRED: 27 edges (avg confidence: 0.85)
+- 96 nodes · 152 edges · 12 communities (7 shown, 5 thin omitted)
+- Extraction: 49% EXTRACTED · 51% INFERRED · 0% AMBIGUOUS · INFERRED: 77 edges (avg confidence: 0.85)
 - Token cost: 0 input · 0 output
 
 ## Graph Freshness
-- Built from commit: `2c083d30`
+- Built from commit: `9c5da73e`
 - Run `git rev-parse HEAD` and compare to check if the graph is stale.
 - Run `graphify update .` after code changes (no API cost).
 
 ## Community Hubs (Navigation)
 - Show-CleanupPreviewTui
-- Scan-OrphanedStorageFolders
-- Get-BackupRootDirectory
-- Start-DeepScan
-- Load-ConfigSafe
 - Invoke-CleanupItems
-- Scan-ServiceLeftovers
-- Scan-ShortcutLeftovers
-- Scan-TaskLeftovers
+- Get-BackupRootDirectory
+- Start-ForcedUninstall
+- 2.1.0
+- HailUninstaller.ps1
+- HailUninstaller
 
 ## God Nodes (most connected - your core abstractions)
-1. `Show-CleanupPreviewTui()` - 8 edges
-2. `Start-DeepScan()` - 8 edges
-3. `Show-RestoreMenuTui()` - 7 edges
-4. `Format-Color()` - 6 edges
-5. `Show-Banner()` - 5 edges
-6. `Show-Header()` - 5 edges
-7. `Show-InteractiveAppPicker()` - 4 edges
-8. `Show-ProgressBar()` - 4 edges
-9. `Scan-OrphanedStorageFolders()` - 4 edges
-10. `Get-BackupRootDirectory()` - 4 edges
+1. `Show-HailUninstallerGUI()` - 14 edges
+2. `Start-ForcedUninstall()` - 13 edges
+3. `Start-DeepScan()` - 10 edges
+4. `2.1.0` - 8 edges
+5. `Show-CleanupPreviewTui()` - 8 edges
+6. `HailUninstaller` - 8 edges
+7. `Show-RestoreMenuTui()` - 7 edges
+8. `Get-InstalledApplications()` - 7 edges
+9. `New-CleanupBackup()` - 7 edges
+10. `Get-CleanupBackups()` - 6 edges
 
 ## Surprising Connections (you probably didn't know these)
-- `Show-CleanupPreviewTui()` --calls--> `Invoke-CleanupItems()`  [INFERRED]
-  HailUninstaller.ps1 → Modules/Cleanup.ps1
-- `Show-CleanupPreviewTui()` --calls--> `New-CleanupBackup()`  [INFERRED]
-  HailUninstaller.ps1 → Modules/Backup.ps1
 - `Show-InteractiveAppPicker()` --calls--> `Get-InstalledApplications()`  [INFERRED]
   HailUninstaller.ps1 → Modules/Applications.ps1
+- `Show-CleanupPreviewTui()` --calls--> `New-CleanupBackup()`  [INFERRED]
+  HailUninstaller.ps1 → Modules/Backup.ps1
+- `Show-CleanupPreviewTui()` --calls--> `Invoke-CleanupItems()`  [INFERRED]
+  HailUninstaller.ps1 → Modules/Cleanup.ps1
 - `Show-RestoreMenuTui()` --calls--> `Get-CleanupBackups()`  [INFERRED]
   HailUninstaller.ps1 → Modules/Backup.ps1
 - `Show-RestoreMenuTui()` --calls--> `Restore-CleanupBackup()`  [INFERRED]
@@ -51,37 +51,53 @@
 ## Import Cycles
 - None detected.
 
-## Communities (15 total, 12 thin omitted)
+## Communities (12 total, 5 thin omitted)
 
 ### Community 0 - "Show-CleanupPreviewTui"
-Cohesion: 0.44
+Cohesion: 0.40
 Nodes (9): Show-CleanupPreviewTui(), Show-InteractiveAppPicker(), Show-RestoreMenuTui(), Format-Bytes(), Format-Color(), Show-AppDetails(), Show-Banner(), Show-Header() (+1 more)
 
-### Community 1 - "Scan-OrphanedStorageFolders"
-Cohesion: 0.29
-Nodes (4): Get-InstalledApplications(), Get-FolderSizeSafe(), Scan-FileLeftovers(), Scan-OrphanedStorageFolders()
+### Community 1 - "Invoke-CleanupItems"
+Cohesion: 0.40
+Nodes (3): Invoke-CleanupItems(), Evaluate-CandidateEvidence(), Load-ConfigSafe()
 
 ### Community 2 - "Get-BackupRootDirectory"
-Cohesion: 0.47
-Nodes (4): Get-BackupRootDirectory(), Get-CleanupBackups(), New-CleanupBackup(), Restore-CleanupBackup()
+Cohesion: 0.46
+Nodes (5): Get-BackupRootDirectory(), Get-CleanupBackups(), New-CleanupBackup(), New-SystemRestorePoint(), Restore-CleanupBackup()
+
+### Community 3 - "Start-ForcedUninstall"
+Cohesion: 0.15
+Nodes (9): Get-FolderSizeSafe(), Scan-FileLeftovers(), Start-ForcedUninstall(), Scan-RunningAppProcesses(), Scan-RegistryLeftovers(), Start-DeepScan(), Scan-ServiceLeftovers(), Scan-ShortcutLeftovers() (+1 more)
+
+### Community 4 - "2.1.0"
+Cohesion: 0.14
+Nodes (13): archiveName, minPowerShellVersion, minWindowsVersion, notes, releaseDate, sha256, version, latest (+5 more)
+
+### Community 5 - "HailUninstaller.ps1"
+Cohesion: 0.19
+Nodes (8): Get-InstalledApplications(), Invoke-NativeUninstall(), Show-HailUninstallerGUI(), Get-RunningHunterTargets(), Invoke-HunterTarget(), Scan-OrphanedStorageFolders(), Build-QuietUninstallCommand(), Detect-InstallerType()
+
+### Community 9 - "HailUninstaller"
+Cohesion: 0.20
+Nodes (9): Advanced One-Line Launcher Options, 📦 Creating & Publishing Releases (Maintainers), HailUninstaller, 📄 License, 💻 Local Execution, ⚡ Quick Start (One-Line Web Launcher), 📂 Repository Architecture, 🛡️ Safety Invariants (+1 more)
 
 ## Knowledge Gaps
-- **12 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
+- **5 thin communities (<3 nodes) omitted from report** — run `graphify query` to explore isolated nodes.
 
 ## Suggested Questions
 _Questions this graph is uniquely positioned to answer:_
 
-- **Why does `Get-InstalledApplications()` connect `Scan-OrphanedStorageFolders` to `Show-CleanupPreviewTui`?**
-  _High betweenness centrality (0.369) - this node is a cross-community bridge._
-- **Why does `Scan-OrphanedStorageFolders()` connect `Scan-OrphanedStorageFolders` to `Load-ConfigSafe`?**
-  _High betweenness centrality (0.349) - this node is a cross-community bridge._
-- **Why does `Show-InteractiveAppPicker()` connect `Show-CleanupPreviewTui` to `Scan-OrphanedStorageFolders`?**
-  _High betweenness centrality (0.336) - this node is a cross-community bridge._
-- **Are the 7 inferred relationships involving `Show-CleanupPreviewTui()` (e.g. with `New-CleanupBackup()` and `Invoke-CleanupItems()`) actually correct?**
-  _`Show-CleanupPreviewTui()` has 7 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 7 inferred relationships involving `Start-DeepScan()` (e.g. with `Evaluate-CandidateEvidence()` and `Load-ConfigSafe()`) actually correct?**
-  _`Start-DeepScan()` has 7 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 6 inferred relationships involving `Show-RestoreMenuTui()` (e.g. with `Get-CleanupBackups()` and `Restore-CleanupBackup()`) actually correct?**
-  _`Show-RestoreMenuTui()` has 6 INFERRED edges - model-reasoned connections that need verification._
-- **Are the 3 inferred relationships involving `Show-Banner()` (e.g. with `Show-CleanupPreviewTui()` and `Show-InteractiveAppPicker()`) actually correct?**
-  _`Show-Banner()` has 3 INFERRED edges - model-reasoned connections that need verification._
+- **Why does `Start-ForcedUninstall()` connect `Start-ForcedUninstall` to `Show-CleanupPreviewTui`, `Invoke-CleanupItems`, `Get-BackupRootDirectory`, `HailUninstaller.ps1`?**
+  _High betweenness centrality (0.123) - this node is a cross-community bridge._
+- **Are the 13 inferred relationships involving `Show-HailUninstallerGUI()` (e.g. with `HailUninstaller.ps1` and `Get-InstalledApplications()`) actually correct?**
+  _`Show-HailUninstallerGUI()` has 13 INFERRED edges - model-reasoned connections that need verification._
+- **Should `Start-ForcedUninstall` be split into smaller, more focused modules?**
+  _Cohesion score 0.14619883040935672 - nodes in this community are weakly interconnected._
+- **Why does `Show-HailUninstallerGUI()` connect `HailUninstaller.ps1` to `Show-CleanupPreviewTui`, `Invoke-CleanupItems`, `Get-BackupRootDirectory`, `Start-ForcedUninstall`?**
+  _High betweenness centrality (0.091) - this node is a cross-community bridge._
+- **Are the 12 inferred relationships involving `Start-ForcedUninstall()` (e.g. with `HailUninstaller.ps1` and `Evaluate-CandidateEvidence()`) actually correct?**
+  _`Start-ForcedUninstall()` has 12 INFERRED edges - model-reasoned connections that need verification._
+- **Should `2.1.0` be split into smaller, more focused modules?**
+  _Cohesion score 0.14285714285714285 - nodes in this community are weakly interconnected._
+- **Why does `Start-DeepScan()` connect `Start-ForcedUninstall` to `Show-CleanupPreviewTui`, `Invoke-CleanupItems`, `HailUninstaller.ps1`?**
+  _High betweenness centrality (0.084) - this node is a cross-community bridge._

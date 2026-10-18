@@ -92,6 +92,11 @@ function Start-DeepScan {
                 InstallLocation = $appInstallLoc
             }
             Scan-ShortcutLeftovers @scArgs
+        }},
+        @{ Name = "Active Running Processes"; Action = {
+            if (Get-Command Scan-RunningAppProcesses -ErrorAction SilentlyContinue) {
+                Scan-RunningAppProcesses -AppName $appName -InstallLocation $appInstallLoc
+            }
         }}
     )
 
@@ -102,11 +107,15 @@ function Start-DeepScan {
             & $ProgressCallback ($i + 1) $total $s.Name
         }
 
-        $items = & $s.Action
-        if ($items) {
-            foreach ($it in $items) {
-                $rawCandidates.Add($it)
+        try {
+            $items = & $s.Action
+            if ($items) {
+                foreach ($it in $items) {
+                    if ($it) { $rawCandidates.Add($it) }
+                }
             }
+        } catch {
+            Write-Warning "DeepScan step '$($s.Name)' encountered an error: $_"
         }
     }
 

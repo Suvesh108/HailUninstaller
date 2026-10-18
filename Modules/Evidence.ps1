@@ -75,8 +75,11 @@ function Evaluate-CandidateEvidence {
             }
 
             if (-not $isProtected -and $pathToCheck -and $protectedConfig.ProtectedRegistryRoots) {
+                $normPath = $pathToCheck -replace '^Microsoft\.PowerShell\.Core\\Registry::HKEY_LOCAL_MACHINE\\?', 'HKLM:\' `
+                                         -replace '^Microsoft\.PowerShell\.Core\\Registry::HKEY_CURRENT_USER\\?', 'HKCU:\'
                 foreach ($pr in $protectedConfig.ProtectedRegistryRoots) {
-                    if ($pathToCheck -ieq $pr -or $pathToCheck -like "$pr\*") {
+                    $normPr = $pr.TrimEnd('\')
+                    if ($normPath -ieq $normPr -or $normPath -like "$normPr\*") {
                         $isProtected = $true
                         $protectReason = "Critical Windows registry hive ($pr)"
                         break
@@ -140,7 +143,13 @@ function Evaluate-CandidateEvidence {
         $rawScore = 0
         $evidence = [System.Collections.Generic.List[string]]::new()
 
-        $leafName = if ($pathToCheck) { Split-Path $pathToCheck -Leaf } else { $nameToCheck }
+        $leafName = switch ($item.Category) {
+            "Task"     { $nameToCheck }
+            "Service"  { if ($item.DisplayName) { $item.DisplayName } else { $nameToCheck } }
+            "Registry" { if ($item.Type -eq "Value" -and $item.ValueName) { $item.ValueName } else { Split-Path $pathToCheck -Leaf } }
+            "Shortcut" { [System.IO.Path]::GetFileNameWithoutExtension($pathToCheck) }
+            Default    { if ($pathToCheck) { Split-Path $pathToCheck -Leaf } else { $nameToCheck } }
+        }
         $appDisplayName = if ($Application.DisplayName) { $Application.DisplayName } else { "" }
         $appPublisher = if ($Application.Publisher) { $Application.Publisher } else { "" }
         $installLocation = if ($Application.InstallLocation) { $Application.InstallLocation } else { "" }
@@ -167,10 +176,16 @@ function Evaluate-CandidateEvidence {
         }
 
         # D. Publisher Association
-        if ($appPublisher -and $appPublisher -notmatch '^(Microsoft|Google|Apple|Corp|Inc|LLC)$') {
-            if ($pathToCheck -like "*$appPublisher*" -or $nameToCheck -like "*$appPublisher*") {
-                $rawScore += 20
-                $evidence.Add("Publisher name match '$appPublisher' (+20%)")
+        if ($appPublisher) {
+            $pubWords = $appPublisher -split '[\s\-_]+' | Where-Object { 
+                $_.Length -ge 4 -and $_ -notmatch '^(Microsoft|Google|Apple|Corp|Corporation|Inc|LLC|Technologies|Technology|Software)$' 
+            }
+            foreach ($pw in $pubWords) {
+                if ($pathToCheck -like "*$pw*" -or $nameToCheck -like "*$pw*") {
+                    $rawScore += 20
+                    $evidence.Add("Publisher name match '$pw' (+20%)")
+                    break
+                }
             }
         }
 
@@ -180,18 +195,27 @@ function Evaluate-CandidateEvidence {
             $evidence.Add("Resides in user/machine application data repository (+15%)")
         }
 
-        # Clamp score between 10 and 99
-        $finalScore = [math]::Min(99, [math]::Max(20, $rawScore))
+        # Clamp score between 0 and 99
+        $finalScore = [math]::Min(99, [math]::Max(0, $rawScore))
+
+        # Filter out items with score < 20 (unmatched items)
+        if ($finalScore -lt 20) {
+            continue
+        }
 
         # Categorize
-        $confCategory = "REVIEW"
-        $badge = "[REVIEW]"
+        $confCategory = "LOW"
+        $badge = "[LOW]"
         $preSelect = $false
 
         if ($finalScore -ge $highThreshold) {
             $confCategory = "HIGH"
             $badge = "[HIGH]"
             $preSelect = $true
+        } elseif ($finalScore -ge $reviewThreshold) {
+            $confCategory = "REVIEW"
+            $badge = "[REVIEW]"
+            $preSelect = $false
         }
 
         $scoredList.Add([PSCustomObject]@{

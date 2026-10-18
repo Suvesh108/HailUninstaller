@@ -18,18 +18,44 @@ function Start-ForcedUninstall {
     $targetName = ""
     $targetPublisher = ""
     $targetPath = ""
+    $targetFile = ""
 
     # Check if target is an existing path (directory or file)
-    if (Test-Path -LiteralPath $Target) {
-        $item = Get-Item -LiteralPath $Target -ErrorAction SilentlyContinue
+    $cleanTarget = $Target.Trim().Trim('"', "'", ' ')
+    if (Test-Path -LiteralPath $cleanTarget) {
+        $item = Get-Item -LiteralPath $cleanTarget -ErrorAction SilentlyContinue
         if ($item -is [System.IO.FileInfo]) {
-            $targetPath = Split-Path $item.FullName -Parent
+            $targetFile = $item.FullName
+            $targetPath = $item.FullName
+            $parentDir = Split-Path $item.FullName -Parent
             $targetName = [System.IO.Path]::GetFileNameWithoutExtension($item.Name)
             try {
                 $vi = [System.Diagnostics.FileVersionInfo]::GetVersionInfo($item.FullName)
                 if ($vi.ProductName) { $targetName = $vi.ProductName }
                 if ($vi.CompanyName) { $targetPublisher = $vi.CompanyName }
             } catch { }
+
+            # Two-Tier Target Qualification: Do NOT target shared root parent folders
+            $unsafeRoots = @(
+                $env:USERPROFILE,
+                [Environment]::GetFolderPath([Environment+SpecialFolder]::Desktop),
+                [Environment]::GetFolderPath([Environment+SpecialFolder]::Personal),
+                (Join-Path $env:USERPROFILE "Downloads"),
+                $env:TEMP,
+                $env:ProgramFiles,
+                ${env:ProgramFiles(x86)},
+                $env:SystemRoot
+            ) | Where-Object { $_ } | ForEach-Object { $_.TrimEnd('\') }
+
+            $isDriveRoot = [System.IO.Path]::GetPathRoot($parentDir).TrimEnd('\') -ieq $parentDir.TrimEnd('\')
+            $isUnsafeParent = $isDriveRoot -or ($unsafeRoots | Where-Object { $_ -ieq $parentDir.TrimEnd('\') })
+
+            $parentName = Split-Path $parentDir -Leaf
+            $nameMatches = ($targetName -and $parentName -like "*$targetName*") -or ($targetPublisher -and $parentName -like "*$targetPublisher*")
+
+            if (-not $isUnsafeParent -and $nameMatches) {
+                $targetPath = $parentDir
+            }
         } else {
             $targetPath = $item.FullName
             $targetName = $item.Name
@@ -46,21 +72,39 @@ function Start-ForcedUninstall {
         }
     } else {
         # Target was supplied as a raw application name or keyword
-        $targetName = $Target.Trim()
+        $targetName = $cleanTarget
     }
 
     # Construct synthetic application definition
     $mockApp = [PSCustomObject]@{
         DisplayName     = $targetName
         Publisher       = $targetPublisher
-        InstallLocation = $targetPath
+        InstallLocation = if ($targetPath) { $targetPath } else { $targetFile }
         Type            = "ForcedTarget"
     }
 
     $rawCandidates = [System.Collections.Generic.List[PSCustomObject]]::new()
     $seenPaths = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
 
-    # 1. Primary Target Directory
+    # 0. Active Running Processes
+    if (Get-Command Scan-RunningAppProcesses -ErrorAction SilentlyContinue) {
+        $procLeftovers = Scan-RunningAppProcesses -AppName $targetName -InstallLocation (if ($targetPath) { $targetPath } else { $targetFile })
+        foreach ($pr in $procLeftovers) {
+            $rawCandidates.Add([PSCustomObject]@{
+                Category     = "Process"
+                Type         = "Process"
+                Id           = $pr.Id
+                Name         = $pr.Name
+                Path         = $pr.Path
+                Size         = $pr.Size
+                ItemCount    = 1
+                MatchReason  = "Active running process for target application"
+                MatchedToken = $targetName
+            })
+        }
+    }
+
+    # 1. Primary Target Directory or File
     if ($targetPath -and (Test-Path -LiteralPath $targetPath)) {
         $seenPaths.Add($targetPath) | Out-Null
         $stat = Get-FolderSizeSafe -Path $targetPath
@@ -71,6 +115,18 @@ function Start-ForcedUninstall {
             Size         = $stat.Size
             ItemCount    = $stat.Count
             MatchReason  = "Primary forced uninstall target path"
+            MatchedToken = $targetName
+        })
+    } elseif ($targetFile -and (Test-Path -LiteralPath $targetFile)) {
+        $seenPaths.Add($targetFile) | Out-Null
+        $fItem = Get-Item -LiteralPath $targetFile -ErrorAction SilentlyContinue
+        $rawCandidates.Add([PSCustomObject]@{
+            Category     = "File"
+            Type         = "File"
+            Path         = $targetFile
+            Size         = if ($fItem) { $fItem.Length } else { 0L }
+            ItemCount    = 1
+            MatchReason  = "Primary forced uninstall target executable"
             MatchedToken = $targetName
         })
     }

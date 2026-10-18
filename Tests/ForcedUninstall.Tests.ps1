@@ -30,6 +30,22 @@ Describe "Forced Uninstall and Backup/Restore Tests" {
                 Remove-Item -Path $tempDir -Recurse -Force -ErrorAction SilentlyContinue
             }
         }
+
+        It "Preserves generic parent directory and targets only the file for standalone executables" {
+            $standaloneExe = Join-Path $env:TEMP "standalone_tool_$(Get-Random).exe"
+            Set-Content -Path $standaloneExe -Value "MZ_TEST"
+
+            try {
+                $res = Start-ForcedUninstall -Target $standaloneExe
+                $res.TargetPath | Should Be $standaloneExe
+                # Verify $env:TEMP is not targeted as a directory candidate
+                $candidatesList = @($res.Candidates)
+                $tempCand = $candidatesList | Where-Object { $_.Path -eq $env:TEMP }
+                $tempCand | Should BeNullOrEmpty
+            } finally {
+                Remove-Item -LiteralPath $standaloneExe -Force -ErrorAction SilentlyContinue
+            }
+        }
     }
 
     Context "Directory Backup and Restore" {

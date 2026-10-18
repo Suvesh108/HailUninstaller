@@ -13,22 +13,30 @@ function Detect-InstallerType {
     $raw = $UninstallString.Trim()
 
     # 1. Windows Installer / MSI detection
-    if ($raw -match 'msiexec(\.exe)?' -or $raw -match '(\{[A-F0-9]{8}\-[A-F0-9]{4}\-[A-F0-9]{4}\-[A-F0-9]{4}\-[A-F0-9]{12}\})') {
-        $guid = if ($matches.Count -gt 1) { $matches[$matches.Count - 1] } else { "" }
+    if ($raw -match '(?<guid>\{[A-F0-9]{8}\-[A-F0-9]{4}\-[A-F0-9]{4}\-[A-F0-9]{4}\-[A-F0-9]{12}\})') {
+        $guid = $matches['guid']
         return [PSCustomObject]@{
-            InstallerType = "MSI"
-            QuietSwitches = "/qn /norestart"
-            RecommendedArgs = if ($guid) { "/x $guid /qn /norestart" } else { "$raw /qn /norestart" }
-            Confidence    = "HIGH"
-            Description   = "Windows Installer (MSI package)"
+            InstallerType   = "MSI"
+            QuietSwitches   = "/qn /norestart"
+            RecommendedArgs = "/x $guid /qn /norestart"
+            Confidence      = "HIGH"
+            Description     = "Windows Installer (MSI package)"
+        }
+    } elseif ($raw -match 'msiexec(\.exe)?') {
+        return [PSCustomObject]@{
+            InstallerType   = "MSI"
+            QuietSwitches   = "/qn /norestart"
+            RecommendedArgs = "$raw /qn /norestart"
+            Confidence      = "HIGH"
+            Description     = "Windows Installer (MSI package)"
         }
     }
 
-    # Extract executable path
+    # Extract executable path (handles both quoted and unquoted paths with spaces)
     $exePath = ""
     if ($raw -match '^"([^"]+)"') {
         $exePath = $matches[1]
-    } elseif ($raw -match '^(\S+\.exe)') {
+    } elseif ($raw -match '^(.*?\.(?:exe|bat|cmd))\b') {
         $exePath = $matches[1]
     } else {
         $exePath = ($raw -split '\s+')[0]
@@ -49,10 +57,11 @@ function Detect-InstallerType {
 
     # 3. NSIS (Nullsoft Scriptable Install System)
     if ($exeName -match '^uninstall\.exe$' -or $exeName -match '^uninst\.exe$' -or $raw -match '[\/\-]nsis') {
+        $nsisArgs = if (-not [string]::IsNullOrWhiteSpace($InstallLocation)) { "/S _?=$InstallLocation" } else { "/S" }
         return [PSCustomObject]@{
             InstallerType   = "NSIS"
-            QuietSwitches   = "/S"
-            RecommendedArgs = "/S"
+            QuietSwitches   = $nsisArgs
+            RecommendedArgs = $nsisArgs
             Confidence      = "HIGH"
             Description     = "Nullsoft Scriptable Install System (NSIS)"
         }
@@ -135,12 +144,21 @@ function Build-QuietUninstallCommand {
     }
 
     # 2. If MSI package
-    if ($raw -match '(\{[A-F0-9\-]{36}\})' -or $raw -match 'msiexec') {
-        $guid = if ($matches.Count -gt 1) { $matches[$matches.Count - 1] } else { $Application.Id }
+    if ($raw -match '(?<guid>\{[A-F0-9\-]{36}\})') {
+        $guid = $matches['guid']
         return [PSCustomObject]@{
             Executable  = "msiexec.exe"
             Arguments   = "/x $guid /qn /norestart"
             FullCommand = "msiexec.exe /x $guid /qn /norestart"
+            Type        = "MSI"
+        }
+    } elseif ($raw -match 'msiexec') {
+        $targetId = if ($Application.Id) { $Application.Id } else { "" }
+        $argsStr = if ($targetId) { "/x $targetId /qn /norestart" } else { "$raw /qn /norestart" }
+        return [PSCustomObject]@{
+            Executable  = "msiexec.exe"
+            Arguments   = $argsStr
+            FullCommand = "msiexec.exe $argsStr"
             Type        = "MSI"
         }
     }
@@ -154,7 +172,7 @@ function Build-QuietUninstallCommand {
     if ($raw -match '^"([^"]+)"\s*(.*)$') {
         $exe = $matches[1]
         $existingArgs = $matches[2]
-    } elseif ($raw -match '^(\S+\.exe)\s*(.*)$') {
+    } elseif ($raw -match '^(.*?\.(?:exe|bat|cmd))\b\s*(.*)$') {
         $exe = $matches[1]
         $existingArgs = $matches[2]
     } else {

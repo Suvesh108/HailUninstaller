@@ -1,0 +1,59 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  build-and-release:
+    name: Package and Publish Release
+    runs-on: windows-latest
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Extract Tag Version
+        id: get_version
+        shell: powershell
+        run: |
+          $tag = "${{ github.ref_name }}"
+          $version = $tag -replace '^v', ''
+          echo "VERSION=$version" >> $env:GITHUB_OUTPUT
+          Write-Host "Packaging release for version: $version"
+
+      - name: Build Release Package & Checksums
+        shell: powershell
+        run: |
+          $version = "${{ steps.get_version.outputs.VERSION }}"
+          .\Tools\New-ReleasePackage.ps1 -Version $version -OutputDir "release" -UpdateManifest
+
+      - name: Run Test Suite on Package
+        shell: powershell
+        run: |
+          Invoke-Pester -Path ./Tests/ -PassThru
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v2
+        with:
+          name: HailUninstaller v${{ steps.get_version.outputs.VERSION }}
+          draft: false
+          prerelease: false
+          files: |
+            release/*.zip
+            release/*.sha256
+          body: |
+            ## HailUninstaller v${{ steps.get_version.outputs.VERSION }}
+            
+            Production release with zero-install one-line launcher and cryptographic verification.
+            
+            ### Quick Start
+            ```powershell
+            irm "https://raw.githubusercontent.com/${{ github.repository }}/main/bootstrap.ps1" | iex
+            ```
+            
+            ### Checksum Verification
+            Official release artifacts are verified using SHA-256 before extraction.

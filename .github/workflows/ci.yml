@@ -1,0 +1,27 @@
+name: CI
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  test:
+    name: Run Pester Tests
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Pester Test Suite
+        shell: powershell
+        run: |
+          $pesterModule = Get-Module -ListAvailable -Name Pester | Sort-Object Version -Descending | Select-Object -First 1
+          Write-Host "Using Pester version: $($pesterModule.Version)"
+          $result = Invoke-Pester -Path ./Tests/ -PassThru
+          if ($result.FailedCount -gt 0) {
+              Write-Error "Tests failed! Failed count: $($result.FailedCount)"
+              exit 1
+          }

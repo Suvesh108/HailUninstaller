@@ -68,7 +68,8 @@ function Scan-OrphanedStorageFolders {
         "fontconfig", "Crypto", "System Certificates", "DeliveryOptimization",
         "Start Menu", "Templates", "Documents", "History", "Publishers",
         "ToastNotificationManagerCompat", "ssh", "Comms", "Diagnostics",
-        "INetCache", "INetCookies", "CredentialManager", "Windows Powershell", "PowerShell"
+        "INetCache", "INetCookies", "CredentialManager", "Windows Powershell", "PowerShell",
+        "Programs", "pip", "npm", "yarn", "nuget", "cargo", "git", "Docker", "NVIDIA", "OneDrive"
     )
     foreach ($cp in $coreProtectedList) { $protectedNames.Add($cp) | Out-Null }
 

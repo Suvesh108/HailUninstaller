@@ -65,7 +65,17 @@
     "History",
     "Publishers",
     "ToastNotificationManagerCompat",
-    "HailUninstaller"
+    "HailUninstaller",
+    "Programs",
+    "pip",
+    "npm",
+    "yarn",
+    "nuget",
+    "cargo",
+    "git",
+    "Docker",
+    "NVIDIA",
+    "OneDrive"
   ],
   "ProtectedRegistryRoots": [
     "HKLM:\\SOFTWARE\\Microsoft\\Windows",

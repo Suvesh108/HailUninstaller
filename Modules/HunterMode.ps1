@@ -12,6 +12,10 @@ function Get-RunningHunterTargets {
         $ConfigDir = Join-Path (Split-Path $PSScriptRoot -Parent) "Config"
     }
 
+    if (-not (Get-Command Load-ConfigSafe -ErrorAction SilentlyContinue)) {
+        . (Join-Path (Split-Path $PSScriptRoot -Parent) "Modules\UI.ps1")
+    }
+
     $protectedConfig = Load-ConfigSafe -Path (Join-Path $ConfigDir "ProtectedPaths.json")
     $protectedProcs = [System.Collections.Generic.HashSet[string]]::new([System.StringComparer]::OrdinalIgnoreCase)
     if ($protectedConfig -and $protectedConfig.ProtectedProcesses) {
@@ -69,12 +73,23 @@ function Invoke-HunterTarget {
         [string]$ConfigDir = ""
     )
 
+    if (-not $ConfigDir) {
+        $ConfigDir = Join-Path (Split-Path $PSScriptRoot -Parent) "Config"
+    }
+
+    $protectedConfig = Load-ConfigSafe -Path (Join-Path $ConfigDir "ProtectedPaths.json")
+    if ($protectedConfig -and $protectedConfig.ProtectedProcesses) {
+        if ($protectedConfig.ProtectedProcesses -contains $Target.ProcessName) {
+            throw "SECURITY_VIOLATION: Cannot target protected system process '$($Target.ProcessName)'."
+        }
+    }
+
     if ($TerminateProcess -and $Target.Id) {
         try {
             Stop-Process -Id $Target.Id -Force -ErrorAction SilentlyContinue
         } catch { }
     }
 
-    # Route the target path directly into Forced Uninstall scanner
-    return (Start-ForcedUninstall -Target $Target.Path -ConfigDir $ConfigDir)
+    $targetRoute = if ($Target.Path) { $Target.Path } else { $Target.ProcessName }
+    return (Start-ForcedUninstall -Target $targetRoute -ConfigDir $ConfigDir)
 }
