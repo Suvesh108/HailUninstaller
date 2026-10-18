@@ -54,9 +54,9 @@
     "semantic_hash": ""
   },
   "Modules/GUI.ps1": {
-    "mtime": 1792301487.0970502,
-    "seen": 1792301695.0362735,
-    "ast_hash": "ee82168c0770e53613c0077c5d8644ed",
+    "mtime": 1792303819.8804865,
+    "seen": 1792303892.3139377,
+    "ast_hash": "e34d7a5e7c2aee06a678b91b1beb583f",
     "semantic_hash": ""
   },
   "Modules/OrphanScanner.ps1": {
@@ -168,9 +168,9 @@
     "semantic_hash": ""
   },
   "README.md": {
-    "mtime": 1792301940.2392614,
-    "seen": 1792302721.1949685,
-    "ast_hash": "f4bb300877e8e44587baeb437769afef",
+    "mtime": 1792303806.4950268,
+    "seen": 1792303892.3139684,
+    "ast_hash": "889b2077b741272e6516779366e8c769",
     "semantic_hash": ""
   },
   "Website/index.html": {
@@ -179,28 +179,16 @@
     "ast_hash": "e2c1add6ed69889f330735a8d8c5ccf3",
     "semantic_hash": ""
   },
-  "core technical architecture.pdf": {
-    "mtime": 1790920905.1934688,
-    "seen": 1792267648.773458,
-    "ast_hash": "568d05c75908f0ea59a1ed506acde23d",
-    "semantic_hash": ""
-  },
   "Website/assets/logo.png": {
     "mtime": 1790921028.5501926,
     "seen": 1792267648.7734592,
     "ast_hash": "d3bce7a5676f67de8da10937e0c8d67c",
     "semantic_hash": ""
   },
-  "logo.png": {
-    "mtime": 1790921028.5501926,
-    "seen": 1792267648.7734604,
-    "ast_hash": "d3bce7a5676f67de8da10937e0c8d67c",
-    "semantic_hash": ""
-  },
   "Config/Releases.json": {
-    "mtime": 1792301656.5457406,
-    "seen": 1792301695.036256,
-    "ast_hash": "57540c240c1604aa468855210ec2e76d",
+    "mtime": 1792303845.2926424,
+    "seen": 1792303892.3139234,
+    "ast_hash": "b927932e280f3f3f52cc93538c34c47f",
     "semantic_hash": ""
   },
   "Tests/Bootstrap.Tests.ps1": {
@@ -210,15 +198,15 @@
     "semantic_hash": ""
   },
   "Tools/New-ReleasePackage.ps1": {
-    "mtime": 1792301652.601154,
-    "seen": 1792301695.0363,
-    "ast_hash": "f265c52c973245c64a978899f0838086",
+    "mtime": 1792303838.337959,
+    "seen": 1792303892.3139615,
+    "ast_hash": "d01dcde3b651907d46ca945b3911f3d1",
     "semantic_hash": ""
   },
   "bootstrap.ps1": {
-    "mtime": 1792301664.9885533,
-    "seen": 1792301695.0363028,
-    "ast_hash": "8b3ba9aac0794fafa85a9a5204a42805",
+    "mtime": 1792303861.1564434,
+    "seen": 1792303892.3139644,
+    "ast_hash": "ce35b59476daafaf03124871a96cb90f",
     "semantic_hash": ""
   },
   ".github/workflows/ci.yml": {
@@ -231,12 +219,6 @@
     "mtime": 1792302703.9843402,
     "seen": 1792302721.1949673,
     "ast_hash": "20500b20e1cc34525b587c6eb5172ff8",
-    "semantic_hash": ""
-  },
-  "screenshot.png": {
-    "mtime": 1792302699.5033977,
-    "seen": 1792303311.8671458,
-    "ast_hash": "0c0bf49b64e1593e53996613d4240838",
     "semantic_hash": ""
   },
   "Website/js/app.js": {
@@ -260,6 +242,18 @@
   "Website/assets/screenshot.png": {
     "mtime": 1792302699.5033977,
     "seen": 1792303311.8671434,
+    "ast_hash": "0c0bf49b64e1593e53996613d4240838",
+    "semantic_hash": ""
+  },
+  "assets/logo.png": {
+    "mtime": 1790921028.5501926,
+    "seen": 1792303892.3139758,
+    "ast_hash": "d3bce7a5676f67de8da10937e0c8d67c",
+    "semantic_hash": ""
+  },
+  "assets/screenshot.png": {
+    "mtime": 1792302699.5033977,
+    "seen": 1792303892.3139768,
     "ast_hash": "0c0bf49b64e1593e53996613d4240838",
     "semantic_hash": ""
   }

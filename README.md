@@ -1,6 +1,6 @@
 <div align="center">
 
-  <img src="logo.png" alt="HailUninstaller Logo" width="128" height="128">
+  <img src="assets/logo.png" alt="HailUninstaller Logo" width="128" height="128">
 
   # HailUninstaller
 
@@ -18,7 +18,7 @@
 
   <br>
 
-  <img src="screenshot.png" alt="HailUninstaller Storage & Application Cleaner Interface" width="900">
+  <img src="assets/screenshot.png" alt="HailUninstaller Storage & Application Cleaner Interface" width="900">
 
 </div>
 

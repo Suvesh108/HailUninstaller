@@ -54,7 +54,6 @@ try {
     $rootFiles = @(
         "HailUninstaller.ps1",
         "Run.bat",
-        "logo.png",
         "LICENSE",
         "README.md"
     )
@@ -82,6 +81,16 @@ try {
     $configSrc = Join-Path $RepoRoot "Config"
     Get-ChildItem -LiteralPath $configSrc -Filter "*.json" | Where-Object { $_.Name -ne "Releases.json" } | ForEach-Object {
         Copy-Item -LiteralPath $_.FullName -Destination (Join-Path $configDest $_.Name) -Force
+    }
+
+    # Assets
+    $assetsDest = Join-Path $stagingDir "assets"
+    New-Item -ItemType Directory -Path $assetsDest -Force | Out-Null
+    $assetsSrc = Join-Path $RepoRoot "assets"
+    if (Test-Path -LiteralPath $assetsSrc) {
+        Get-ChildItem -LiteralPath $assetsSrc -Filter "*.png" | ForEach-Object {
+            Copy-Item -LiteralPath $_.FullName -Destination (Join-Path $assetsDest $_.Name) -Force
+        }
     }
 
     Write-Host "[2/5] Compressing release archive ($archiveName)..." -ForegroundColor Gray

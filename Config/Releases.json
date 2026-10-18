@@ -8,7 +8,7 @@
                                    "version":  "0.0.1",
                                    "releaseDate":  "2026-10-18",
                                    "archiveName":  "HailUninstaller-v0.0.1.zip",
-                                   "sha256":  "CA75C778614C909949BDEF46395A80217C8C4BC7E444E5C8D0F62669CD3042CB",
+                                   "sha256":  "0F1DB041CFFBA78C3D5D52A0F9AA5F94C0A3CC3BEE025BCB3EFD1439F29DBCF1",
                                    "minPowerShellVersion":  "5.1",
                                    "minWindowsVersion":  "10.0",
                                    "notes":  "HailUninstaller v0.0.1 official release package."

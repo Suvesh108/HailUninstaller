@@ -35,7 +35,10 @@ function Show-HailUninstallerGUI {
     }
 
     $modulesDir = Join-Path $scriptDir "Modules"
-    $logoPath = Join-Path $scriptDir "logo.png"
+    $logoPath = Join-Path $scriptDir "assets\logo.png"
+    if (-not (Test-Path -LiteralPath $logoPath)) {
+        $logoPath = Join-Path $scriptDir "logo.png"
+    }
 
     Log-GuiConsole -Tag "INIT" -Message "Initializing HailUninstaller v0.0.1 Fluent GUI..." -Color Green
 

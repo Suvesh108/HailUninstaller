@@ -58,7 +58,7 @@ $script:KnownReleases = @{
     "0.0.1" = @{
         Version     = "0.0.1"
         ArchiveName = "HailUninstaller-v0.0.1.zip"
-        Sha256      = "CA75C778614C909949BDEF46395A80217C8C4BC7E444E5C8D0F62669CD3042CB"
+        Sha256      = "0F1DB041CFFBA78C3D5D52A0F9AA5F94C0A3CC3BEE025BCB3EFD1439F29DBCF1"
         MinPS       = "5.1"
         MinOS       = "10.0"
     }
